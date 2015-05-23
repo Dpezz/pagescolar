@@ -6,8 +6,7 @@ Plataforma de Administración y Gestión Escolar. Plataforma web que orienta hac
 Desarrollado por:
   [Daniel Jara](http://twitter.com/davegandy),
   
-Desarrollado para Aprendamos a leer Matemática(ALM):
-[ALM](http://www.aprendamosaleermatematica.cl).
+Desarrollado para [Aprendamos a leer Matemática(ALM)](http://www.aprendamosaleermatematica.cl).
 
 ##Herramientas
 - [Symfony](http://symfony.com/)
