@@ -1,0 +1,75 @@
+{% extends 'PAGEDemoBundle:Layout:layout_page.html.twig' %}
+
+{% block title 'Restaurar'%}
+
+{% block stylesheets %}
+    {{parent()}}
+    <link rel="stylesheet" href="{{ asset('bundles/pagedemo/plugin/signin/signin.css')}}">
+{% endblock %}
+
+
+{% block javascripts %}
+  {{parent()}}
+  <script src="{{ asset('bundles/pagedemo/js/validar.js')}}"></script>
+{% endblock %}
+
+
+{% block content %}
+  <div class="form-signin">
+    <div class="page-header">
+      <h1 class="text-center text-mint" style="font-size:50px;font-family:'open-sans-light'">Restablecer Contraseña</h1>
+    </div>
+
+    <hr style="border-top-color:#ddd">
+
+    <p class="text-center text-muted">Ingrese el correo electrónico con el cual inicia su cuenta y su nueva contraseña.</p>
+
+    {% if flag == 1 %}
+    <div class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <i class="fa fa-check-circle"></i>&nbsp;<strong>Finalizado!</strong>&nbsp;cambios realizados con exito.
+    </div>
+    {% elseif flag == 0 %}
+      <div class="alert alert-danger alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <i class="fa fa-times-circle"></i>&nbsp;<strong>Cancelado!</strong>&nbsp;ocurrio un error al guardar los cambios.
+      </div>
+    {% elseif flag == 2 %}
+      <div class="alert alert-danger alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <i class="fa fa-times-circle"></i>&nbsp;<strong>Cancelado!</strong>&nbsp;Email no coincide, vuelva a intentar.
+      </div>
+    {% endif %}
+
+    <form id="signupForm" action="{{ path('_secured_restore',{'codigo':url} ) }}" method="POST">
+      
+      <div class="form-group">
+        <label class="text-mint"></label>
+        <input type="email" class="form-control" name="email" placeholder="Correo Electrónico" required autofocus>
+      </div>
+
+      <hr style="border-top-color:#ddd">
+
+      <div class="form-group">
+        <label class="text-mint"></label>
+        <input type="password" class="form-control" name="password" placeholder="Nueva Contraseña" required autofocus>
+      </div>
+
+      <div class="form-group">
+        <label class="text-mint"></label>
+        <input type="password" class="form-control" name="confirmPassword" placeholder="Confirmar Contraseña" required autofocus>
+      </div>
+
+      <button class="btn btn-block btn-mint" type="submit"><i class="fa fa-key"></i>&nbsp;Restablecer</button>
+    </form>
+
+
+
+    <h5 class="text-center text-muted"><small><a href="{{path('_demo_signin')}}"><i class="fa fa-long-arrow-left"></i>&nbsp;Volver</a></small></h5>
+
+    <h5 class="text-center text-muted"><small>
+      <abbr title="Aprende a Leer Matemáticas" class="initialism">ALM</abbr>&nbsp;-&nbsp;
+      Todos los derechos reservados. La Serena,Chile. {{ "now"|date("Y") }}
+    </small></h5>
+  </div>
+{% endblock %}

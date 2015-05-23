@@ -1,0 +1,120 @@
+{% block docencia_planificar %}
+{# CURSOS #}
+<form action="{{ path('planificar_edit',{'id':dataD.id}) }}" method="POST" ng-app="loader" ng-controller="load">
+
+	{# curso #}
+	<div class="panel-group" id="curso" role="tablist" aria-multiselectable="true">
+	  	<div class="panel panel-default" ng-repeat="(ncurso,curso) in cursos | filter:{'name':'Básico'}">
+		    <div class="panel-heading" role="tab" id="hcurso{[{ncurso}]}">
+		      	<h4 class="panel-title">
+		        	<a data-toggle="collapse" data-parent="#curso" href="#ccurso{[{ncurso}]}" aria-expanded="true" aria-controls="ccurso{[{ncurso}]}" ng-click="loadId('{{dataD.id}}','{{app.user.parent}}')">
+		          	<span class="badge">{[{curso.name}]}</span>
+		        	</a>
+		      	</h4>
+		    </div>
+		    <div id="ccurso{[{ncurso}]}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="hcurso{[{ncurso}]}">
+		      	<div class="panel-body">
+		        
+		        	{# asignaturas #}
+		        	<div class="panel-group" id="asignatura" role="tablist" aria-multiselectable="true">
+			        	<div class="panel panel-default" ng-repeat="(nasignatura,asignatura) in asignaturas | limitTo: 10">
+						    <div class="panel-heading" role="tab" id="hasignatura{[{ncurso}]}{[{nasignatura}]}">
+						      	<h4 class="panel-title">
+						        	<a data-toggle="collapse" data-parent="#asignatura" href="#casignatura{[{ncurso}]}{[{nasignatura}]}" aria-expanded="true" aria-controls="casignatura{[{ncurso}]}{[{nasignatura}]}">
+						          	{[{asignatura.name}]}
+						        	</a>
+						      	</h4>
+						    </div>
+						    <div id="casignatura{[{ncurso}]}{[{nasignatura}]}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="hasignatura{[{ncurso}]}{[{nasignatura}]}">
+						      	<div class="panel-body">
+						        
+
+						      		{# unidad #}
+						        	<div class="panel-group" id="unidad" role="tablist" aria-multiselectable="true">
+							        	<div class="panel panel-default" ng-repeat="(nunidad,unidad) in unidades | limitTo: 5">
+						        	
+										    <div class="panel-heading" role="tab" id="hunidad{[{ncurso}]}{[{nasignatura}]}{[{nunidad}]}">
+										      	<h4 class="panel-title">
+										        	<a data-toggle="collapse" data-parent="#unidad" href="#cunidad{[{ncurso}]}{[{nasignatura}]}{[{nunidad}]}" aria-expanded="true" aria-controls="cunidad{[{ncurso}]}{[{nasignatura}]}{[{nunidad}]}" ng-click="cargar(curso.name,asignatura.name,unidad.name)">
+										          	{[{unidad.name}]}
+										        	</a>
+										      	</h4>
+										    </div>
+										    <div id="cunidad{[{ncurso}]}{[{nasignatura}]}{[{nunidad}]}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="hunidad{[{ncurso}]}{[{nasignatura}]}{[{nunidad}]}">
+										      	<div class="panel-body">
+
+										        	{# Objetivos #}
+											      	<div class="row">
+												      	<div ng-if="ncurso >= 6">
+												      		<div class="col-md-4" ng-repeat="(nobjetivo,objetivo) in objetivos | filter: {'id': 20}">
+												      				<div class="list-group">
+																	 	<a class="list-group-item">
+																	   		{[{objetivo.name}]}
+																	 	</a>
+																	 	<li class="list-group-item list-group-item-info" ng-repeat="(ndato,dato) in datos| filter: {'curso': curso.name,'asignatura': asignatura.name,'unidad': unidad.name,'objetivo':objetivo.name}: true">
+																	 		<u>{[{ dato.id_obj }]} - {[{ dato.asignatura }]}</u>
+																	 		<br>
+																	 		<em>{[{ dato.detalle }]}</em>
+
+																	 		<div class="checkbox">
+																			    <label>
+																			      <input type="checkbox" name="obj[]" value="{[{dato.id}]}"> Planificar
+																			    </label>
+																		  	</div>
+																	 	</li>
+																	</div>
+												      		</div>
+											      		</div>
+											      		<div ng-if="ncurso < 6">
+												      		<div class="col-md-4" ng-repeat="(nobjetivo,objetivo) in objetivos| filter: {'id': 10}">
+												      				<div class="list-group">
+																	 	<a class="list-group-item">
+																	   		{[{objetivo.name}]}
+																	 	</a>
+																	 	<li class="list-group-item list-group-item-info" ng-repeat="(ndato,dato) in datos| filter: {'curso': curso.name,'asignatura': asignatura.name,'unidad': unidad.name,'objetivo':objetivo.name}: true">
+																	 		<u>{[{ dato.id_obj }]} - {[{ dato.asignatura }]}</u>
+																	 		<br>
+																	 		<em>{[{ dato.detalle }]}</em>
+																	 		
+																	 		<div class="checkbox" ng-if="check(dato.id) == false">
+																			    <label>
+																			      <input type="checkbox" name="obj[]" value="{[{dato.id}]}"> Planificar
+																			    </label>
+																		  	</div>
+																		  	<div ng-if="check(dato.id) == true">
+																			    <label>
+																			     <i class="glyphicon glyphicon-check text-success"></i> Planificado
+																			    </label>
+																		  	</div>
+																	 		
+																	 	</li>
+																	</div>
+												      		</div>
+											      		</div>
+											      		
+											      	</div>
+											      	{# end Objetivos #}
+
+										      	</div>
+										    </div>
+									  	</div>
+						      		</div>
+						      		{# end unidad #}
+
+
+						      	</div>
+						    </div>
+					  	</div>
+		      		</div>
+		      		{# end asignaturas #}
+
+		    	</div>
+	  		</div>
+		</div>
+		{# end curso #}
+	<div class="modal-footer">
+		<button type="submit" class="btn btn-mint"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+	</div>
+</form>
+
+{% endblock %}

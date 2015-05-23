@@ -1,0 +1,152 @@
+{% block docencia_docente %}
+	{% if dataD %}
+	<form id="formNew" action="{{ path('docente_perfil_edit',{'id':dataD.id}) }}" method="POST">
+	{% else %}
+	<form id="formNew" action="{{ path('docente_create') }}" method="POST">
+	{% endif %}
+
+	<div class="row">
+		<div class="col-md-3">
+			<h4 class="text-center">
+				{% if not image %}
+	        		<img src="{{asset('bundles/pagedemo/images/profile.png')}}" class="img-thumbnail" class="img-thumbnail"  width="148px" height="148px">
+	        	{% else %}
+	        		<img src="{{asset('users/' ~ app.user.parent ~ '/images/' ~ dataD.id )}}" class="img-thumbnail"  style="max-width:180px;max-height:180px">
+        		{% endif %}
+	    	</h4>
+		</div>
+		<div class="col-md-9">
+
+			<div class="form-group">
+				<label class="text-muted">RUT</label>
+				<input type="text" class="form-control" id="rut" name="rut" value="{% if dataD %}{{dataD.rut}}{% endif %}" required autofocus>
+			</div>
+	
+
+			<div class="row">
+				<div class="col-md-4">
+					<div class="form-group">
+						<label class="text-muted">Nombre</label>
+				    	<input type="text" class="form-control" name="name" value="{% if dataD %}{{dataD.name}}{% endif %}" required autofocus>
+				  	</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<label class="text-muted">Apellido Paterno</label>
+				    	<input type="text" class="form-control" name="plastname" value="{% if dataD %}{{dataD.plastname}}{% endif %}" required autofocus>
+				  	</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<label class="text-muted">Apellido Materno</label>
+				    	<input type="text" class="form-control" name="mlastname" value="{% if dataD %}{{dataD.mlastname}}{% endif %}" required autofocus>
+				  	</div>
+				</div>
+			</div>
+			<hr>
+		</div>
+
+	</div>
+	   
+	<br>
+
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group">
+				<label class="text-muted">Fecha Nacimiento</label>
+				{% if dataD %}
+					{% set fecha = dataD.fechanacimiento|date('d') ~'/'~dataD.fechanacimiento|date('m') ~'/'~dataD.fechanacimiento|date('Y')%}
+			    	<input type="text" class="form-control" id="date-nacimiento" name="fnacimiento" value="{{fecha}}">
+	    	 	{% else %}
+	    	 		<input type="text" class="form-control" id="date-nacimiento" name="fnacimiento">
+	    	 	{% endif %}
+		  	</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group">
+				<label class="text-muted">Género</label>
+		    	{% set items = listaS|split(',') %}
+		          <select class="form-control" name="sexo">
+		            <option value="">-- Género --</option>
+		            {% for item in items %}
+		              {% if dataD and item == dataD.sexo %}
+		                <option value="{{item}}" selected>{{item}}</option>
+		              {% else %}
+		                <option value="{{item}}">{{item}}</option>
+		              {% endif %}
+		            {% endfor %}
+		          </select>
+		  	</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="text-muted">Dirección</label>
+    	<input type="text" class="form-control" name="address" value="{% if dataD %}{{dataD.address}}{% endif %}">
+  	</div>
+
+	<div class="row">
+		<div class="col-md-4">
+			<div class="form-group">
+				<label class="text-muted">Región</label>
+		    	{% set items = listaR|split(',') %}
+	          	<select class="form-control" id="region" name="region">
+		            <option value="">-- Región --</option>
+		            {% for item in items %}
+		              {% if dataD and item == dataD.region %}
+		                <option value="{{item}}" selected>{{item}}</option>
+		              {% else %}
+		                <option value="{{item}}">{{item}}</option>
+		              {% endif %}
+		            {% endfor %}
+	          	</select>
+		  	</div>
+		</div>
+		<div class="col-md-4">
+			<div class="form-group">
+				<label class="text-muted">Comuna</label>
+				<input type="hidden" id="comuna_load" value="{% if dataD %}{{dataD.comuna}}{% endif %}">
+	          	<select class="form-control" id="comuna" name="comuna">
+		            <option value="">-- Comuna --</option>
+	          	</select>
+		  	</div>
+		</div>
+		<div class="col-md-4">
+			<div class="form-group">
+				<label class="text-muted">Pais</label>
+		    	{% set items = listaP|split(',') %}
+	          	<select class="form-control" name="pais">
+		            <option value="">-- Pais --</option>
+		            {% for item in items %}
+		              {% if dataD and item == dataD.pais %}
+		                <option value="{{item}}" selected>{{item}}</option>
+		              {% else %}
+		                <option value="{{item}}">{{item}}</option>
+		              {% endif %}
+		            {% endfor %}
+	          	</select>
+		  	</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group">
+				<label class="text-muted">Teléfono/Celular</label>
+		    	<input type="text" class="form-control" name="telefono" value="{% if dataD %}{{dataD.telefono}}{% endif %}">
+		  	</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group">
+				<label class="text-muted">Email</label>
+		    	<input type="email" class="form-control" name="email" value="{% if dataD %}{{dataD.email}}{% endif %}">
+		  	</div>
+		</div>
+	</div>
+
+	<div class="modal-footer">
+		<button class="btn btn-mint" type="submit"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+	</div>
+</form>
+
+{% endblock %}

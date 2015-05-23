@@ -1,0 +1,94 @@
+{% block docencia_academico %}
+
+	<form action="{{ path('docente_academico_edit',{'id':dataD.id}) }}" method="POST">
+
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group">
+				<label class="text-muted">Grupo</label>
+		    	{% set items = listaG|split(',') %}
+	          	<select class="form-control" name="grupo">
+		            <option value="">-- Grupo --</option>
+		            {% for item in items %}
+		              {% if dataD and item == dataD.grupo %}
+		                <option value="{{item}}" selected>{{item}}</option>
+		              {% else %}
+		                <option value="{{item}}">{{item}}</option>
+		              {% endif %}
+		            {% endfor %}
+	          	</select>
+		  	</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group">
+				<label class="text-muted">Función</label>
+		    	{% set items = listaF|split(',') %}
+	          	<select class="form-control" name="funcion">
+		            <option value="">-- Función --</option>
+		            {% for item in items %}
+		              {% if dataD and item == dataD.funcion %}
+		                <option value="{{item}}" selected>{{item}}</option>
+		              {% else %}
+		                <option value="{{item}}">{{item}}</option>
+		              {% endif %}
+		            {% endfor %}
+	          	</select>
+		  	</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group">
+				<label class="text-muted">Nivel</label>
+		    	{% set items = listaN|split(',') %}
+	          	<select class="form-control" name="nivel">
+		            <option value="">-- Nivel --</option>
+		            {% for item in items %}
+		              {% if dataD and item == dataD.nivel %}
+		                <option value="{{item}}" selected>{{item}}</option>
+		              {% else %}
+		                <option value="{{item}}">{{item}}</option>
+		              {% endif %}
+		            {% endfor %}
+	          	</select>
+		  	</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group">
+				<label class="text-muted">Asignatura</label>
+	          	<select class="form-control" name="asignatura" required autofocus>
+		            <option value="">-- Asignatura --</option>
+		            {% for item in dataA %}
+		              {% if dataD and item.id == dataD.asignatura %}
+		                <option value="{{item.id}}" selected>{{item.name}}</option>
+		              {% else %}
+		                <option value="{{item.id}}">{{item.name}}</option>
+		              {% endif %}
+		            {% endfor %}
+	          	</select>
+		  	</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group">
+				<label class="text-muted">Título o Grado</label>
+		    	<input type="text" class="form-control" name="titulo" value="{% if dataD %}{{dataD.titulo}}{% endif %}">
+		  	</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group">
+				<label class="text-muted">Año Ingreso</label required autofocus>
+		    	<input type="number" class="form-control" name="ingreso" value="{% if dataD %}{{dataD.ingreso}}{% else %}2000{% endif %}" required autofocus>
+		  	</div>
+		</div>
+	</div>
+
+	<div class="modal-footer">
+		<button class="btn btn-mint" type="submit" {% if not dataD %}disabled{% endif %}><i class="fa fa-save"></i>&nbsp;Guardar</button>
+	</div>
+</form>
+{% endblock %}
+

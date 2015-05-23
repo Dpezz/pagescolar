@@ -1,0 +1,29 @@
+{% extends 'PAGEDemoBundle:Layout:layout_dashboard.html.twig' %}
+
+{% block title "Cuenta"%}
+
+{% block subtitle %}<i class="fa fa-user"></i>&nbsp;Cuenta{% endblock %}
+
+
+
+{% block menubar %}
+    <li role="presentation" class="active btn-mint"><a href="{{path('_profile_secured_account')}}">Cuenta</a></li>
+    <li role="presentation"><a href="{{path('_profile_secured_password')}}">Contraseña</a></li>
+{% endblock %}
+
+
+{% block datos %}
+    {% embed 'PAGEDemoBundle:Layout:layout_alert.html.twig' %}
+      {% block alert %}
+        {{ parent() }}
+      {% endblock %}
+    {% endembed %}
+
+
+	{% include 'PAGEDemoBundle:Secured:_account.html.twig' %}
+	{% block secured_account %}
+		{{parent()}}
+	{% endblock %}
+{% endblock %}
+
+

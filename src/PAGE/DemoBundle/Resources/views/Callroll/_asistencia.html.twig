@@ -1,0 +1,87 @@
+{% block academico_asistencias %}
+{% if exist %}
+	<form action="{{path('asistencia_edit',{'id':id_curso,'fecha':fecha})}}" method="POST">
+{% else %}
+	<form action="{{path('asistencia_create',{'id':id_curso,'fecha':fecha})}}" method="POST">
+{% endif %}
+
+	{% set ids = '' %}
+	{% for id in dataAS %}
+		{% set ids = ids ~ id.id ~ ',' %}
+	{% endfor %}
+	{% set ids = ids|split(',') %}
+
+	<div class="table-responsive">
+	  	<table class="table table-hover">
+		    <thead>
+		    	<tr>
+		    		<th>#</th>
+		    		<th>Alumno</th>
+		    		<th>Presente</th>
+					<th>Motivo</th>
+		    	</tr>
+		    </thead>
+		    <tbody>
+		    {% for item in dataA %}
+		    	<tr>
+		    		<td><span class="badge">{{loop.index}}</span></td>
+		    		<td>{{item.name}}&nbsp;{{item.plastname}}&nbsp;{{item.mlastname}}</td>
+		    		<td>
+		    			<div class="form-group">
+				      		<div class="checkbox">
+					        	<label>
+					        	{% if exist %}
+					        		{% if dataAS|length > 0 %}
+							        	{% for value in dataAS %}
+								        	{% if item.id in ids %}
+									        	{% if value.id == item.id %}
+									          		<input type="checkbox" name="presente_{{item.id}}" value="1" >
+								          		{% endif %}
+								        	{% else %}
+								        		<input type="checkbox" name="presente_{{item.id}}" value="1" checked>
+								        	{% endif %}
+							        	{% endfor %}
+					        		{% else %}
+					        			<input type="checkbox" name="presente_{{item.id}}" value="1" checked>
+					        		{% endif %}
+					        	{% else %}
+					        		<input type="checkbox" name="presente_{{item.id}}" value="1">
+					        	{% endif %}
+					        	</label>
+					      	</div>
+					  	</div>
+		    		</td>
+		    		<td>
+			    		<div class="form-group">
+			    		{% if exist %}
+				    		{% if dataAS|length > 0 %}
+					    		{% for value in dataAS %}
+						    		{% if item.id in ids %}
+							        	{% if value.id == item.id %}
+									    	<input type="text" class="form-control" name="motivo_{{item.id}}" value="{{value.motivo}}">
+									    {% endif %}
+									{% else %}
+					        			<input type="text" class="form-control" name="motivo_{{item.id}}">
+					        		{% endif %}
+					        	{% endfor %}
+			        		{% else %}
+			        			<input type="text" class="form-control" name="motivo_{{item.id}}">
+			        		{% endif %}
+			        	{% else %}
+					    	<input type="text" class="form-control" name="motivo_{{item.id}}">
+					    {% endif %}
+					  	</div>
+				  	</td>
+	    		</tr>
+    		{% endfor %}
+		    </tbody>
+	  	</table>
+	</div>
+
+
+	<div class="modal-footer">
+		<a href="{{path('asistencias',{'id':id_curso})}}" class="btn btn-default" type="button"><i class="fa fa-long-arrow-left fa-lg"></i>&nbsp;Volver</a>
+		<button type="submit" class="btn btn-mint"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+	</div>
+</form>
+{% endblock %}

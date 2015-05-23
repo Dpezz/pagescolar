@@ -1,0 +1,63 @@
+{% extends 'PAGEDemoBundle:Layout:layout_page.html.twig' %}
+
+{% block title titulo %}
+
+{% block stylesheets %}
+    {{parent()}}
+    <link rel="stylesheet" href="{{ asset('bundles/pagedemo/plugin/signin/signin.css')}}">
+{% endblock %}
+
+{% block content %}
+
+  <div class="form-signin">
+    <div class="page-header">
+      <h1 class="text-center text-mint" style="font-size:50px;font-family:'open-sans-light'">PAGESCOLAR</h1>
+    </div>
+
+    <hr style="border-top-color:#ddd">
+
+    {% if type == 0 %}
+          {% if flag == 1 %}
+            <h4 class="text-center text-muted"><strong><i class="fa fa-check-circle text-mint"></i>&nbsp;Finalizado Registro Exitoso</strong></h4>
+            <p class="text-center text-muted"><strong>Gracias</strong>&nbsp;por registrarte en PAGESCOLAR, en unos momentos te contactaremos para activar tu cuenta.</p>
+          {% else %}
+            <h4 class="text-center text-muted"><strong><i class="fa fa-times-circle text-danger"></i>&nbsp;Cancelado Registro Fallido</strong></h4>
+            <p class="text-center text-muted"><strong>Lo Sentimos</strong>&nbsp;no se pudo registrar en PAGESCOLAR, verifique sus datos, o email ya registrado. Vuelva a intentar.</p>
+          {% endif %}
+    {% elseif type == 2 %}
+          {% if flag == 21 %}
+            <h4 class="text-center text-muted"><strong><i class="fa fa-check-circle text-mint"></i>&nbsp;Finalizado Exitosamente!</strong></h4>
+            <p class="text-center text-muted">Se ha restablecido su contraseña.</p>
+          {% elseif flag == 22 %}
+            <h4 class="text-center text-muted"><strong><i class="fa fa-times-circle text-danger"></i>&nbsp;Cancelado Solicitud Fallida</strong></h4>
+            <p class="text-center text-muted"><strong>Lo Sentimos</strong>&nbsp;no se pudo restablecer contraseña, Email ingresado no coincide, vuelva a intentar.</p>
+          {% elseif flag == 0 %}
+            <h4 class="text-center text-muted"><strong><i class="fa fa-times-circle text-danger"></i>&nbsp;Cancelado Solicitud Fallida</strong></h4>
+            <p class="text-center text-muted"><strong>Lo Sentimos</strong>&nbsp;no se pudo restablecer contraseña, verifique sus datos y vuelva a intentar.</p>
+          {% endif %}
+
+    {% else %}
+          {% if flag == 11 %}
+            <h4 class="text-center text-muted"><strong><i class="fa fa-check-circle text-mint"></i>&nbsp;Finalizado Solicitud Enviada!</strong></h4>
+            <p class="text-center text-muted">Se ha enviado el código de activación a su Correo Electrónico.</p>
+          {% elseif flag == 12 %}
+            <h4 class="text-center text-muted"><strong><i class="fa fa-times-circle text-danger"></i>&nbsp;Cancelado Solicitud Fallida</strong></h4>
+            <p class="text-center text-muted"><strong>Lo Sentimos</strong>&nbsp;no se pudo enviar código de solicitud de contraseña, Email ingresado no coincide, vuelva a intentar.</p>
+          {% elseif flag == 0 %}
+            <h4 class="text-center text-muted"><strong><i class="fa fa-times-circle text-danger"></i>&nbsp;Cancelado Solicitud Fallida</strong></h4>
+            <p class="text-center text-muted"><strong>Lo Sentimos</strong>&nbsp;no se pudo enviar código de solicitud de contraseña, verifique sus datos y vuelva a intentar.</p>
+          {% endif %}
+    {% endif %}
+
+    <hr style="border-top-color:#ddd">
+
+    <h5 class="text-center text-muted"><small>Ya tienes cuenta?</small></h5>
+    <h5 class="text-center text-muted"><small><a href="{{path('_demo_signin')}}"><i class="fa fa-long-arrow-left"></i>&nbsp;Volver</a></small></h5>
+
+    <h5 class="text-center text-muted"><small>
+      <abbr title="Aprendamos a Leer Matemáticas" class="initialism">ALM</abbr>&nbsp;-&nbsp;
+      Todos los derechos reservados. La Serena,Chile. {{ "now"|date("Y") }}
+    </small></h5>
+  </div>
+
+{% endblock %}

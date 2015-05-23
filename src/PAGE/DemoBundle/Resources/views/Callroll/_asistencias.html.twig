@@ -1,0 +1,127 @@
+{% block academico_asistencias %}
+	{% set dates = '' %}
+	{% for asistencia in dataAS.asistencia %}
+		{% set dates = dates ~ asistencia.fecha ~ ',' %}
+	{% endfor %}
+	{% set dates = dates|split(',') %}
+
+
+
+	<div class="table-responsive">
+	  	<table class="table table-hover">
+		    <thead>
+		    	<tr>
+		    		<th>#</th>
+		    		<th>Alumno</th>
+		    		{% set fecha = 'now'|date('d/m/y') %}
+		    		<th class="active"><a href="{{path('asistencia',{'id':dataAS.id,'fecha':fecha})}}">{{'now'|date('d/m/y')}}</a></th>
+		    		{% for item in 1..dias %}
+		    			{% set fecha = 'now'|date('m/d/y')|date_modify("-" ~ item ~ " day")|date("d/m/Y") %}
+    					<th><a href="{{path('asistencia',{'id':dataAS.id,'fecha':fecha})}}">{{fecha}}</a></th>
+	    				
+		    		{% endfor %}
+		    	</tr>
+		    </thead>
+		    <tbody>
+		    {% for item in dataA %}
+		    	<tr>
+		    		<td><span class="badge">{{loop.index}}</span></td>
+		    		<td>{{item.name}}&nbsp;{{item.plastname}}&nbsp;{{item.mlastname}}</td>
+
+		    		{% set fecha = 'now'|date('d/m/y')|replace({'/':'-'}) %}
+		    		{% if fecha in dates %}
+    					{% for asistencia in dataAS.asistencia %}
+			    			{% if asistencia.fecha == fecha %}
+			    				{% if asistencia.ausentes|length > 0 %}
+			    					{% set ids = '' %}
+				    				{% for ausentes in asistencia.ausentes %}
+				    					{% set ids = ids ~ ausentes.id ~ ',' %}
+				    				{% endfor %}
+			    					{% set ids = ids|split(',') %}
+										
+				    				{% if item.id in ids %}
+					    				<td class="active"><i class="fa fa-remove  text-danger"></i></td>
+					    			{% else %}
+					    				<td class="active"><i class="fa fa-check text-mint"></i></td>
+					    			{% endif %}
+			    				{% else %}
+			    					<td class="active"><i class="fa fa-check text-mint"></i></td>
+			    				{% endif %}
+			    			{% endif %}
+		    			{% endfor %}
+		    		{% else %}
+		    				<td class="active"><i class="fa fa-minus text-muted"></i></td>
+		    		{% endif %}
+
+
+		    		{% for value in 1..dias %}
+		    			{% set fecha = 'now'|date('m/d/y')|date_modify("-" ~ value ~ " day")|date("d/m/Y")|replace({'/':'-'}) %}
+    					
+    					{% if fecha in dates %}
+	    					{% for asistencia in dataAS.asistencia %}
+				    			{% if asistencia.fecha == fecha %}
+				    				{% if asistencia.ausentes|length > 0 %}
+				    					{% set ids = '' %}
+					    				{% for ausentes in asistencia.ausentes %}
+				    						{% set ids = ids ~ ausentes.id ~ ',' %}
+					    				{% endfor %}
+				    					{% set ids = ids|split(',') %}
+												
+					    				{% if item.id in ids %}
+						    				<td><i class="fa fa-remove  text-danger"></i></td>
+						    			{% else %}
+						    				<td><i class="fa fa-check text-mint"></i></td>
+						    			{% endif %}
+				    				{% else %}
+				    					<td><i class="fa fa-check text-mint"></i></td>
+				    				{% endif %}
+				    			{% endif %}
+			    			{% endfor %}
+		    			{% else %}
+		    				<td><i class="fa fa-minus text-muted"></i></td>
+		    			{% endif %}
+
+	    			{% endfor %}
+	    		</tr>
+    		{% endfor %}
+		    </tbody>
+	  	</table>
+	</div>
+
+	<div class="modal-footer">
+		<a href="" class="btn btn-default" data-toggle="modal" data-target="#filter"><i class="fa fa-filter"></i>&nbsp;Filtro</a>
+	</div>
+
+	<!-- Modal Filtro-->
+	{#<div class="modal fade" id="filter" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		  	<div class="modal-dialog modal-sm">
+		    	<div class="modal-content">
+			      	<div class="modal-header">
+			        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        	<h4 class="modal-title" id="myModalLabel">Filtrar Asistencias</h4>
+			      	</div>
+			      	<div class="modal-body">
+				      	<form action="{{path('academico_asistencias')}}" method="POST">
+							
+							<div class="form-group">
+								<label class="text-muted">Curso</label>
+				        		<select class="form-control" name="curso">
+				        			<option value="">-- Curso --</option>
+				        			{% for item in dataC %}
+					                	<option value="{{item.id}}">{{item.name}} {{item.indice}}</option>
+				        			{% endfor %}
+				        		</select>
+					      	</div>
+	
+						
+				      		<div class="modal-footer">
+				        		<a type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-remove"></i>&nbsp;Cerrar</a>
+				        		<button type="submit" class="btn btn-mint"><i class="fa fa-filter"></i>&nbsp;Filtrar</button>
+				      		</div>
+			      		</form>
+		    		</div>
+		  		</div>
+			</div>
+		</div>#}
+
+{% endblock %}

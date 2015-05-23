@@ -1,0 +1,41 @@
+{% extends 'PAGEDemoBundle:Layout:layout_dashboard.html.twig' %}
+
+{% block title "Evaluaciones"%}
+
+{% block active_menu_academico %}class="in"{% endblock %}
+
+{% block subtitle %}
+	 <i class="fa fa-file-text"></i>&nbsp;Evaluaciones
+   {% if dataN.curso %}&nbsp;<i class="fa fa-angle-left"></i>&nbsp;<span class="text-mint">{{dataN.curso}}</span>{% endif %}
+   {% if dataN.asignatura %}&nbsp;<i class="fa fa-angle-left"></i>&nbsp;{{dataN.asignatura}}{% endif %}
+   {% if dataN.docente %}&nbsp;<i class="fa fa-angle-left"></i>&nbsp;<small class="text-mint">{{dataN.docente}}</small>{% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script src="{{ asset('bundles/pagedemo/js/evaluacionesController.js')}}"></script>
+{% endblock %}
+
+{% block submenu_alumno_evaluaciones_alumno %}
+  <li class="active"><a href="{{path('evaluaciones_alumno',{'id': app.user.id })}}">&emsp;&emsp;<i class="fa fa-book"></i>&nbsp;Evaluaciones</a></li>
+{% endblock %}
+
+{% block submenu_docente_evaluaciones %}
+  <li class="active"><a href="{{ path('evaluaciones_docente',{'id':app.user.id}) }}">&emsp;&emsp;<i class="fa fa-book"></i>&nbsp;Evaluaciones</a></li>
+{% endblock %}
+
+{% block datos %}
+    {% embed 'PAGEDemoBundle:Layout:layout_alert.html.twig' %}
+      {% block alert %}
+        {{ parent() }}
+      {% endblock %}
+    {% endembed %}
+
+    
+  <section ng-app="evaluaciones" ng-controller="evaluacion">
+  	{% include 'PAGEDemoBundle:Test:_evaluaciones.html.twig' %}
+  	{% block academico_evaluaciones %}
+  		{{parent()}}
+  	{% endblock %}
+  </section>
+{% endblock %}

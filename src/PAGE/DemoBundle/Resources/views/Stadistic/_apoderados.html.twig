@@ -1,0 +1,29 @@
+{% block estadisticas_apoderados %}
+	<div class="row">
+		<div class="col-md-12" ng-controller="bar_apoderados">
+			<h5 class="page-header"><small class="badge">Cursos</small></h5>
+			<canvas id="bar" class="chart chart-bar" data="data" labels="labels" height="80px"></canvas>
+		</div>
+		
+	</div>
+	<div class="row" ng-controller="donuts_apoderados">
+		<div class="col-md-4">
+			<h5 class="page-header"><small class="badge">Parentesco</small></h5>
+			<canvas id="doughnut" class="chart chart-doughnut" data="pardata" labels="parlabels"></canvas> 
+		</div>
+		<div class="col-md-4">
+			<h5 class="page-header"><small class="badge">Convivencia</small></h5>
+			<canvas id="doughnut" class="chart chart-doughnut" data="condata" labels="conlabels"></canvas> 
+		</div>
+		<div class="col-md-4">
+			<h5 class="page-header"><small class="badge">Escolaridad</small></h5>
+			<canvas id="doughnut" class="chart chart-doughnut" data="escdata" labels="esclabels"></canvas> 
+		</div>
+	</div>
+	<br>
+	{#
+	<div class="modal-footer">
+		<a href="{{path('_print_docentes')}}" type="button" class="btn btn-mint"><i class="fa fa-download fa-lg"></i>&nbsp;Descargar</a>
+	</div>
+	#}
+{% endblock %}

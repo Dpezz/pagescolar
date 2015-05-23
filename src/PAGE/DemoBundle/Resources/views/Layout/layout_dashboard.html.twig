@@ -1,0 +1,360 @@
+{% extends 'PAGEDemoBundle:Layout:layout_page.html.twig' %}
+
+{% block title 'Inicio'%}
+
+{% block stylesheets %}
+    {{parent()}}
+    <link rel="stylesheet" href="{{ asset('bundles/pagedemo/plugin/dashboard/css/jasny-bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{ asset('bundles/pagedemo/plugin/dashboard/css/navmenu.css')}}">
+    <link rel="stylesheet" href="{{ asset('bundles/pagedemo/plugin/datepicker/css/bootstrap-datetimepicker.min.css')}}">
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script src="{{ asset('bundles/pagedemo/plugin/dashboard/js/jasny-bootstrap.min.js')}}"></script>
+    <script src="{{ asset('bundles/pagedemo/plugin/datepicker/js/moment.js')}}"></script>
+    <script src="{{ asset('bundles/pagedemo/plugin/datepicker/js/bootstrap-datetimepicker.min.js')}}"></script>
+    <script src="{{ asset('bundles/pagedemo/js/datepicker.js')}}"></script>
+{% endblock %}
+
+{% block content %}
+
+  <div class="navmenu navmenu-default navmenu-fixed-left offcanvas-sm">
+
+    <a class="navmenu-brand visible-xs visible-sm visible-md visible-lg" href="{{path('_demo_profile')}}">
+    <strong class="text-center text-mint">PAGESCOLAR</strong>
+    </a>
+
+    {# ROLE ADMIN #}
+    {% if app.user.role == 'ROLE_ADMIN' %}
+          <ul class="nav navmenu-nav">
+              <li>
+                <a id="collapseListGroupHeading1" data-toggle="collapse" href="#collapseListGroup1" aria-expanded="true" aria-controls="collapseListGroup1">Institución&nbsp;<i class="fa fa-caret-down"></i>
+                </a>
+                <div id="collapseListGroup1" {% block active_menu_institucion %} class="collapse" {% endblock %} role="tabpanel" aria-labelledby="collapseListGroupHeading1" aria-expanded="true">
+                  <ul class="nav navmenu-nav">
+                      {% block submenu_admin_institucion_perfil %}
+                      <li><a href="{{path('institucion_perfil')}}">&emsp;&emsp;<i class="fa fa-university"></i>&nbsp;perfil</a></li>
+                      {% endblock %}
+
+                      {% block submenu_admin_institucion_cuentas %}
+                      <li><a href="{{path('institucion_cuentas')}}">&emsp;&emsp;<i class="fa fa-credit-card"></i>&nbsp;Cuentas</a></li>
+                      {% endblock %}
+                  </ul>
+                </div>
+              </li>
+          </ul>
+
+          <ul class="nav navmenu-nav">
+                <li>
+                    <a id="collapseListGroupHeading4" data-toggle="collapse" href="#collapseListGroup4" aria-expanded="true" aria-controls="collapseListGroup4">Académico&nbsp;<i class="fa fa-caret-down"></i>
+                    </a>
+
+                    <div id="collapseListGroup4" {% block active_menu_academico %} class="collapse" {% endblock %} role="tabpanel" aria-labelledby="collapseListGroupHeading4" aria-expanded="true">
+                      <ul class="nav navmenu-nav">
+
+                        {% block submenu_admin_cursos %}
+                        <li><a href="{{ path('cursos') }}">&emsp;&emsp;<i class="fa fa-graduation-cap"></i>&nbsp;Cursos</a></li>
+                        {% endblock %}
+
+                        {% block submenu_admin_asignaturas %}
+                        <li><a href="{{ path('asignaturas') }}">&emsp;&emsp;<i class="fa fa-book"></i>&nbsp;Asignaturas</a></li>
+                        {% endblock %}
+
+                        {% block submenu_academico_evaluaciones %}
+                        {#<li><a href="{{ path('academico_evaluaciones') }}">&emsp;&emsp;<i class="fa fa-file-text-o"></i>&nbsp;Evaluaciones</a></li>#}
+                        {% endblock %}
+
+                        {% block submenu_academico_calendario %}
+                        {#<li><a href="{{path('calendario_evaluaciones')}}">&emsp;&emsp;<i class="fa fa-calendar"></i>&nbsp;Calendario</a></li>#}
+                        {% endblock %}
+
+                        {% block submenu_academico_notas %}
+                        {#<li><a href="{{path('academico_notas')}}">&emsp;&emsp;<i class="fa fa-file-text-o"></i>&nbsp;Notas</a></li>#}
+                        {% endblock %}
+
+
+                        {% block submenu_academico_asistencias %}
+                        {#<li><a href="{{path('academico_asistencias')}}">&emsp;&emsp;<i class="fa fa-check-circle"></i>&nbsp;Asistencias</a></li>#}
+                        {% endblock %}
+
+                      </ul>
+                    </div>
+                </li>
+          </ul>
+
+          <ul class="nav navmenu-nav">
+              <li>
+                  <a id="collapseListGroupHeading2" data-toggle="collapse" href="#collapseListGroup2" aria-expanded="true" aria-controls="collapseListGroup2">Docencia&nbsp;<i class="fa fa-caret-down"></i>
+                  </a>
+                  <div id="collapseListGroup2" {% block active_menu_docencia %} class="collapse" {% endblock %} role="tabpanel" aria-labelledby="collapseListGroupHeading2" aria-expanded="true">
+                    <ul class="nav navmenu-nav">
+
+                      {% block submenu_admin_docentes_nuevo %}
+                      <li><a href="{{ path('docente_new') }}">&emsp;&emsp;<i class="fa fa-user-plus"></i>&nbsp;Nuevo Docente</a></li>
+                      {% endblock %}
+
+                      {% block submenu_admin_docentes %}
+                      <li><a href="{{ path('docentes') }}">&emsp;&emsp;<i class="fa fa-graduation-cap"></i>&nbsp;Docentes</a></li>
+                      {% endblock %}
+
+                    </ul>
+                  </div>
+              </li>
+          </ul>
+
+          <ul class="nav navmenu-nav">
+              <li>
+                  <a id="collapseListGroupHeading3" data-toggle="collapse" href="#collapseListGroup3" aria-expanded="true" aria-controls="collapseListGroup3">Alumnado&nbsp;<i class="fa fa-caret-down"></i>
+                  </a>
+
+                  <div id="collapseListGroup3" {% block active_menu_alumnos %} class="collapse" {% endblock %} role="tabpanel" aria-labelledby="collapseListGroupHeading3" aria-expanded="false">
+                    <ul class="nav navmenu-nav">
+
+                      {% block submenu_admin_alumnos_nuevo %}
+                      <li><a href="{{path('alumno_new')}}">&emsp;&emsp;<i class="fa fa-user-plus"></i>&nbsp;Nuevo Alumno</a></li>
+                      {% endblock %}
+
+                      {% block submenu_admin_alumnos %}
+                      <li><a href="{{path('alumnos')}}">&emsp;&emsp;<i class="fa fa-users"></i>&nbsp;Alumnos</a></li>
+                      {% endblock %}
+                    </ul>
+                  </div>
+              </li>
+          </ul>
+
+          <ul class="nav navmenu-nav">
+              <li>
+                  <a id="collapseListGroupHeading5" data-toggle="collapse" href="#collapseListGroup5" aria-expanded="true" aria-controls="collapseListGroup5">Estadisticas&nbsp;<i class="fa fa-caret-down"></i>
+                  </a>
+
+                  <div id="collapseListGroup5" {% block active_menu_estadisticas %} class="collapse" {% endblock %} role="tabpanel" aria-labelledby="collapseListGroupHeading5" aria-expanded="true">
+                    <ul class="nav navmenu-nav">
+                        {% block submenu_admin_estadisticas_docentes %}
+                        <li><a href="{{path('estadisticas_docentes')}}">&emsp;&emsp;<i class="fa fa-area-chart"></i>&nbsp;Docentes</a></li>
+                        {% endblock %}
+
+                        {% block submenu_admin_estadisticas_alumnos %}
+                        <li><a href="{{path('estadisticas_alumnos')}}">&emsp;&emsp;<i class="fa fa-bar-chart"></i>&nbsp;Alumnos</a></li>
+                        {% endblock %}
+
+                        {% block submenu_admin_estadisticas_apoderados %}
+                        <li><a href="{{path('estadisticas_apoderados')}}">&emsp;&emsp;<i class="fa fa-line-chart"></i>&nbsp;Apoderados</a></li>
+                        {% endblock %}
+
+                        {% block submenu_admin_estadisticas_evaluaciones %}
+                        <li><a href="{{path('estadisticas_evaluaciones')}}">&emsp;&emsp;<i class="fa fa-pie-chart"></i>&nbsp;Evaluaciones</a></li>
+                        {% endblock %}
+                    </ul>
+                  </div>
+              </li>
+          </ul>
+
+          <ul class="nav navmenu-nav">
+                <li>
+                    <a id="collapseListGroupHeading6" data-toggle="collapse" href="#collapseListGroup6" aria-expanded="true" aria-controls="collapseListGroup6">Documentos&nbsp;<i class="fa fa-caret-down"></i>
+                    </a>
+                  
+                    <div id="collapseListGroup6" {% block active_menu_documentos %} class="collapse" {% endblock %} role="tabpanel" aria-labelledby="collapseListGroupHeading6" aria-expanded="false">
+                      <ul class="nav navmenu-nav">
+
+                      {% block submenu_admin_documentos_institucion %}
+                      <li><a href="{{path('documentos_institucion')}}">&emsp;&emsp;<i class="fa fa-file-o"></i>&nbsp;Institución</a></li>
+                      {% endblock %}
+
+                      {% block submenu_admin_documentos_pie %}
+                        <li><a href="{{path('documentos_pie')}}">&emsp;&emsp;<i class="fa fa-file-o"></i>&nbsp;PIE</a></li>
+                        {% endblock %}
+                      </ul>
+                    </div>
+                </li>
+          </ul>
+
+    {# ROLE DOCENTE #}
+    {% elseif app.user.role == 'ROLE_DOCENTE' %}
+            <ul class="nav navmenu-nav">
+              <li>
+                <a id="collapseListGroupHeading1" data-toggle="collapse" href="#collapseListGroup1" aria-expanded="true" aria-controls="collapseListGroup1">Docencia&nbsp;<i class="fa fa-caret-down"></i>
+                </a>
+
+                <div id="collapseListGroup1" class="in" role="tabpanel" aria-labelledby="collapseListGroupHeading1" aria-expanded="true">
+                  <ul class="nav navmenu-nav">
+                    {% block submenu_docente_perfil %}
+                    <li class="text-muted"><a href="{{path('docente_perfil_show',{'id': app.user.id }) }}">&emsp;&emsp;<i class="fa fa-graduation-cap"></i>&nbsp;Docente</a></li>
+                    {% endblock %}
+
+                    {% block submenu_docente_calendario_docente %}
+                    <li class="text-muted"><a href="{{path('calendario_docente',{'id': app.user.id })}}">&emsp;&emsp;<i class="fa fa-calendar"></i>&nbsp;Horario</a></li>
+                    {% endblock %}
+
+                    {% block submenu_docente_planificacion %}
+                    <li><a href="{{path('planificar',{'id': app.user.id })}}">&emsp;&emsp;<i class="fa fa-check-square-o"></i>&nbsp;Planificación</a></li>
+                    {% endblock %}
+                    
+                  </ul>
+                </div>
+              </li>
+            </ul>
+
+            <ul class="nav navmenu-nav">
+                <li>
+                  <a id="collapseListGroupHeading2" data-toggle="collapse" href="#collapseListGroup2" aria-expanded="true" aria-controls="collapseListGroup2">Académico&nbsp;<i class="fa fa-caret-down"></i>
+                  </a>
+
+                  <div id="collapseListGroup2" class="in" role="tabpanel" aria-labelledby="collapseListGroupHeading2" aria-expanded="true">
+                    <ul class="nav navmenu-nav">
+                      {% block submenu_docente_evaluaciones %}
+                      <li class="text-muted"><a href="{{ path('evaluaciones_docente',{'id':app.user.id}) }}">&emsp;&emsp;<i class="fa fa-book"></i>&nbsp;Evaluaciones</a></li>
+                      {% endblock %}
+
+                      {% block submenu_docente_calendario_evaluaciones %}
+                      <li class="text-muted"><a href="">&emsp;&emsp;<i class="fa fa-calendar"></i>&nbsp;Calendario</a></li>
+                      {% endblock %}
+                    </ul>
+                  </div>
+                </li>
+            </ul>
+
+            <ul class="nav navmenu-nav">
+              <li>
+                  <a id="collapseListGroupHeading3" data-toggle="collapse" href="#collapseListGroup3" aria-expanded="true" aria-controls="collapseListGroup3">Estadisticas&nbsp;<i class="fa fa-caret-down"></i>
+                  </a>
+
+                  <div id="collapseListGroup3" class="collapse" role="tabpanel" aria-labelledby="collapseListGroupHeading3" aria-expanded="true">
+                    <ul class="nav navmenu-nav">
+                        {% block submenu_docencia_estadisticas_docentes %}
+                        <li><a href="{{path('estadisticas_docentes')}}">&emsp;&emsp;<i class="fa fa-area-chart"></i>&nbsp;Docentes</a></li>
+                        {% endblock %}
+
+                        {% block submenu_docencia_estadisticas_alumnos %}
+                        <li><a href="{{path('estadisticas_alumnos')}}">&emsp;&emsp;<i class="fa fa-bar-chart"></i>&nbsp;Alumnos</a></li>
+                        {% endblock %}
+
+                        {% block submenu_docencia_estadisticas_apoderados %}
+                        <li><a href="{{path('estadisticas_apoderados')}}">&emsp;&emsp;<i class="fa fa-line-chart"></i>&nbsp;Apoderados</a></li>
+                        {% endblock %}
+
+                        {% block submenu_docencia_estadisticas_evaluaciones %}
+                        <li><a href="{{path('estadisticas_evaluaciones')}}">&emsp;&emsp;<i class="fa fa-pie-chart"></i>&nbsp;Evaluaciones</a></li>
+                        {% endblock %}
+                    </ul>
+                  </div>
+              </li>
+            </ul>
+
+            <ul class="nav navmenu-nav">
+                <li>
+                    <a id="collapseListGroupHeading6" data-toggle="collapse" href="#collapseListGroup6" aria-expanded="false" aria-controls="collapseListGroup6">Documentos&nbsp;<i class="fa fa-caret-down"></i>
+                    </a>
+                  
+                    <div id="collapseListGroup6" {% block active_menu_docente_documentos %} class="collapse" {% endblock %} role="tabpanel" aria-labelledby="collapseListGroupHeading6" aria-expanded="false">
+                      <ul class="nav navmenu-nav">
+
+                      {% block submenu_docente_documentos_institucion %}
+                      <li><a href="{{path('documentos_institucion')}}">&emsp;&emsp;<i class="fa fa-file-o"></i>&nbsp;Institución</a></li>
+                      {% endblock %}
+
+                      {% block submenu_docente_documentos_pie %}
+                        <li><a href="{{path('documentos_pie')}}">&emsp;&emsp;<i class="fa fa-file-o"></i>&nbsp;PIE</a></li>
+                        {% endblock %}
+                      </ul>
+                    </div>
+                </li>
+            </ul>
+    
+    {# ROLE ALUMNO #}
+    {% elseif app.user.role == 'ROLE_ALUMNO' %}
+            <ul class="nav navmenu-nav">
+              <li>
+                <a id="collapseListGroupHeading1" data-toggle="collapse" href="#collapseListGroup1" aria-expanded="true" aria-controls="collapseListGroup1">Alumno&nbsp;<i class="fa fa-caret-down"></i>
+                </a>
+                <div id="collapseListGroup1" class="in" role="tabpanel" aria-labelledby="collapseListGroupHeading1" aria-expanded="true">
+                  <ul class="nav navmenu-nav">
+                    {% block submenu_alumno_perfil %}
+                    <li class="text-muted"><a href="{{path('alumno_perfil_show',{'id': app.user.id})}}">&emsp;&emsp;<i class="fa fa-user"></i>&nbsp;Alumno</a></li>
+                    {% endblock %}
+
+                    {% block submenu_alumno_calendario_alumno %}
+                    <li class="text-muted"><a href="{{path('calendario_alumno',{'id': app.user.id })}}">&emsp;&emsp;<i class="fa fa-calendar-o"></i>&nbsp;Horario</a></li>
+                    {% endblock %}
+                  </ul>
+                </div>
+                </li>
+            </ul>
+
+            <ul class="nav navmenu-nav">
+              <li>
+                <a id="collapseListGroupHeading2" data-toggle="collapse" href="#collapseListGroup2" aria-expanded="true" aria-controls="collapseListGroup2">Académico&nbsp;<i class="fa fa-caret-down"></i>
+                </a>
+                <div id="collapseListGroup2" class="in" role="tabpanel" aria-labelledby="collapseListGroupHeading2" aria-expanded="true">
+                  <ul class="nav navmenu-nav">
+                    {% block submenu_alumno_evaluaciones_alumno %}
+                    <li class="text-muted"><a href="{{path('evaluaciones_alumno',{'id': app.user.id })}}">&emsp;&emsp;<i class="fa fa-book"></i>&nbsp;Evaluaciones</a></li>
+                    {% endblock %}
+
+                    {% block submenu_alumno_calendario_evaluaciones %}
+                    <li class="text-muted"><a href="">&emsp;&emsp;<i class="fa fa-calendar"></i>&nbsp;Calendario</a></li>
+                    {% endblock %}
+
+                    {% block submenu_alumno_notas %}
+                    <li class="text-muted"><a href="{{ path('notas_alumno',{'id':app.user.id}) }}">&emsp;&emsp;<i class="fa fa-check-circle"></i>&nbsp;Notas</a></li>
+                    {% endblock %}
+
+                    {% block submenu_alumno_asistencia %}
+                    <li class="text-muted"><a href="{{ path('asistencias_alumno',{'id':app.user.id}) }}">&emsp;&emsp;<i class="fa fa-clock-o"></i>&nbsp;Asistencia</a></li>
+                    {% endblock %}
+
+                  </ul>
+                </div>
+              </li>
+            </ul>    
+    
+    {# ROLE SUPER ADMIN #}
+    {% elseif app.user.role == 'ROLE_SUPER_ADMIN' %}
+            <ul class="nav navmenu-nav">
+              <li>
+                <a id="collapseListGroupHeading1" data-toggle="collapse" href="#collapseListGroup1" aria-expanded="true" aria-controls="collapseListGroup1">Admin&nbsp;<i class="fa fa-caret-down"></i>
+                </a>
+                <div id="collapseListGroup1" class="in" role="tabpanel" aria-labelledby="collapseListGroupHeading1" aria-expanded="true">
+                  <ul class="nav navmenu-nav">
+                      {% block submenu_admin_superadmin %}
+                      <li class="text-muted"><a href="{{path('admin_index')}}">&emsp;&emsp;<i class="fa fa-credit-card"></i>&nbsp;Cuentas</a></li>
+                      {% endblock %}
+                  </ul>
+                </div>
+              </li>
+            </ul>    
+    {% endif %}
+  </div>
+
+
+  {% block navbar %}
+    {% embed 'PAGEDemoBundle:Layout:layout_navbar.html.twig' %}
+      {% block navbar_default %}
+        {{ parent() }}
+      {% endblock %}
+    {% endembed %}
+  {% endblock %}
+
+  <div class="container" style="padding-top:10px;">
+    <div class="row">
+        <div class="col-md-4">
+          <h4 class="text-muted">
+            <a type="button" data-toggle="offcanvas"><i class="fa fa-angle-left"></i></a>
+            {% block subtitle %}{% endblock %}
+          </h4>
+        </div>
+
+        <div class="col-md-8">
+            <ul class="nav nav-pills pull-right">
+              {% block menubar %}{% endblock %}
+            </ul> 
+        </div>
+    </div>
+    
+    <hr>
+
+    {% block datos %}{% endblock %}
+  </div>
+
+{% endblock %}

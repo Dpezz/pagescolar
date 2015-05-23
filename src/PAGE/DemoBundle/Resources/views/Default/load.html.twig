@@ -1,0 +1,20 @@
+{% extends "::base.html.twig" %}
+
+{% block title 'Inicio Sesión'%}
+
+
+{% block body %}
+
+<div class="container">
+
+
+  {% for item in text %}
+    {% for value in item %}
+      {{value}}<br>
+    {% endfor %}
+    <hr>
+  {% endfor %}
+  
+</div>
+
+{% endblock %}

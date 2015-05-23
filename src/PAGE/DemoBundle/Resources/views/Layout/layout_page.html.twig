@@ -1,0 +1,25 @@
+{% extends "::base.html.twig" %}
+
+{% block title "Inicio" %}
+
+
+{% block stylesheets %}
+   	{{parent()}}
+   	<link rel="stylesheet" href="{{ asset('bundles/pagedemo/plugin/validator/css/formValidation.css')}}">
+{% endblock %}
+
+
+{% block javascripts %}
+	{{parent()}}
+	<script src="{{ asset('bundles/pagedemo/plugin/validator/js/formValidation.js')}}"></script>
+    <script src="{{ asset('bundles/pagedemo/plugin/validator/js/framework/bootstrap.min.js')}}"></script>
+    <script src="{{ asset('bundles/pagedemo/plugin/jquery-rut/jquery.rut.min.js')}}"></script>
+{% endblock %}
+
+
+{% block body %}
+	{% block content %}{% endblock %}
+{% endblock %}
+
+
+            

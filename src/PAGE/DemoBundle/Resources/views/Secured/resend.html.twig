@@ -1,0 +1,29 @@
+  {% extends 'PAGEDemoBundle:Layout:layout_dashboard.html.twig' %}
+
+  {% block title "Solicitar"%}
+
+  {% block subtitle %}<i class="fa fa-key"></i>&nbsp;Solicitar Contraseña{% endblock %}
+
+
+  {% block datos %}
+
+    {% embed 'PAGEDemoBundle:Layout:layout_alert.html.twig' %}
+      {% block alert %}
+        {{ parent() }}
+      {% endblock %}
+    {% endembed %}
+
+  <form action="{{ path('_profile_secured_resend_post')}}" method="POST">  
+    <div class="form-group">
+      <label class="text-mint">Correo Electrónico</label>
+      <input type="email" class="form-control" name="email" required autofocus>
+      <small class="text-success"><strong><em>Ingrese el correo electrónico con el cual inicia su cuenta.</em></strong></small>
+    </div>
+
+    <div class="modal-footer">
+      <a href="{{path('_profile_secured_password')}}" class="btn btn-default" type="button"><i class="fa fa-long-arrow-left"></i>&nbsp;volver</a>
+      <button class="btn btn-mint" type="submit"><i class="fa fa-envelope"></i>&nbsp;Solicitar</button>
+    </div>
+  </form>
+
+  {% endblock %}

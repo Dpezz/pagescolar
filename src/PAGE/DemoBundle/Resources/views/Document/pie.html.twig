@@ -1,0 +1,24 @@
+{% extends 'PAGEDemoBundle:Layout:layout_dashboard.html.twig' %}
+
+{% block title "Profile"%}
+
+{% block active_menu_documentos %}class="in"{% endblock %}
+
+{% block subtitle %}
+	 <i class="fa fa-file"></i>&nbsp;Documentos PIE
+{% endblock %}
+
+{% block submenu_admin_documentos_pie %}
+    <li class="active"><a href="{{path('documentos_pie')}}">&emsp;&emsp;<i class="fa fa-file"></i>&nbsp;PIE</a></li>
+{% endblock %}
+
+
+{% block datos %}
+    
+<section>
+	{% include 'PAGEDemoBundle:Document:_pie.html.twig' %}
+	{% block institucion_pie %}
+		{{parent()}}
+	{% endblock %}
+</section>
+{% endblock %}

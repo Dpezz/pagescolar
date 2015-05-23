@@ -1,0 +1,34 @@
+{% extends 'PAGEDemoBundle:Layout:layout_dashboard.html.twig' %}
+
+{% block title "Notas"%}
+
+{% block active_menu_academico %}class="in"{% endblock %}
+
+{% block subtitle %}
+     <i class="fa fa-file-text"></i>&nbsp;Notas
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+{% endblock %}
+
+{% block submenu_academico_notas %}
+    {#<li class="active"><a href="{{path('academico_notas')}}">&emsp;&emsp;<i class="fa fa-file-text"></i>&nbsp;Notas</a></li>#}
+{% endblock %}
+
+{% block submenu_docente_academico_notas %}
+    {#<li class="active"><a href="{{path('academico_notas')}}">&emsp;&emsp;<i class="fa fa-file-text"></i>&nbsp;Notas</a></li>#}
+{% endblock %}
+
+{% block submenu_alumnos_academico_notas %}
+   {# <li class="active"><a href="{{path('academico_notas')}}">&emsp;&emsp;<i class="fa fa-file-text"></i>&nbsp;Notas</a></li>#}
+{% endblock %}
+
+{% block datos %}
+  <section>
+    {% include 'PAGEDemoBundle:Grade:_notas.html.twig' %}
+    {% block academico_notas %}
+        {{parent()}}
+    {% endblock %}
+  </section>
+{% endblock %}

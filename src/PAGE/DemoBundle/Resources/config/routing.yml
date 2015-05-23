@@ -1,0 +1,94 @@
+#index
+_default:
+    resource: "@PAGEDemoBundle/Controller/DefaultController.php"
+    type:     annotation
+
+#perfiles
+_profile:
+    resource: "@PAGEDemoBundle/Controller/ProfileController.php"
+    type:     annotation
+
+#seguridad
+_secured:
+    resource: "@PAGEDemoBundle/Controller/SecuredController.php"
+    type:     annotation
+
+#return Json
+_get:
+    resource: "@PAGEDemoBundle/Controller/GetController.php"
+    type:     annotation
+
+#load json
+_load:
+    resource: "@PAGEDemoBundle/Controller/LoadController.php"
+    type:     annotation
+
+#usuario admin
+_admin:
+    resource: "@PAGEDemoBundle/Controller/AdminController.php"
+    type:     annotation
+
+#institucion
+_institution:
+    resource: "@PAGEDemoBundle/Controller/InstitutionController.php"
+    type:     annotation
+
+#documentos
+_document:
+    resource: "@PAGEDemoBundle/Controller/DocumentController.php"
+    type:     annotation
+
+#cuentas
+_account:
+    resource: "@PAGEDemoBundle/Controller/AccountController.php"
+    type:     annotation
+
+#cursos
+_level:
+    resource: "@PAGEDemoBundle/Controller/LevelController.php"
+    type:     annotation
+
+#asignaturas
+_class:
+    resource: "@PAGEDemoBundle/Controller/ClassController.php"
+    type:     annotation
+
+#docentes
+_teacher:
+    resource: "@PAGEDemoBundle/Controller/TeacherController.php"
+    type:     annotation
+
+#alumnos
+_student:
+    resource: "@PAGEDemoBundle/Controller/StudentController.php"
+    type:     annotation
+
+#estadisticas
+_stadistic:
+    resource: "@PAGEDemoBundle/Controller/StadisticController.php"
+    type:     annotation
+
+#planificacion
+_planning:
+    resource: "@PAGEDemoBundle/Controller/PlanningController.php"
+    type:     annotation
+
+#calendario
+_calendar:
+    resource: "@PAGEDemoBundle/Controller/CalendarController.php"
+    type:     annotation
+
+#asistencia
+_callroll:
+    resource: "@PAGEDemoBundle/Controller/CallrollController.php"
+    type:     annotation
+
+#evaluaciones
+_test:
+    resource: "@PAGEDemoBundle/Controller/TestController.php"
+    type:     annotation
+
+#notas
+_grade:
+    resource: "@PAGEDemoBundle/Controller/GradeController.php"
+    type:     annotation

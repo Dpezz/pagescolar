@@ -1,0 +1,79 @@
+{% block docencia_docentes %}
+	<form>
+		
+		<div class="table-responsive">
+		  <table class="table table-hover">
+		    <thead>
+		    	<tr>
+		    		<th>#</th>
+		    		<th>Rut</th>
+		    		<th>Nombre</th>
+		    		<th>Asignatura</th>
+		    		<th>Función</th>
+		    		<th>Teléfono/Celular</th>
+		    		<th></th>
+		    	</tr>
+		    </thead>
+		    <tbody>
+		    	{% for item in dataD %}
+		    	<tr>
+		    		<td><span class="badge">{{loop.index}}</span></td>
+		    		<td><span class="text-mint"><strong>{{ item.rut }}</strong></span></td>
+		    		<td>{{item.plastname}}&nbsp;{{item.mlastname}}&nbsp;{{item.name}}</td>
+		    		<td>
+		    		{% for value in dataA %}
+			    		{% if value.id == item.asignatura %}
+			    			{{value.name}}
+			    		{% endif %}
+		    		{% endfor %}
+		    		</td>
+		    		<td>{{item.funcion}}</td>
+		    		<td>{{item.telefono}}</td>
+		    		<td>
+		    			
+			    		<a href="{{path('docente_perfil_show',{'id':item.id})}}" title="editar"><i class="glyphicon glyphicon-edit"></i></a>&emsp;
+
+			    		<a href="{{path('calendario_docente',{'id':item.id})}}" title="horario"><i class="glyphicon glyphicon-calendar text-info"></i></a>&emsp;
+
+			    		<a href="{{path('evaluaciones_docente',{'id':item.id})}}" title="evaluaciones"><i class="glyphicon glyphicon-book text-warning"></i></a>&emsp;
+						
+						<a href="{{path('planificar',{'id':item.id})}}" title="planificar"><i class="glyphicon glyphicon-check text-lila"></i></a>&emsp;
+
+			    		<a href="" title="descargar"><i class="glyphicon glyphicon-download-alt text-muted"></i></a>&emsp;
+
+			    		<a href="#" ng-click="delete('{{item.id}}','{{item.name}}')" data-toggle="modal" data-target="#delete" title="eliminar"><i class="glyphicon glyphicon-trash text-danger"></i></a>
+		    		</td>
+	    		</tr>
+	    		{% endfor %}
+		    </tbody>
+		  </table>
+		</div>
+
+		<div class="modal-footer">
+			<a href="{{ path('docente_new') }}" class="btn btn-mint" type="button"><i class="fa fa-plus"></i>&nbsp;Nuevo</a>
+		</div>
+	</form>
+
+
+	<!-- Modal -->
+	<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  	<div class="modal-dialog">
+	    	<div class="modal-content">
+		      	<div class="modal-header">
+		        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        	<h4 class="modal-title" id="myModalLabel">{[{ title }]}</h4>
+		      	</div>
+		      	<div class="modal-body">
+			      	<form>
+			      		<h5 class="text-center">Seguro que desea eliminar a <strong class="text-mint">{[{ name }]}</strong> de docentes?</h5>
+
+			      		<div class="modal-footer">
+			        		<a type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-remove"></i>&nbsp;Cerrar</a>
+			        		<button ng-click="delete(-1,-1)" class="btn btn-mint"><i class="fa fa-trash"></i>&nbsp;Eliminar</button>
+			      		</div>
+		      		</form>
+	    		</div>
+	  		</div>
+		</div>
+	</div>
+{% endblock %}

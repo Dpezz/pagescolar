@@ -1,0 +1,49 @@
+{% extends 'PAGEDemoBundle:Layout:layout_dashboard.html.twig' %}
+
+{% block title "Evaluaciones"%}
+
+{% block active_menu_academico %}class="in"{% endblock %}
+
+{% block subtitle %}
+   <i class="fa fa-calendar"></i>&nbsp;Calendario Evaluaciones
+{% endblock %}
+
+{% block stylesheets %}
+    {{parent()}}
+    <link rel="stylesheet" href="{{ asset('bundles/pagedemo/plugin/bootstrap-calendar/css/calendar.css')}}">
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script src="{{ asset('bundles/pagedemo/plugin/bootstrap-calendar/components/underscore/underscore-min.js')}}"></script>
+    <script src="{{ asset('bundles/pagedemo/plugin/bootstrap-calendar/components/jstimezonedetect/jstz.min.js')}}"></script>
+    <script src="{{ asset('bundles/pagedemo/plugin/bootstrap-calendar/js/language/es-ES.js')}}"></script>
+    <script src="{{ asset('bundles/pagedemo/plugin/bootstrap-calendar/js/calendar.js')}}"></script>
+    <script src="{{ asset('bundles/pagedemo/js/calendario.js')}}"></script>
+{% endblock %}
+
+
+{% block submenu_calendario_evaluaciones %}
+    <li class="active"><a href="">&emsp;&emsp;<i class="fa fa-calendar"></i>&nbsp;Calendario</a></li>
+{% endblock %}
+
+{% block submenu_docente_calendario_evaluaciones %}
+  <li class="active"><a href="">&emsp;&emsp;<i class="fa fa-calendar"></i>&nbsp;Calendario</a></li>
+{% endblock %}
+
+
+{% block datos %}
+    {% embed 'PAGEDemoBundle:Layout:layout_alert.html.twig' %}
+      {% block alert %}
+        {{ parent() }}
+      {% endblock %}
+    {% endembed %}
+
+    
+  <section>
+    {% include 'PAGEDemoBundle:Calendar:_evaluaciones.html.twig' %}
+    {% block calendario_evaluaciones %}
+      {{parent()}}
+    {% endblock %}
+  </section>
+{% endblock %}

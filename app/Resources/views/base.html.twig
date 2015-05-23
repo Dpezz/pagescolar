@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Pagescolar - {% block title %}Bienvenido!{% endblock %}</title>
+        <link rel="icon" type="image/x-icon" href="{{ asset('bundles/pagedemo/images/favicon.ico') }}" />
+        {% block stylesheets %}
+            <link rel="stylesheet" href="{{ asset('bundles/pagedemo/plugin/bootstrap/css/bootstrap.css')}}">
+            <link rel="stylesheet" href="{{ asset('bundles/pagedemo/plugin/font-awesome/css/font-awesome.min.css')}}">
+        {% endblock %}
+    </head>
+    <body>
+        {% block body %}{% endblock %}
+        {% block javascripts %}
+            <script src="{{ asset('bundles/pagedemo/plugin/angular/jquery.min.js') }}"></script>
+            <script src="{{ asset('bundles/pagedemo/plugin/bootstrap/js/bootstrap.min.js') }}"></script>
+            <script src="{{ asset('bundles/pagedemo/plugin/angular/angular.min.js') }}"></script>
+        {% endblock %}
+    </body>
+</html>
+

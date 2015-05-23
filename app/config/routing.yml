@@ -1,0 +1,2 @@
+page_demo:
+    resource: "@PAGEDemoBundle/Resources/config/routing.yml"

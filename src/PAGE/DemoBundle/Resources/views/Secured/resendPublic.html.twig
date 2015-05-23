@@ -1,0 +1,37 @@
+{% extends 'PAGEDemoBundle:Layout:layout_page.html.twig' %}
+
+{% block title 'Solicitar'%}
+
+{% block stylesheets %}
+    {{parent()}}
+    <link rel="stylesheet" href="{{ asset('bundles/pagedemo/plugin/signin/signin.css')}}">
+{% endblock %}
+
+{% block content %}
+  <div class="form-signin">
+    <div class="page-header">
+      <h1 class="text-center text-mint" style="font-size:50px;font-family:'open-sans-light'">Solicitar Contraseña</h1>
+    </div>
+
+    <hr style="border-top-color:#ddd">
+
+    <p class="text-center text-muted">Ingrese el correo electrónico con el cual inicia su cuenta.</p>
+
+    <form action="{{path('_secured_resend_post')}}" method="POST">
+      <div class="form-group">
+        <label class="text-mint"></label>
+        <input type="email" class="form-control" name="email" placeholder="Correo Electrónico" required autofocus>
+      </div>
+      <button class="btn btn-block btn-mint" type="submit"><i class="fa fa-envelope"></i>&nbsp;Solicitar</button>
+    </form>
+
+    <hr style="border-top-color:#ddd">
+
+    <h5 class="text-center text-muted"><small><a href="{{path('_demo_signin')}}"><i class="fa fa-long-arrow-left"></i>&nbsp;Volver</a></small></h5>
+
+    <h5 class="text-center text-muted"><small>
+      <abbr title="Aprende a Leer Matemáticas" class="initialism">ALM</abbr>&nbsp;-&nbsp;
+      Todos los derechos reservados. La Serena,Chile. {{ "now"|date("Y") }}
+    </small></h5>
+  </div>
+{% endblock %}

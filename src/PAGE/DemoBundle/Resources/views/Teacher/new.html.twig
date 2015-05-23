@@ -1,0 +1,38 @@
+{% extends 'PAGEDemoBundle:Layout:layout_dashboard.html.twig' %}
+
+{% block title "Nuevo Docente"%}
+
+{% block active_menu_docencia %}class="in"{% endblock %}
+
+{% block subtitle %}
+	 <i class="fa fa-graduation-cap"></i>&nbsp;Nuevo Docente
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script src="{{ asset('bundles/pagedemo/js/comunas.js')}}"></script>
+    <script src="{{ asset('bundles/pagedemo/js/validar.js')}}"></script>
+{% endblock %}
+
+{% block submenu_admin_docentes_nuevo %}
+    <li class="active"><a href="{{path('docente_new')}}">&emsp;&emsp;<i class="fa fa-user-plus"></i>&nbsp;Nuevo Docente</a></li>
+{% endblock %}
+
+{% block menubar %}
+    <li role="presentation" class="active btn-mint"><a>Datos Docente</a></li>
+    <li role="presentation" class="disabled"><a>Registro Académico</a></li>
+    <li role="presentation" class="disabled"><a>Imagen</a></li>
+{% endblock %}
+
+{% block datos %}
+    {% embed 'PAGEDemoBundle:Layout:layout_alert.html.twig' %}
+      {% block alert %}
+        {{ parent() }}
+      {% endblock %}
+    {% endembed %}
+
+	{% include 'PAGEDemoBundle:Teacher:_docente.html.twig' %}
+	{% block docencia_docente %}
+		{{parent()}}
+	{% endblock %}
+{% endblock %}

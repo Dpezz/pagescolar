@@ -1,0 +1,167 @@
+{% block calendario_docentes %}
+
+	<div class="table-responsive">
+	  	<table class="table table-hover">
+		    <thead>
+		    	<tr>
+		    		<th>Bloque #</th>
+		    		<th>Lunes</th>
+		    		<th>Martes</th>
+		    		<th>Miércoles</th>
+		    		<th>Jueves</th>
+		    		<th>Viernes</th>
+		    		<th>Sábado</th>
+		    	</tr>
+		    </thead>
+		    <tbody>
+		    	{% for i in [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]|batch(2,'') %}
+			        {% for item in i %}
+				        <tr>
+				        	<td><span class="badge">{{item}}</span></td>
+				            <td>
+				            {% for value in dataCD %}
+				            	{% if value.dia == 'Lunes' and item == value.bloque %}<a href="" data-toggle="modal" data-target="#delete" ng-click="delete('{{value.id}}','{{value.dia}}~{{value.bloque}}')"><small class="text-mint"><strong>{{ value.curso }}</strong>&nbsp;/&nbsp;<br> {{ value.asignatura }}</small></a>{% endif %}
+			            	{% endfor %}
+				            </td>
+				    		<td>
+				    			{% for value in dataCD %}
+				    			{% if value.dia == 'Martes' and item == value.bloque %}<a href="" data-toggle="modal" data-target="#delete" ng-click="delete('{{value.id}}','{{value.dia}}~{{value.bloque}}')"><small class="text-mint"><strong>{{ value.curso }}</strong>&nbsp;/&nbsp;<br> {{ value.asignatura }}</small></a>{% endif %}
+				    			{% endfor %}
+				    		</td>
+				    		<td>
+				    			{% for value in dataCD %}
+				    			{% if value.dia == 'Miércoles' and item == value.bloque %}<a href="" data-toggle="modal" data-target="#delete" ng-click="delete('{{value.id}}','{{value.dia}}~{{value.bloque}}')"><small class="text-mint"><strong>{{ value.curso }}</strong>&nbsp;/&nbsp;<br> {{ value.asignatura }}</small></a>{% endif %}
+				    			{% endfor %}
+				    		</td>
+				    		<td>
+				    			{% for value in dataCD %}
+				    			{% if value.dia == 'Jueves' and item == value.bloque %}<a href="" data-toggle="modal" data-target="#delete" ng-click="delete('{{value.id}}','{{value.dia}}~{{value.bloque}}')"><small class="text-mint"><strong>{{ value.curso }}</strong>&nbsp;/&nbsp;<br> {{ value.asignatura }}</small></a>{% endif %}
+				    			{% endfor %}
+				    		</td>
+				    		<td>
+				    			{% for value in dataCD %}
+				    			{% if value.dia == 'Viernes' and item == value.bloque %}<a href="" data-toggle="modal" data-target="#delete" ng-click="delete('{{value.id}}','{{value.dia}}~{{value.bloque}}')"><small class="text-mint"><strong>{{ value.curso }}</strong>&nbsp;/&nbsp;<br> {{ value.asignatura }}</small></a>{% endif %}
+				    			{% endfor %}
+				    		</td>
+				    		<td>
+				    			{% for value in dataCD %}
+				    			{% if value.dia == 'Sábado' and item == value.bloque %}<a href="" data-toggle="modal" data-target="#delete" ng-click="delete('{{value.id}}','{{value.dia}}~{{value.bloque}}')"><small class="text-mint"><strong>{{ value.curso }}</strong>&nbsp;/&nbsp;<br> {{ value.asignatura }}</small></a>{% endif %}
+				    			{% endfor %}
+				    		</td>
+			    		</tr>
+			        {% endfor %}
+		        {% if 3 == loop.index or 6 == loop.index%}
+			    <tr class="danger">
+			    {% else %}
+			    <tr class="success">
+			    {% endif %}
+		        	<td></td>
+		            <td></td>
+		    		<td></td>
+		    		<td></td>
+		    		<td></td>
+		    		<td></td>
+		    		<td></td>
+	    		</tr>
+	    		{% endfor %}
+		    </tbody>
+	  	</table>
+	</div>
+
+	<div class="modal-footer">
+		
+	{% if app.user.role == 'ROLE_DOCENTE' %}
+		<a href="" class="btn btn-mint" ng-click="nuevo('{{id_docente}}','{{ app.user.id }}')" data-toggle="modal" data-target="#new"><i class="fa fa-plus"></i>&nbsp;Agregar</a>
+		<a href="" class="btn btn-default" type="button"><i class="fa fa-long-arrow-right"></i>&nbsp;Siguiente</a>
+	{% else %}
+		<a href="{{path('docentes')}}" class="btn btn-default" type="button"><i class="fa fa-long-arrow-left"></i>&nbsp;Volver</a>
+		<a href="" class="btn btn-mint" ng-click="nuevo('{{id_docente}}','{{ app.user.id }}')" data-toggle="modal" data-target="#new"><i class="fa fa-plus"></i>&nbsp;Agregar</a>
+	{% endif %}
+	</div>
+
+
+	<!-- Modal Nuevo-->
+	<div class="modal fade" id="new" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  	<div class="modal-dialog">
+		    <div class="modal-content">
+		      	<div class="modal-header">
+		        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        	<h4 class="modal-title" id="myModalLabel">{[{ title }]}</h4>
+		      	</div>
+		      	<div class="modal-body">	
+		      		<form>
+		      		
+		      			<div class="row">
+		      				<div class="col-md-6">
+		      					<div class="form-group">
+							    	<label>Curso</label>
+							    	<select class="form-control" ng-model="curso" ng-options="curso.name for curso in cursos">
+							    		<option value="">-- Curso --</option>
+							    	</select>
+							  	</div>
+		      				</div>
+		      				<div class="col-md-6">
+		      					<div class="form-group">
+							    	<label>Asignatura</label>
+							    	<select class="form-control" ng-model="asignatura" ng-options="asignatura.name for asignatura in asignaturas">
+							    		<option value="">-- Asignatura --</option>
+							    	</select>
+							  	</div>
+		      				</div>
+		      			</div>
+
+		      			<div class="row">
+		      				<div class="col-md-6">
+		      					<div class="form-group">
+							    	<label>Día</label>
+							    	<select class="form-control" ng-model="dia" ng-options="dia.name for dia in dias">
+							    		<option value="">-- Día --</option>
+							    	</select>
+							  	</div>
+		      				</div>
+		      				<div class="col-md-6">
+		      					<div class="form-group">
+							    	<label>Bloque</label>
+							    	<select class="form-control" ng-model="bloque" ng-options="bloque.name for bloque in bloques">
+							    		<option value="">-- Bloque --</option>
+							    	</select>
+							  	</div>
+		      				</div>
+		      			</div>
+		      			
+
+						<div class="modal-footer">
+				        	<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-remove"></i>&nbsp;Cerrar</button>
+				        	<button class="btn btn-mint" ng-click="save()"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+				      	</div>
+		      		</form>
+
+		    	</div>
+		  	</div>
+		</div>
+	</div>
+
+	
+	<!-- Modal Eliminar-->
+	<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  	<div class="modal-dialog">
+	    	<div class="modal-content">
+		      	<div class="modal-header">
+		        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        	<h4 class="modal-title" id="myModalLabel">{[{ title }]}</h4>
+		      	</div>
+		      	<div class="modal-body">
+			      	<form>
+			      		<h5 class="text-center">Seguro que desea eliminar a <strong class="text-mint">{[{name}]}</strong> de Horario?</h5>
+
+			      		<div class="modal-footer">
+			        		<a type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-remove"></i>&nbsp;Cerrar</a>
+			        		<button class="btn btn-mint" ng-click="delete(-1,-1)"><i class="fa fa-trash"></i>&nbsp;Eliminar</button>
+			      		</div>
+		      		</form>
+	    		</div>
+	  		</div>
+		</div>
+	</div>
+
+{% endblock %}

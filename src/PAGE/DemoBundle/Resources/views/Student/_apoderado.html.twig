@@ -1,0 +1,187 @@
+{% block alumnos_apoderado %}
+
+	<div class="table-responsive">
+	  	<table class="table table-hover">
+		    <thead>
+		    	<tr>
+		    		<th>#</th>
+		    		<th>Rut</th>
+		    		<th>Nombre</th>
+		    		<th>Parentesco</th>
+		    		<th>Nivel</th>
+		    		<th>Teléfono/Celular</th>
+		    		<th>Conviven</th>
+		    		<th></th>
+		    	</tr>
+		    </thead>
+		    <tbody>
+		    	{% for item in dataApo|sort %}
+		    	<tr>
+		    		<td><span class="badge">{{loop.index}}</span></td>
+		    		<td><span class="text-mint"><strong>{{ item.rut }}</strong></span></td>
+		    		<td>{{item.name}}&nbsp;{{item.lastname}}</td>
+		    		<td>{{item.parentesco}}</td>
+		    		<td><em>{{item.nivel}}</em></td>
+		    		<td>{{item.telefono}}</td>
+		    		<td>
+		    		{% if item.convive %}Si{% else %}No{% endif %}</td>
+		    		<td>
+			    		<a href="#" data-toggle="modal" data-target="#new" ng-click="edit('{{item.id}}')" title="editar"><i class="glyphicon glyphicon-edit"></i></a>&emsp;
+
+			    		<a href="#" data-toggle="modal" data-target="#delete" ng-click="delete('{{item.id}}','{{item.name}}')" title="eliminar"><i class="glyphicon glyphicon-trash text-danger"></i></a>
+		    		</td>
+	    		</tr>
+	    		{% endfor %}
+		    </tbody>
+	  	</table>
+	</div>
+
+
+	<div class="modal-footer">
+		<a href="" class="btn btn-mint" ng-click="nuevo('{{dataA.id}}')" data-toggle="modal" data-target="#new"><i class="fa fa-plus"></i>&nbsp;Nuevo</a>
+	</div>
+
+
+	<!-- Modal Nuevo-->
+	<div class="modal fade" id="new" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  	<div class="modal-dialog">
+		    <div class="modal-content">
+		      	<div class="modal-header">
+		        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        	<h4 class="modal-title" id="myModalLabel">{[{ title }]}</h4>
+		      	</div>
+		      	<div class="modal-body">	
+
+		      		<form  name="myForm" novalidate>
+			      		<div class="row">
+				      		<div class="col-md-6">
+					      		<div class="form-group">
+									<label class="text-muted">Parentesco</label>
+									<select class="form-control" ng-change="validate()" name="parentesco" ng-model="parentesco" ng-options="parentesco.name for parentesco in parentescos" required autofocus>
+										<option value="">-- Parentesco --</option>
+									</select>
+						      	</div>
+					      	</div>
+					      	<div class="col-md-6">
+					      		<div class="form-group">
+									<label class="text-muted">RUT</label>
+						        	<input type="text" id="rut" name="rut" ng-change="validate()"class="form-control" ng-model="data.rut" required autofocus>
+						      	</div>
+					      	</div>
+				      	</div>
+
+				      	<div class="row">
+				      		<div class="col-md-6">
+					      		<div class="form-group">
+									<label class="text-muted">Nombre</label>
+						        	<input type="text" class="form-control" name="name" ng-change="validate()" ng-model="data.name" required autofocus>
+						      	</div>
+				      		</div>
+				      		<div class="col-md-6">
+					      		<div class="form-group">
+									<label class="text-muted">Apellidos</label>
+						        	<input type="text" class="form-control" name="lastname" ng-change="validate()" ng-model="data.lastname" required autofocus>
+						      	</div>
+				      		</div>
+				      	</div>
+
+			      		<div class="form-group">
+							<label class="text-muted">Dirección</label>
+				        	<input type="text" class="form-control" name="address" ng-change="validate()" ng-model="data.address">
+				      	</div>
+
+				      	<div class="row">
+				      		<div class="col-md-6">
+								<div class="form-group">
+									<label class="text-muted">Región</label>
+						        	<select class="form-control" name="region" ng-change="change()" ng-model="region" ng-options="region.name for region in regiones"  required autofocus>
+										<option value="">-- Región --</option>
+									</select>
+						      	</div>
+					      	</div>
+					      	<div class="col-md-6">
+						      	<div class="form-group">
+									<label class="text-muted">Comuna</label>
+						        	<select class="form-control" name="comuna" ng-change="validate()" ng-model="comuna" ng-options="comuna.name for comuna in comunas"  required autofocus>
+										<option value="">-- Comuna --</option>
+									</select>
+						      	</div>
+					      	</div>
+				      	</div>
+
+				      	<div class="row">
+				      		<div class="col-md-6">
+								<div class="form-group">
+									<label class="text-muted">Email</label>
+						        	<input type="text" class="form-control" name="email" ng-model="data.email">
+						      	</div>
+					      	</div>
+				      		<div class="col-md-6">
+						      	<div class="form-group">
+									<label class="text-muted">Telefono</label>
+						        	<input type="text" class="form-control" name="fono" ng-model="data.telefono">
+						      	</div>
+					      	</div>
+				      	</div>
+				      	<div class="row">
+				      		<div class="col-md-4">
+						      	<div class="form-group">
+									<label class="text-muted">Nivel</label>
+						        	<select class="form-control" name="prioridad" ng-change="validate()" ng-model="prioridad" ng-options="prioridad.name for prioridad in prioridades" required autofocus>
+										<option value="">-- Nivel --</option>
+									</select>
+						      	</div>
+				      		</div>
+				      		<div class="col-md-4">
+								<div class="form-group">
+									<label class="text-muted">Conviven?</label>
+						        	<select class="form-control" name="convive" ng-change="validate()" ng-model="convive" ng-options="convive.value for convive in binarios"  required autofocus>
+						        		<option value="">-- Conviven --</option>
+						        	</select>
+						      	</div>
+				      		</div>
+				      		<div class="col-md-4">
+						      	<div class="form-group">
+									<label class="text-muted">Escolaridad</label>
+						        	<select class="form-control" name="escolaridad" ng-change="validate()" ng-model="escolaridad" ng-options="escolaridad.name for escolaridad in escolaridades" required autofocus>
+										<option value="">-- Escolaridad --</option>
+									</select>
+						      	</div>
+				      		</div>
+				      	</div>
+			      	
+				      	<div class="modal-footer">
+				        	<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-remove"></i>&nbsp;Cerrar</button>
+				        	<button class="btn btn-mint" ng-click="save()" ng-disabled="flag"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+				      	</div>
+		      		</form>
+
+		    	</div>
+		  	</div>
+		</div>
+	</div>
+
+	
+	<!-- Modal Eliminar-->
+	<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  	<div class="modal-dialog">
+	    	<div class="modal-content">
+		      	<div class="modal-header">
+		        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        	<h4 class="modal-title" id="myModalLabel">{[{ title }]}</h4>
+		      	</div>
+		      	<div class="modal-body">
+			      	<form>
+			      		<h5 class="text-center">Seguro que desea eliminar a <strong class="text-mint">{[{name}]}</strong> de Apoderados?</h5>
+
+			      		<div class="modal-footer">
+			        		<a type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-remove"></i>&nbsp;Cerrar</a>
+			        		<button class="btn btn-mint" ng-click="delete(-1,-1)"><i class="fa fa-trash"></i>&nbsp;Eliminar</button>
+			      		</div>
+		      		</form>
+	    		</div>
+	  		</div>
+		</div>
+	</div>
+{% endblock %}
+
