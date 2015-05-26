@@ -92,3 +92,8 @@ _test:
 _grade:
     resource: "@PAGEDemoBundle/Controller/GradeController.php"
     type:     annotation
+
+#imprimir
+_print:
+    resource: "@PAGEDemoBundle/Controller/PrintController.php"
+    type:     annotation

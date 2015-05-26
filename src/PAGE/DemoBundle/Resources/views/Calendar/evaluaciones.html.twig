@@ -22,6 +22,9 @@
     <script src="{{ asset('bundles/pagedemo/js/calendario.js')}}"></script>
 {% endblock %}
 
+{% block submenu_admin_calendario %}
+  <li class="active"><a href="{{ path('calendario_evaluaciones') }}">&emsp;&emsp;<i class="fa fa-calendar"></i>&nbsp;Calendario</a></li>
+{% endblock %}
 
 {% block submenu_calendario_evaluaciones %}
     <li class="active"><a href="">&emsp;&emsp;<i class="fa fa-calendar"></i>&nbsp;Calendario</a></li>

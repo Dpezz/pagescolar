@@ -363,7 +363,7 @@ class TestController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $data = $em->createQuery('SELECT i FROM PAGEDemoBundle:DatosEvaluaciones i where i.id_user = :user  
-        ORDER BY i.fecha DESC')
+        ORDER BY i.id_curso ASC, i.id_asignatura ASC, i.id_docente ASC, i.fecha DESC')
         ->setParameter('user', $id_user)
         ->getResult();
 
@@ -637,4 +637,22 @@ class TestController extends Controller
         }
         return null;
     }
+
+    private function editJsonNotas($id,$id_curso,$id_asignatura,$id_user,$semestre){
+        $url = "users/".$id_user."/grades/".$id_curso.$id_asignatura.".json";
+        if(file_exists($url)){
+            $file = file_get_contents($url);
+            $json = json_decode($file,true);
+
+            foreach ($json['evaluaciones'] as $key => $value) {
+                if($value['id'] == $id){
+                    $json['evaluaciones'][$key]['semestre'] = $semestre;
+                }
+            }
+            $json = json_encode($json,true);
+            file_put_contents($url, $json);
+        }
+        return null;
+    }
+    
 }

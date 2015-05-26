@@ -15,15 +15,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-use PAGE\DemoBundle\Entity\User;
-use PAGE\DemoBundle\Entity\DatosInstitucion;
-use PAGE\DemoBundle\Entity\DatosAsignaturas;
-use PAGE\DemoBundle\Entity\DatosCursos;
-use PAGE\DemoBundle\Entity\DatosEvaluaciones;
-use PAGE\DemoBundle\Entity\DatosDocentes;
-use PAGE\DemoBundle\Entity\DatosAlumnos;
-
-
 /**
  * @Route("/print")
  */
@@ -33,30 +24,43 @@ class PrintController extends Controller
 /* Template */
 
     /**
-     * @Route("/docentes", name="_print_docentes")
-     * @Template()
+     * @Route("/alumno/{id}", name="print_alumno")
      */
-    public function docentesAction(Request $request){    
+    public function alumnoAction(Request $request,$id){
+        $em = $this->getDoctrine()->getManager();
+        $data = $em->getRepository('PAGEDemoBundle:DatosAlumnos')->find($id);
 
-        return array();
+        $facade = $this->get('ps_pdf.facade');
+        $response = new Response();
+        $pdf = $this->render('PAGEDemoBundle:Print:alumno.pdf.twig', array('data'=>$data), $response);
+
+        $xml = $response->getContent();
+        $content = $facade->render($xml);
+
+        return new Response(
+            $content, 200, 
+            array('content-type' => 'application/pdf',
+            'Content-Disposition'   => 'attachment; filename="'.$data->getName().'.pdf"'));
     }
 
     /**
-     * @Route("/get-docentes", name="_print_get_docentes")
+     * @Route("/docente/{id}", name="print_docente")
      */
-    public function printDocentes(Request $request){
-  
-        $pageUrl = $this->generateUrl('_print_docentes', array(), true);   
+    public function docenteAction(Request $request,$id){
+        $em = $this->getDoctrine()->getManager();
+        $data = $em->getRepository('PAGEDemoBundle:DatosDocentes')->find($id);
+
+        $facade = $this->get('ps_pdf.facade');
+        $response = new Response();
+        $pdf = $this->render('PAGEDemoBundle:Print:docente.pdf.twig', array('data'=>$data), $response);
+
+        $xml = $response->getContent();
+        $content = $facade->render($xml);
 
         return new Response(
-            $this->get('knp_snappy.pdf')->getOutput($pageUrl, 
-                array()),
-            200,
-            array(
-                'Content-Type'          => 'application/pdf',
-                'Content-Disposition'   => 'attachment; filename="Estadisticas_Docentes.pdf"'
-            )
-        );
+            $content, 200, 
+            array('content-type' => 'application/pdf',
+            'Content-Disposition'   => 'attachment; filename="'.$data->getName().'.pdf"'));
     }
 
    

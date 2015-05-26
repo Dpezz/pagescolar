@@ -66,25 +66,6 @@ class DefaultController extends Controller
         return array();
     }
 
-    /**
-     * @Route("/test", name="test")
-     */
-    public function testAction()
-    {
-
-        $facade = $this->get('ps_pdf.facade');
-        $response = new Response();
-        $pdf = $this->render('PAGEDemoBundle:Default:test.pdf.twig', array(), $response);
-
-        $xml = $response->getContent();
-
-        $content = $facade->render($xml);
-
-        return new Response(
-            $content, 200, 
-            array('content-type' => 'application/pdf',
-            'Content-Disposition'   => 'attachment; filename="Estadisticas_Docentes.pdf"'));
-    }
 
 /* POST */
     /**

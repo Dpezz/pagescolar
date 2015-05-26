@@ -19,8 +19,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use PAGE\DemoBundle\Controller\LoadController;
 use PAGE\DemoBundle\Entity\DatosAlumnos;
 
-
-
 /**
  * @Route("/profile")
  */
@@ -192,9 +190,9 @@ class StudentController extends Controller
     private function getAlumnos($id_user,$id){
         $em = $this->getDoctrine()->getManager();
         if($id != -1)
-            $data = $em->getRepository('PAGEDemoBundle:DatosAlumnos')->findBy(array('id_user'=>$id_user,'curso'=>$id),array('plastname'=>'ASC','curso'=>'ASC'));
+            $data = $em->getRepository('PAGEDemoBundle:DatosAlumnos')->findBy(array('id_user'=>$id_user,'curso'=>$id),array('curso'=>'ASC','plastname'=>'ASC'));
         else 
-            $data = $em->getRepository('PAGEDemoBundle:DatosAlumnos')->findBy(array('id_user'=>$id_user),array('plastname'=>'ASC','curso'=>'ASC'));
+            $data = $em->getRepository('PAGEDemoBundle:DatosAlumnos')->findBy(array('id_user'=>$id_user),array('curso'=>'ASC','plastname'=>'ASC'));
         return $data;
     }
 

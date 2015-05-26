@@ -43,7 +43,7 @@
 
 			    		<a href="{{path('calendario_alumno',{'id':item.id})}}" title="calendario evaluaciones"><i class="fa fa-calendar text-info"></i></a>&emsp;
 
-			    		<a href="" title="descargar"><i class="glyphicon glyphicon-download-alt text-muted"></i></a>&emsp;
+			    		<a href="{{ path('print_alumno',{'id':item.id}) }}" title="descargar"><i class="glyphicon glyphicon-download-alt text-success"></i></a>&emsp;
 
 			    		<a href="#" title="eliminar" ng-click="delete('{{item.id}}','{{item.name}}')" data-toggle="modal" data-target="#delete"><i class="glyphicon glyphicon-trash text-danger"></i></a>
 		    		</td>

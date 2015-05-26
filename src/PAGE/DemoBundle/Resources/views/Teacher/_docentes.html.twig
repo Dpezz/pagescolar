@@ -39,7 +39,7 @@
 						
 						<a href="{{path('planificar',{'id':item.id})}}" title="planificar"><i class="glyphicon glyphicon-check text-lila"></i></a>&emsp;
 
-			    		<a href="" title="descargar"><i class="glyphicon glyphicon-download-alt text-muted"></i></a>&emsp;
+			    		<a href="{{ path('print_docente',{'id':item.id}) }}" title="descargar"><i class="glyphicon glyphicon-download-alt text-success"></i></a>&emsp;
 
 			    		<a href="#" ng-click="delete('{{item.id}}','{{item.name}}')" data-toggle="modal" data-target="#delete" title="eliminar"><i class="glyphicon glyphicon-trash text-danger"></i></a>
 		    		</td>

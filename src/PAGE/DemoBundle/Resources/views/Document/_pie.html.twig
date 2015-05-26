@@ -1,22 +1,45 @@
 {% block institucion_pie %}
-<div class="panel-group" role="tablist">
-{% for item in folder %}
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  {% for item in folder %}
+    
     <div class="panel panel-default">
-      	<div class="panel-heading" role="tab" id="folder{{loop.index}}">
-        	<h4 class="panel-title" id="-collapsible-list-group-">
-          	<a class="collapsed" data-toggle="collapse" href="#folderList{{loop.index}}" aria-expanded="false" aria-controls="folderList{{loop.index}}">
-            <i class="fa fa-folder text-lemon"></i>&nbsp;{{item.folder}}&nbsp;<i class="fa fa-angle-down text-white"></i>
-          	</a>
-      	</div>
-      	<div id="folderList{{loop.index}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="folder{{loop.index}}" aria-expanded="false" style="height: 0px;">
-        	<ul class="list-group">
-				{% for file in item.files %}
-	  				<li class="list-group-item"><a href="{{path('pie_download',{'folder':item.folder,'file':file})}}"><i class="fa fa-file-o text-muted"></i>&nbsp;{{file}}&nbsp;<i class="fa fa-download text-mint"></i></a></li>
-	  	 		{% endfor %}
-        	</ul>
-      	</div>
+      <div class="panel-heading" role="tab" id="hPie{{loop.index}}">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#cPie{{loop.index}}" aria-expanded="true" aria-controls="cPie{{loop.index}}">
+            <span class="badge">{{loop.index}}</span>&emsp;{{ item.folder }} 
+          </a>
+        </h4>
+      </div>
+      <div id="cPie{{loop.index}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="hPie{{loop.index}}">
+        <div class="panel-body">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Título</th>
+                  <th>Categoria</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for file in item.files %}
+                <tr>
+                  <td><span class="badge">{{ loop.index }}</span></td>
+                  <td>{{ file }}</td>
+                  <td>{{ item.folder }}</td>
+                  <td>
+                    <a href="{{ path('pie_download',{'folder':item.folder,'file':file}) }}" title="descargar"><i class="fa fa-download text-success"></i></a>
+                  </td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
-    {% endfor %}
+  {% endfor %}
 </div>
 {% endblock %}
 

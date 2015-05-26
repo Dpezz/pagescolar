@@ -93,7 +93,7 @@
 	</div>
 
 	<!-- Modal Filtro-->
-	{#<div class="modal fade" id="filter" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal fade" id="filter" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		  	<div class="modal-dialog modal-sm">
 		    	<div class="modal-content">
 			      	<div class="modal-header">
@@ -101,7 +101,7 @@
 			        	<h4 class="modal-title" id="myModalLabel">Filtrar Asistencias</h4>
 			      	</div>
 			      	<div class="modal-body">
-				      	<form action="{{path('academico_asistencias')}}" method="POST">
+				      	<form action="{{path('asistencias_filter')}}" method="POST">
 							
 							<div class="form-group">
 								<label class="text-muted">Curso</label>
@@ -122,6 +122,6 @@
 		    		</div>
 		  		</div>
 			</div>
-		</div>#}
+		</div>
 
 {% endblock %}

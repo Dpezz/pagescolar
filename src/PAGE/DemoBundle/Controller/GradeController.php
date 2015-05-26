@@ -28,24 +28,21 @@ class GradeController extends Controller
 /* Template */
 
     /**
-     * @Route("/notas/{id}", name="notas")
+     * @Route("/notas", name="notas")
      * @Method("GET")
      * @Template()
      */
-    public function notasAction(Request $request,$id){
+    public function notasAction(Request $request){
         $id_user = $this->getUser()->getParent();//id de institucion
-        $id_curso = $id;//get Id
 
-        if( is_null($request->get('asignatura')) ){
-            if($user = $this->getEvaluacionesAll($id_user)){
-                $id_asignatura = $user->getIdAsignatura();
-            }else{
-                $id_asignatura = '';
-            }
+        if($user = $this->getEvaluacionesAll($id_user)){
+            $id_curso = $user->getIdCurso();
+            $id_asignatura = $user->getIdAsignatura();
         }else{
-            $id_asignatura = $request->get('asignatura');
+            $id_asignatura = '';
+            $id_curso = '';//get Id
         }
-
+       
         return array(
             'dataC'=>$this->getCursos($id_user),
             'dataAS'=>$this->getAsignaturas($id_user),
@@ -56,6 +53,32 @@ class GradeController extends Controller
             'dataA'=>$this->getAlumnosCurso($id_user,$id_curso),
             'dataN'=>$this->getEvaluacionesFiltro($id_user,$id_curso,$id_asignatura)
         );
+    }
+
+    /**
+     * @Route("/notas/curso/{id}", name="notas_curso")
+     * @Method("GET")
+     */
+    public function notasCursoAction(Request $request,$id){
+        $id_user = $this->getUser()->getParent();//id de institucion
+        $id_curso = $id;//get Id
+
+        if($user = $this->getEvaluacionesAll($id_user)){
+            $id_asignatura = $user->getIdAsignatura();
+        }else{
+            $id_asignatura = '';
+        }
+        
+        return $this->render('PAGEDemoBundle:Grade:notas.html.twig',array(
+            'dataC'=>$this->getCursos($id_user),
+            'dataAS'=>$this->getAsignaturas($id_user),
+            'dataE'=>array('curso'=>$this->getNameCurso($id_curso),
+            'asignatura'=>$this->getNameAsignatura($id_asignatura),
+            'docente'=>$this->getNameDocente($this->getDocenteEvaluacion($id_user,$id_curso,$id_asignatura))
+            ),
+            'dataA'=>$this->getAlumnosCurso($id_user,$id_curso),
+            'dataN'=>$this->getEvaluacionesFiltro($id_user,$id_curso,$id_asignatura)
+        ));
     }
 
     /**
@@ -437,39 +460,6 @@ class GradeController extends Controller
 /* FUNCIONES */
 
 
-    private function editJsonNotas($id,$id_curso,$id_asignatura,$id_user,$semestre){
-        $url = "users/".$id_user."/grades/".$id_curso.$id_asignatura.".json";
-        if(file_exists($url)){
-            $file = file_get_contents($url);
-            $json = json_decode($file,true);
-
-            foreach ($json['evaluaciones'] as $key => $value) {
-                if($value['id'] == $id){
-                    $json['evaluaciones'][$key]['semestre'] = $semestre;
-                }
-            }
-            $json = json_encode($json,true);
-            file_put_contents($url, $json);
-        }
-        return null;
-    }
-
-    private function deleteJsonNotas($id,$id_curso,$id_asignatura,$id_user){
-        $url = "users/".$id_user."/grades/".$id_curso.$id_asignatura.".json";
-        if(file_exists($url)){
-            $file = file_get_contents($url);
-            $json = json_decode($file,true);
-
-            foreach ($json['evaluaciones'] as $key => $value) {
-                if($value['id'] == $id){
-                    unset($json['evaluaciones'][$key]);
-                }
-            }
-            $json = json_encode($json,true);
-            file_put_contents($url, $json);
-        }
-        return null;
-    }
 
     private function getJsonNota($id,$id_curso,$id_asignatura,$id_user){
         $file = file_get_contents("users/".$id_user."/grades/".$id_curso.$id_asignatura.".json");

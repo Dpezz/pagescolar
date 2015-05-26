@@ -28,11 +28,11 @@ class CallrollController extends Controller
 /* Template */
 
     /**
-    * @Route("/asistencias/{id}", name="asistencias")
+    * @Route("/asistencias", name="asistencias")
     * @Method("GET")
     * @Template()
     */
-    public function asistenciasAction(Request $request,$id){
+    public function asistenciasAction(Request $request){
         //Asignar el FLAG
         if(!$request->getSession()->get('flag'))
         {$request->getSession()->set('flag',-1);}
@@ -41,7 +41,7 @@ class CallrollController extends Controller
         $request->getSession()->set('flag',-1);
 
         $id_user = $this->getUser()->getParent();
-        $id_curso = $id;//Id del Curso
+        $id_curso = $this->getCursos($id_user)[0]->getId();//Id del Curso
            
         //Obtener la fecha de hoy y de inicio de clases
         $hoy = new \DateTime('now');
@@ -62,6 +62,41 @@ class CallrollController extends Controller
             'dias'=>intval($dias->format('%a'))
             
         );
+    }
+
+    /**
+    * @Route("/asistencias/curso/{id}", name="asistencias_curso")
+    * @Method("GET")
+    */
+    public function asistenciasCursoAction(Request $request,$id){
+        //Asignar el FLAG
+        if(!$request->getSession()->get('flag'))
+        {$request->getSession()->set('flag',-1);}
+
+        $flag = $request->getSession()->get('flag');
+        $request->getSession()->set('flag',-1);
+
+        $id_user = $this->getUser()->getParent();
+        $id_curso = $id;//Id del Curso
+           
+        //Obtener la fecha de hoy y de inicio de clases
+        $hoy = new \DateTime('now');
+        $user = $this->getInstitucion($id_user);
+        if(!is_null($user->getFechaInicio()) && !empty($user->getFechaInicio()))
+            $inicio = $user->getFechaInicio();
+        else
+            $inicio = new \DateTime(date('Y').'-03-01');
+
+        $dias = $inicio->diff($hoy);
+
+        return $this->render('PAGEDemoBundle:Callroll:asistencias.html.twig',array (
+            'flag'=>$flag,
+            'curso'=>$this->getNameCurso($id_curso),
+            'dataC'=>$this->getCursos($id_user),
+            'dataA'=>$this->getAlumnosCurso($id_user,$id_curso),
+            'dataAS'=>$this->getJsonAsistencia($id_curso,$id_user),
+            'dias'=>intval($dias->format('%a'))
+        ));
     }
 
     /**
@@ -97,6 +132,42 @@ class CallrollController extends Controller
             'dataA'=>$this->getAlumnoCurso($id_user,$id_curso,$id),
             'dataAS'=>$this->getJsonAsistencia($id_curso,$id_user),
             'dias'=>intval($dias->format('%a'))
+        ));
+    }
+
+    /**
+    * @Route("/asistencias/filter", name="asistencias_filter")
+    * @Method("POST")
+    */
+    public function asistenciasFilterAction(Request $request){
+        //Asignar el FLAG
+        if(!$request->getSession()->get('flag'))
+        {$request->getSession()->set('flag',-1);}
+
+        $flag = $request->getSession()->get('flag');
+        $request->getSession()->set('flag',-1);
+
+        $id_user = $this->getUser()->getParent();
+        $id_curso = $request->get('curso');//Id del Curso
+           
+        //Obtener la fecha de hoy y de inicio de clases
+        $hoy = new \DateTime('now');
+        $user = $this->getInstitucion($id_user);
+        if(!is_null($user->getFechaInicio()) && !empty($user->getFechaInicio()))
+            $inicio = $user->getFechaInicio();
+        else
+            $inicio = new \DateTime(date('Y').'-03-01');
+
+        $dias = $inicio->diff($hoy);
+
+        return $this->render('PAGEDemoBundle:Callroll:asistencias.html.twig',array (
+            'flag'=>$flag,
+            'curso'=>$this->getNameCurso($id_curso),
+            'dataC'=>$this->getCursos($id_user),
+            'dataA'=>$this->getAlumnosCurso($id_user,$id_curso),
+            'dataAS'=>$this->getJsonAsistencia($id_curso,$id_user),
+            'dias'=>intval($dias->format('%a'))
+            
         ));
     }
 

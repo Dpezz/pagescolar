@@ -16,6 +16,10 @@
     <script src="{{ asset('bundles/pagedemo/js/evaluacionesController.js')}}"></script>
 {% endblock %}
 
+{% block submenu_admin_evaluaciones %}
+<li class="active"><a href="{{ path('evaluaciones') }}">&emsp;&emsp;<i class="fa fa-book"></i>&nbsp;Evaluaciones</a></li>
+{% endblock %}
+
 {% block submenu_alumno_evaluaciones_alumno %}
   <li class="active"><a href="{{path('evaluaciones_alumno',{'id': app.user.id })}}">&emsp;&emsp;<i class="fa fa-book"></i>&nbsp;Evaluaciones</a></li>
 {% endblock %}
