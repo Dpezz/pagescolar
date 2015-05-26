@@ -50,6 +50,7 @@ class StudentController extends Controller
             'listaE'=>$this->getListEtnia(),
             'listaR'=>$this->getListRegion(),
             'listaP'=>$this->getListPais(),
+            'curso'=>null,
         );
     }
 
@@ -70,6 +71,7 @@ class StudentController extends Controller
             'flag'=>$flag,
             'dataA'=>$this->getAlumnos($this->getUser()->getParent(),$id),
             'dataC'=>$this->getCursos($this->getUser()->getParent()),
+            'curso'=>$id,
         );
     }
 

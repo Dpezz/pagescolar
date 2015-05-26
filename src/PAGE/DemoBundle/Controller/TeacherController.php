@@ -71,6 +71,7 @@ class TeacherController extends Controller
             'dataD'=>$this->getDocentes($this->getUser()->getParent()),
             'dataA'=>$this->getAsignaturas($this->getUser()->getParent()),
             'name_curso'=>'',
+            'curso'=>null,
         );
     }
 
@@ -93,9 +94,9 @@ class TeacherController extends Controller
             'dataD'=>$this->getDocentesCurso($this->getUser()->getParent(),$id),
             'dataA'=>$this->getAsignaturas($this->getUser()->getParent()),
             'name_curso'=>$this->getNameCurso($this->getUser()->getParent(),$id),
+            'curso'=>$id,
         ));
     }
-
 
 
     /**
