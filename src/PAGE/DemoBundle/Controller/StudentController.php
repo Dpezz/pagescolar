@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 use PAGE\DemoBundle\Controller\LoadController;
 use PAGE\DemoBundle\Entity\DatosAlumnos;
+use PAGE\DemoBundle\Entity\DatosApoderados;
 
 /**
  * @Route("/profile")

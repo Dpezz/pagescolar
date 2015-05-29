@@ -17,7 +17,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 use PAGE\DemoBundle\Controller\LoadController;
-
 use PAGE\DemoBundle\Entity\User;
 
 /**
@@ -142,7 +141,7 @@ class AccountController extends Controller
                     $em->persist($user);
                     $em->flush();
                     //enviar Email
-                    //$this->sendEmail($username,$email,$rut);
+                    $this->sendEmail($username,$email,$rut);
                     $request->getSession()->set('flag',1);
                     return new Response(1);
                 }else{

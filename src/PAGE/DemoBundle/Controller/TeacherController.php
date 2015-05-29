@@ -284,7 +284,7 @@ class TeacherController extends Controller
             $request->getSession()->set('flag',0);
         }
         return new RedirectResponse(
-            $this->generateUrl('perfil_show', array('id'=>$id))
+            $this->generateUrl('docente_perfil_show', array('id'=>$id))
             );
     }
 
