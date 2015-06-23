@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 use PAGE\DemoBundle\Controller\LoadController;
 use PAGE\DemoBundle\Entity\DatosDocumentos;
+
 /**
  * @Route("/profile/documentos")
  */
@@ -59,7 +60,7 @@ class DocumentController extends Controller
 /* GET */
     private function getDocumentos($id){
         $em = $this->getDoctrine()->getManager();
-        $data = $em->getRepository('PAGEDemoBundle:DatosDocumentos')->findBy(array('id_user'=>$id),array('title'=>'DESC'));
+        $data = $em->getRepository('PAGEDemoBundle:DatosDocumentos')->findBy(array('id_user'=>$id),array('createAt'=>'DESC'));
         return $data;
     }
 
@@ -103,24 +104,29 @@ class DocumentController extends Controller
                     $size = $file->getClientSize();
                     $id = $this->nuevoIdFile();
                     $title = $request->get('title');
-
-                    if($file->isValid()){
-                        $upload = $file->move('users/'.$id_user.'/documents',$id.'.'.$ext);
-                        $user = new DatosDocumentos();
-                        $user->setId($id)
-                        ->setIdUser($id_user)
-                        ->setTitle($title)
-                        ->setDescription($request->get('description'))
-                        ->setType($type)
-                        ->setExtension($ext)
-                        ->setSize($size)
-                        ->setCreateAt(new \DateTime('now'));
-                        $em = $this->getDoctrine()->getManager();
-                        $em->persist($user);
-                        $em->flush();
-                        $request->getSession()->set('flag',1);
+                    
+                    $ofice = array('docx','xlsx','zip');
+                    if( !in_array($ext, $ofice) ){
+                        if($file->isValid()){
+                            $upload = $file->move('users/'.$id_user.'/documents',$id.'.'.$ext);
+                            $user = new DatosDocumentos();
+                            $user->setId($id)
+                            ->setIdUser($id_user)
+                            ->setTitle($title)
+                            ->setDescription($request->get('description'))
+                            ->setType($type)
+                            ->setExtension($ext)
+                            ->setSize($size)
+                            ->setCreateAt(new \DateTime('now'));
+                            $em = $this->getDoctrine()->getManager();
+                            $em->persist($user);
+                            $em->flush();
+                            $request->getSession()->set('flag',1);
+                        }else{
+                            $request->getSession()->set('flag',0);
+                        }
                     }else{
-                        $request->getSession()->set('flag',0);
+                        $request->getSession()->set('flag',-10);
                     }
                 }else{
                     $request->getSession()->set('flag',0);
@@ -152,7 +158,7 @@ class DocumentController extends Controller
 
             $response = new Response();
 
-            $response->headers->set('Content-Type', 'application/'.$user->getType());
+            $response->headers->set('Content-Type', 'application/'.$user->getExtension());
             $response->headers->set('Content-Disposition', 'attachment;filename='.$user->getTitle().'.'.$user->getExtension());
 
             $response->setContent($content);

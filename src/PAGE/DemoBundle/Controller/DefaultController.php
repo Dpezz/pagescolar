@@ -23,7 +23,6 @@ use PAGE\DemoBundle\Entity\DatosInstitucion;
 
 class DefaultController extends Controller
 {
-
     /**
      * @Route("/", name="_demo_index")
      * @Template()

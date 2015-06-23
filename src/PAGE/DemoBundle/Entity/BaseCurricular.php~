@@ -228,4 +228,27 @@ class BaseCurricular
     {
         return $this->url;
     }
+
+    /**
+     * Set id_obj
+     *
+     * @param string $idObj
+     * @return BaseCurricular
+     */
+    public function setIdObj($idObj)
+    {
+        $this->id_obj = $idObj;
+
+        return $this;
+    }
+
+    /**
+     * Get id_obj
+     *
+     * @return string 
+     */
+    public function getIdObj()
+    {
+        return $this->id_obj;
+    }
 }

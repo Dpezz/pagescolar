@@ -6,7 +6,7 @@
       <div class="panel-heading" role="tab" id="hPie{{loop.index}}">
         <h4 class="panel-title">
           <a data-toggle="collapse" data-parent="#accordion" href="#cPie{{loop.index}}" aria-expanded="true" aria-controls="cPie{{loop.index}}">
-            <span class="badge">{{loop.index}}</span>&emsp;{{ item.folder }} 
+            <span class="badge">{{loop.index}}</span>&emsp;{{ item.folder|capitalize }} 
           </a>
         </h4>
       </div>
@@ -26,8 +26,8 @@
               {% for file in item.files %}
                 <tr>
                   <td><span class="badge">{{ loop.index }}</span></td>
-                  <td>{{ file }}</td>
-                  <td>{{ item.folder }}</td>
+                  <td>{{ file|capitalize }}</td>
+                  <td>{{ item.folder|capitalize }}</td>
                   <td>
                     <a href="{{ path('pie_download',{'folder':item.folder,'file':file}) }}" title="descargar"><i class="fa fa-download text-success"></i></a>
                   </td>

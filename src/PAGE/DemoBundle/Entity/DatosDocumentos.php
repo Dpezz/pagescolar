@@ -46,7 +46,7 @@ class DatosDocumentos
     /**
      * @var string
      *
-     * @ORM\Column(name="type", type="string", length=50)
+     * @ORM\Column(name="type", type="string", length=250)
      */
     private $type;
 

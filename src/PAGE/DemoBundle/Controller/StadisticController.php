@@ -17,7 +17,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 use PAGE\DemoBundle\Controller\LoadController;
 
-
 /**
  * @Route("/profile/estadisticas")
  */
@@ -31,7 +30,51 @@ class StadisticController extends Controller
      * @Template()
      */
     public function docentesAction(Request $request){
-        return array();
+        $em = $this->getDoctrine()->getManager();
+
+        $asignaturas = $em->createQuery('SELECT d.name, count(u.asignatura) as num
+            FROM PAGEDemoBundle:DatosDocentes u INNER JOIN PAGEDemoBundle:DatosAsignaturas d 
+            WHERE d.id = u.asignatura and u.id_user = d.id_user and u.id_user = :user group by d.id')
+        ->setParameter('user',($this->getUser()->getParent()))
+        ->getArrayResult();
+
+        $sexos = $em->createQuery('SELECT u.sexo as name, count(u.sexo) as num
+            FROM PAGEDemoBundle:DatosDocentes u where u.id_user =:user
+            group by u.sexo')
+        ->setParameter('user',($this->getUser()->getParent()))
+        ->getArrayResult();
+
+        $years = $em->createQuery('SELECT u.ingreso as name, count(u.ingreso) as num
+            FROM PAGEDemoBundle:DatosDocentes u where u.id_user =:user
+            group by u.ingreso')
+        ->setParameter('user',($this->getUser()->getParent()))
+        ->getArrayResult();
+
+        $funciones = $em->createQuery('SELECT u.funcion as name, count(u.funcion) as num
+            FROM PAGEDemoBundle:DatosDocentes u where u.id_user =:user
+            group by u.funcion')
+        ->setParameter('user',($this->getUser()->getParent()))
+        ->getArrayResult();
+
+        $niveles = $em->createQuery('SELECT u.nivel as name, count(u.nivel) as num
+            FROM PAGEDemoBundle:DatosDocentes u where u.id_user =:user
+            group by u.nivel')
+        ->setParameter('user',($this->getUser()->getParent()))
+        ->getArrayResult();
+
+        $docentes = $em->createQuery('SELECT count(u.id) as num
+            FROM PAGEDemoBundle:DatosDocentes u where u.id_user =:user')
+        ->setParameter('user',($this->getUser()->getParent()))
+        ->getSingleResult();
+
+        return array(
+            "asignaturas"=>$asignaturas,
+            "sexos"=>$sexos,
+            "years"=>$years,
+            "funciones"=>$funciones,
+            "niveles"=>$niveles,
+            "docentes"=>$docentes,
+        );
     }
 
     /**
@@ -39,7 +82,93 @@ class StadisticController extends Controller
      * @Template()
      */
     public function alumnosAction(Request $request){
-        return array();
+        $em = $this->getDoctrine()->getManager();
+
+        $cursos = $em->createQuery('SELECT d.name, count(u.curso) as num
+            FROM PAGEDemoBundle:DatosAlumnos u INNER JOIN PAGEDemoBundle:DatosCursos d 
+            WHERE d.id = u.curso and d.id_user = u.id_user and u.id_user = :user group by d.id')
+        ->setParameter('user',($this->getUser()->getParent()))
+        ->getArrayResult();
+
+        $sexos = $em->createQuery('SELECT u.sexo as name, count(u.sexo) as num
+            FROM PAGEDemoBundle:DatosAlumnos u where u.id_user = :user
+            group by u.sexo')
+        ->setParameter('user',($this->getUser()->getParent()))
+        ->getArrayResult();
+
+        $years = $em->createQuery('SELECT u.ingreso as name, count(u.ingreso) as num
+            FROM PAGEDemoBundle:DatosAlumnos u where u.id_user = :user
+            group by u.ingreso')
+        ->setParameter('user',($this->getUser()->getParent()))
+        ->getArrayResult();
+
+        $etnias = $em->createQuery('SELECT u.etnia as name, count(u.etnia) as num
+            FROM PAGEDemoBundle:DatosAlumnos u where u.id_user = :user
+            group by u.etnia')
+        ->setParameter('user',($this->getUser()->getParent()))
+        ->getArrayResult();
+
+        $load = new LoadController();
+        $programas = array();
+        $listaProgramas = explode(',', $load->programasAction() );
+        foreach ($listaProgramas as $key => $value) {
+            $num = $em->createQuery('SELECT count(u.programas) as num
+            FROM PAGEDemoBundle:DatosAlumnos u WHERE u.id_user = :user and u.programas LIKE :name')
+            ->setParameter('user',($this->getUser()->getParent()))
+            ->setParameter('name', '%'.($key+1).'%')
+            ->getArrayResult();
+            $programas[] = array('name'=>$value,'num'=>$num[0]['num']);
+        }
+
+        $basicas = array();
+        $listaBasicas = explode(',', $load->basicoAction() );
+        foreach ($listaBasicas as $key => $value) {
+            $num = $em->createQuery('SELECT count(u.nbasica) as num
+            FROM PAGEDemoBundle:DatosAlumnos u WHERE u.id_user = :user and u.nbasica LIKE :name')
+            ->setParameter('user',($this->getUser()->getParent()))
+            ->setParameter('name', '%'.($key+1).'%')
+            ->getArrayResult();
+            $basicas[] = array('name'=>$value,'num'=>$num[0]['num']);
+        }
+
+        $reforzamientos = array();
+        $listaReforzamiento = explode(',', $load->reforzamientoAction() );
+        foreach ($listaReforzamiento as $key => $value) {
+            $num = $em->createQuery('SELECT count(u.nreforzamiento) as num
+            FROM PAGEDemoBundle:DatosAlumnos u WHERE u.id_user = :user and u.nreforzamiento LIKE :name')
+            ->setParameter('user',($this->getUser()->getParent()))
+            ->setParameter('name', '%'.($key+1).'%')
+            ->getArrayResult();
+            $reforzamientos[] = array('name'=>$value,'num'=>$num[0]['num']);
+        }
+
+        $talleres = array();
+        $listaTalleres = explode(',', $load->tallerAction() );
+        foreach ($listaTalleres as $key => $value) {
+            $num = $em->createQuery('SELECT count(u.ntaller) as num
+            FROM PAGEDemoBundle:DatosAlumnos u WHERE u.id_user = :user and u.ntaller LIKE :name')
+            ->setParameter('user',($this->getUser()->getParent()))
+            ->setParameter('name', '%'.($key+1).'%')
+            ->getArrayResult();
+            $talleres[] = array('name'=>$value,'num'=>$num[0]['num']);
+        }
+
+        $alumnos = $em->createQuery('SELECT count(u.id) as num
+            FROM PAGEDemoBundle:DatosAlumnos u where u.id_user = :user ')
+        ->setParameter('user',($this->getUser()->getParent()))
+        ->getSingleResult();
+
+        return array(
+            "cursos"=>$cursos,
+            "sexos"=>$sexos,
+            "years"=>$years,
+            "etnias"=>$etnias,
+            "programas"=>$programas,
+            "basicas"=>$basicas,
+            "reforzamientos"=>$reforzamientos,
+            "talleres"=>$talleres,
+            "alumnos"=>$alumnos,
+        );
     }
 
     /**
@@ -47,7 +176,52 @@ class StadisticController extends Controller
      * @Template()
      */
     public function apoderadosAction(Request $request){
-        return array();
+        $em = $this->getDoctrine()->getManager();
+
+        $alumnos = $em->createQuery('SELECT d.curso as id, count(u.id_user) as num
+            FROM PAGEDemoBundle:DatosApoderados u INNER JOIN PAGEDemoBundle:DatosAlumnos d 
+            WHERE d.id = u.id_user and d.id_user =:user group by d.curso')
+        ->setParameter('user',($this->getUser()->getParent()))
+        ->getArrayResult();
+
+        $parentescos = $em->createQuery('SELECT u.parentesco as name, count(u.parentesco) as num
+            FROM PAGEDemoBundle:DatosApoderados u INNER JOIN PAGEDemoBundle:DatosAlumnos d
+            WHERE d.id = u.id_user and d.id_user =:user group by u.parentesco')
+        ->setParameter('user',($this->getUser()->getParent()))
+        ->getArrayResult();
+
+        $conviven = $em->createQuery('SELECT u.convive as name, count(u.convive) as num
+            FROM PAGEDemoBundle:DatosApoderados u INNER JOIN PAGEDemoBundle:DatosAlumnos d
+            WHERE d.id = u.id_user and d.id_user =:user
+            group by u.convive')
+        ->setParameter('user',($this->getUser()->getParent()))
+        ->getArrayResult();
+
+        $escolaridades = $em->createQuery('SELECT u.escolaridad as name, count(u.escolaridad) as num
+            FROM PAGEDemoBundle:DatosApoderados u INNER JOIN PAGEDemoBundle:DatosAlumnos d
+            WHERE d.id = u.id_user and d.id_user =:user
+            group by u.escolaridad')
+        ->setParameter('user',($this->getUser()->getParent()))
+        ->getArrayResult();
+
+        $cursos = $em->createQuery('SELECT u.id, u.name 
+            FROM PAGEDemoBundle:DatosCursos u ')
+        ->getArrayResult();
+
+        $apoderados = $em->createQuery('SELECT count(u.id) as num
+            FROM PAGEDemoBundle:DatosApoderados u INNER JOIN PAGEDemoBundle:DatosAlumnos d
+            WHERE d.id = u.id_user and d.id_user =:user')
+        ->setParameter('user',($this->getUser()->getParent()))
+        ->getSingleResult();
+        //return new Response(print_r($cursos));
+        return array(
+            "alumnos"=>$alumnos,
+            "parentescos"=>$parentescos,
+            "conviven"=>$conviven,
+            "escolaridades"=>$escolaridades,
+            "cursos"=>$cursos,
+            "apoderados"=>$apoderados,
+        );
     }
 
     /**
@@ -55,7 +229,79 @@ class StadisticController extends Controller
      * @Template()
      */
     public function evaluacionesAction(Request $request){
-        return array();
+        $em = $this->getDoctrine()->getManager();
+
+        $asignaturas = $em->createQuery('SELECT d.name as name, count(u.id_asignatura) as num
+            FROM PAGEDemoBundle:DatosEvaluaciones u INNER JOIN PAGEDemoBundle:DatosAsignaturas d 
+            WHERE d.id = u.id_asignatura and u.id_user = d.id_user and u.id_user = :user group by u.id_asignatura')
+        ->setParameter('user',($this->getUser()->getParent()))
+        ->getArrayResult();
+
+        $momentos = $em->createQuery('SELECT u.momento as name, count(u.momento) as num
+            FROM PAGEDemoBundle:DatosEvaluaciones u where u.id_user = :user
+            group by u.momento')
+        ->setParameter('user',($this->getUser()->getParent()))
+        ->getArrayResult();
+
+        $sistemas = $em->createQuery('SELECT u.sistema as name, count(u.sistema) as num
+            FROM PAGEDemoBundle:DatosEvaluaciones u where u.id_user = :user
+            group by u.sistema')
+        ->setParameter('user',($this->getUser()->getParent()))
+        ->getArrayResult();
+
+        $evaluadores = $em->createQuery('SELECT u.evaluador as name, count(u.evaluador) as num
+            FROM PAGEDemoBundle:DatosEvaluaciones u where u.id_user = :user
+            group by u.evaluador')
+        ->setParameter('user',($this->getUser()->getParent()))
+        ->getArrayResult();
+
+        $evaluar = $em->createQuery('SELECT u.evaluar as name, count(u.evaluar) as num
+            FROM PAGEDemoBundle:DatosEvaluaciones u where u.id_user = :user
+            group by u.evaluar')
+        ->setParameter('user',($this->getUser()->getParent()))
+        ->getArrayResult();
+
+        $evaluaciones = $em->createQuery('SELECT u.evaluacion_docente as name, count(u.evaluacion_docente) as num
+            FROM PAGEDemoBundle:DatosEvaluaciones u where u.id_user = :user
+            group by u.evaluacion_docente')
+        ->setParameter('user',($this->getUser()->getParent()))
+        ->getArrayResult();
+
+        $finalidades = $em->createQuery('SELECT u.finalidad as name, count(u.finalidad) as num
+            FROM PAGEDemoBundle:DatosEvaluaciones u where u.id_user = :user
+            group by u.finalidad')
+        ->setParameter('user',($this->getUser()->getParent()))
+        ->getArrayResult();
+
+        $instrumentos = $em->createQuery('SELECT u.instrumento as name, count(u.instrumento) as num
+            FROM PAGEDemoBundle:DatosEvaluaciones u where u.id_user = :user
+            group by u.instrumento')
+        ->setParameter('user',($this->getUser()->getParent()))
+        ->getArrayResult();
+
+        $aprendizajes = $em->createQuery('SELECT u.aprendizaje as name, count(u.aprendizaje) as num
+            FROM PAGEDemoBundle:DatosEvaluaciones u where u.id_user = :user
+            group by u.aprendizaje')
+        ->setParameter('user',($this->getUser()->getParent()))
+        ->getArrayResult();
+
+        $test = $em->createQuery('SELECT count(u.id) as num
+            FROM PAGEDemoBundle:DatosEvaluaciones u where u.id_user = :user')
+        ->setParameter('user',($this->getUser()->getParent()))
+        ->getSingleResult();
+
+        return array(
+            "asignaturas"=>$asignaturas,
+            "momentos"=>$momentos,
+            "sistemas"=>$sistemas,
+            "evaluadores"=>$evaluadores,
+            "evaluar"=>$evaluar,
+            "evaluaciones"=>$evaluaciones,
+            "finalidades"=>$finalidades,
+            "instrumentos"=>$instrumentos,
+            "aprendizajes"=>$aprendizajes,
+            "test"=>$test,
+        );
     }
 
 

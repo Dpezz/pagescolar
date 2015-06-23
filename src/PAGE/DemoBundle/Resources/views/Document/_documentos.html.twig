@@ -19,7 +19,7 @@
 		    	<tr>
 		    		<td><span class="badge">{{loop.index}}</span></td>
 		    		<td><span class="text-mint"><strong>{{item.title}}</strong></span></td>
-		    		<td>{{item.description}}</td>
+		    		<td>{{item.description|slice(0,25)}}...</td>
 		    		<td>{{item.type}}</td>
 		    		<td>{{(item.size / 1000)|number_format(1)}}&nbsp;kb</td>
 		    		<td>{{ item.createat|date('d/m/y') }}</td>
