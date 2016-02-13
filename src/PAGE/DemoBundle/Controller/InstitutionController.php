@@ -2,258 +2,250 @@
 
 namespace PAGE\DemoBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Security\Core\SecurityContext;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-
-
-// these import the "@Route" and "@Template" annotations
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\HttpFoundation\JsonResponse;
-
-use PAGE\DemoBundle\Controller\LoadController;
+use PAGE\DemoBundle\Entity\Institution;
+use PAGE\DemoBundle\Entity\InInstitution;
+use PAGE\DemoBundle\Form\InstitutionType;
 
 /**
- * @Route("/profile/institucion")
+ * Institution controller.
+ *
+ * @Route("/profile/institution")
  */
 class InstitutionController extends Controller
 {
 
-/* Template */
     /**
-     * @Route("/perfil", name="institucion_perfil")
+     * Lists all Institution entities.
+     *
+     * @Route("/", name="institution")
      * @Method("GET")
      * @Template()
      */
-    public function perfilAction(Request $request){
-        //Asignar el FLAG
-        if(!$request->getSession()->get('flag'))
-        {$request->getSession()->set('flag',-1);}
-
-        $flag = $request->getSession()->get('flag');
-        $request->getSession()->set('flag',-1);
-
-        return array(
-            'flag'=>$flag,
-            'dataI'=>$this->getInstitucion($this->getUser()->getId()),
-            'image'=>$this->getImage($this->getUser()->getId()),
-        );
-    }
-
-    /**
-     * @Route("/unidad", name="institucion_unidad")
-     * @Method("GET")
-     * @Template()
-     */
-    public function unidadAction(Request $request){
-        //Asignar el FLAG
-        if(!$request->getSession()->get('flag'))
-        {$request->getSession()->set('flag',-1);}
-
-        $flag = $request->getSession()->get('flag');
-        $request->getSession()->set('flag',-1);
-
-        return array(
-            'flag'=>$flag,
-            'dataI'=>$this->getInstitucion($this->getUser()->getId()),
-            'listaJ' => $this->getListJornada(),
-            'listaM' => $this->getListModalidad(),
-            'listaR' => $this->getListRegimen()
-        );
-    }
-
-    /**
-     * @Route("/imagen", name="institucion_imagen")
-     * @Method("GET")
-     * @Template()
-     */
-    public function imagenAction(Request $request){
-        //Asignar el FLAG
-        if(!$request->getSession()->get('flag'))
-        {$request->getSession()->set('flag',-1);}
-
-        $flag = $request->getSession()->get('flag');
-        $request->getSession()->set('flag',-1);
-
-        return array(
-            'flag'=>$flag,
-            'image'=>$this->getImage($this->getUser()->getId()),
-            'dataI'=>$this->getInstitucion($this->getUser()->getId()),
-        );
-    }
-
-
-/* GET */
-
-    private function getInstitucion($id){
+    public function indexAction()
+    {
         $em = $this->getDoctrine()->getManager();
-        $data = $em->getRepository('PAGEDemoBundle:DatosInstitucion')->find($id);
-        return $data;
+
+        $entities = $em->getRepository('PAGEDemoBundle:Institution')->findAll();
+
+        return array(
+            'entities' => $entities,
+        );
+    }
+    /**
+     * Creates a new Institution entity.
+     *
+     * @Route("/", name="institution_create")
+     * @Method("POST")
+     * @Template("PAGEDemoBundle:Institution:new.html.twig")
+     */
+    public function createAction(Request $request)
+    {
+        $entity = new Institution();
+        $form = $this->createCreateForm($entity);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $in_institution = new InInstitution();
+            $in_institution -> setInstitution($entity);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($entity);
+            $em->persist($in_institution);
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('institution_show', array('id' => $entity->getId())));
+        }
+
+        return array(
+            'entity' => $entity,
+            'form'   => $form->createView(),
+        );
     }
 
-    private function getImage($id){
-        $id_user = $this->getUser()->getParent();
+    /**
+     * Creates a form to create a Institution entity.
+     *
+     * @param Institution $entity The entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createCreateForm(Institution $entity)
+    {
+        $form = $this->createForm(new InstitutionType(), $entity, array(
+            'action' => $this->generateUrl('institution_create'),
+            'method' => 'POST',
+        ));
+
+        $form->add('submit', 'submit', array('label' => 'Create'));
+
+        return $form;
+    }
+
+    /**
+     * Displays a form to create a new Institution entity.
+     *
+     * @Route("/new", name="institution_new")
+     * @Method("GET")
+     * @Template()
+     */
+    public function newAction()
+    {
+        $entity = new Institution();
+        $form   = $this->createCreateForm($entity);
+
+        return array(
+            'entity' => $entity,
+            'form'   => $form->createView(),
+        );
+    }
+
+    /**
+     * Finds and displays a Institution entity.
+     *
+     * @Route("/{id}", name="institution_show")
+     * @Method("GET")
+     * @Template()
+     */
+    public function showAction($id)
+    {
         $em = $this->getDoctrine()->getManager();
-        if(file_exists('users/'.$id_user.'/images/'.$id))
-            return true;
-        return false;
+
+        $entity = $em->getRepository('PAGEDemoBundle:Institution')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Institution entity.');
+        }
+
+        $deleteForm = $this->createDeleteForm($id);
+
+        return array(
+            'entity'      => $entity,
+            'delete_form' => $deleteForm->createView(),
+        );
     }
 
-    private function getListJornada(){
-        $load = new LoadController();
-        return $load->jornadaAction();
-    }
-
-    private function getListModalidad(){
-        $load = new LoadController();
-        return $load->modalidadAction();
-    }
-
-    private function getListRegimen(){
-        $load = new LoadController();
-        return $load->regimenAction();
-    }
-
-
-/* POST */
     /**
-     * @Route("/perfil/edit",name="institucion_edit")
-     * @Method("POST")
+     * Displays a form to edit an existing Institution entity.
+     *
+     * @Route("/{id}/edit", name="institution_edit")
+     * @Method("GET")
+     * @Template()
      */
-    public function editInstitucionPerfil(Request $request){
-        try{
-            $id = $this->getUser() -> getId();
-            $em = $this->getDoctrine()->getManager();
-            if($dInstitucion = $em->getRepository('PAGEDemoBundle:DatosInstitucion')->find($id))
-            {
-                $dInstitucion->setRbd($request->get("rbd"));
-                $dInstitucion->setRut($request->get("rut"));
-                $dInstitucion->setAddress($request->get("address"));
-                $dInstitucion->setFax($request->get("fax"));
-                $dInstitucion->setRep($request->get("rep"));
-                $em->flush();
-                $request->getSession()->set('flag',1);
-            }
-        }catch(Exception $e){
-            $request->getSession()->set('flag',0);
+    public function editAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('PAGEDemoBundle:Institution')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Institution entity.');
         }
-        return new RedirectResponse($this->generateUrl('institucion_perfil'));
+
+        $editForm = $this->createEditForm($entity);
+        $deleteForm = $this->createDeleteForm($id);
+
+        return array(
+            'entity'      => $entity,
+            'form'   => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        );
     }
 
     /**
-     * @Route("/unidad/edit", name="unidad_edit")
-     * @Method("POST")
+    * Creates a form to edit a Institution entity.
+    *
+    * @param Institution $entity The entity
+    *
+    * @return \Symfony\Component\Form\Form The form
+    */
+    private function createEditForm(Institution $entity)
+    {
+        $form = $this->createForm(new InstitutionType(), $entity, array(
+            'action' => $this->generateUrl('institution_update', array('id' => $entity->getId())),
+            'method' => 'PUT',
+        ));
+
+        $form->add('submit', 'submit', array('label' => 'Update'));
+
+        return $form;
+    }
+    /**
+     * Edits an existing Institution entity.
+     *
+     * @Route("/{id}", name="institution_update")
+     * @Method("PUT")
+     * @Template("PAGEDemoBundle:Institution:edit.html.twig")
      */
-    public function editInstitucionUnidad(Request $request){
-        try{
-            $id = $this->getUser()->getId();
+    public function updateAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('PAGEDemoBundle:Institution')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Institution entity.');
+        }
+
+        $deleteForm = $this->createDeleteForm($id);
+        $editForm = $this->createEditForm($entity);
+        $editForm->handleRequest($request);
+
+        if ($editForm->isValid()) {
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('institution_edit', array('id' => $id)));
+        }
+
+        return array(
+            'entity'      => $entity,
+            'form'   => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        );
+    }
+    /**
+     * Deletes a Institution entity.
+     *
+     * @Route("/{id}", name="institution_delete")
+     * @Method("DELETE")
+     */
+    public function deleteAction(Request $request, $id)
+    {
+        $form = $this->createDeleteForm($id);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            if($dInstitucion = $em->getRepository('PAGEDemoBundle:DatosInstitucion')->find($id))
-            {
-                $dInstitucion->setJornada($request->get("jornada"));
-                $dInstitucion->setModalidad($request->get("modalidad"));
-                $dInstitucion->setRegimen($request->get("regimen"));
+            $entity = $em->getRepository('PAGEDemoBundle:Institution')->find($id);
 
-                //Agregar fecha
-                if( !empty($request->get('finicio'))){
-                    $fecha = str_replace('/', '-', $request->get('finicio'));
-                    $fecha = new \DateTime($fecha);
-                    $dInstitucion->setFechaInicio($fecha);
-                }
-
-                //Agregar fecha
-                if( !empty($request->get('ffin'))){
-                    $fecha = str_replace('/', '-', $request->get('ffin'));
-                    $fecha = new \DateTime($fecha);
-                    $dInstitucion->setFechaFin($fecha);
-                }
-                $em->flush();
-                $request->getSession()->set('flag',1);
+            if (!$entity) {
+                throw $this->createNotFoundException('Unable to find Institution entity.');
             }
-        }catch(Exception $e){
-            $request->getSession()->set('flag',0);
+
+            $em->remove($entity);
+            $em->flush();
         }
-        return new RedirectResponse($this->generateUrl('institucion_unidad'));
+
+        return $this->redirect($this->generateUrl('institution'));
     }
 
     /**
-    * @Route("/imagen/edit", name="institucion_imagen_edit")
-    */
-    public function editImagenAction(Request $request){
-        $id = $this->getUser()->getId();
-        try{
-            $id_user = $this->getUser()->getParent();
-            $file = $request->files->get('file');
-
-            if (($file instanceof UploadedFile) && ($file->getError() == '0')) {
-
-                if (($file->getSize() < 200000000)) {
-                    $name = $file->getClientOriginalName();
-                    $ext = $file->guessExtension();
-                    $type = $file->getMimeType();
-                    $size = $file->getClientSize();
-
-                    $valid_filetypes = array('jpg', 'jpeg','png');
-                    if (in_array($ext, $valid_filetypes)) {
-
-                        if($file->isValid()){
-
-                            $upload = $file->move('users/'.$id_user.'/images/',$id);
-                            $request->getSession()->set('flag',1);
-                            //update BD USER
-                            $em = $this->getDoctrine()->getManager();
-                            if($user = $em->getRepository('PAGEDemoBundle:User')->find($id)){
-                                $user ->setUrl($id);
-                                $em->flush();
-                                $request->getSession()->set('flag',1);
-                            }
-                        }
-                    } else {
-                        //type no corresponde
-                        $request->getSession()->set('flag',0);
-                    }
-                } else {
-                    //Size muy grande
-                    $request->getSession()->set('flag',0);
-                }
-            } else {
-                //Error de file error (0)
-                 $request->getSession()->set('flag',0);
-            }
-        }catch(Exception $e){
-            $request->getSession()->set('flag',0);
-        }
-        return $this->redirect($this->generateUrl('institucion_imagen',array('id'=>$id)));
-    }
-
-    /**
-    * @Route("/imagen/delete", name="institucion_imagen_delete")
-    */
-    public function deleteImagen(Request $request){
-        try{
-            $id = $this->getUser()->getId();
-            $id_user = $this->getUser()->getParent();
-
-            $url = 'users/'.$id_user.'/images/'.$id;
-
-            if (file_exists($url))
-            {
-                unlink($url);
-                $em = $this->getDoctrine()->getManager();
-                if($user = $em->getRepository('PAGEDemoBundle:User')->find($id))
-                    $user ->setUrl(null);
-                    $em->flush();
-            }
-            $request->getSession()->set('flag',1);
-        }catch(Exception $e){
-            $request->getSession()->set('flag',0);
-        }
-        return $this->redirect($this->generateUrl('institucion_imagen',array('id' => $id )));
+     * Creates a form to delete a Institution entity by id.
+     *
+     * @param mixed $id The entity id
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createDeleteForm($id)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('institution_delete', array('id' => $id)))
+            ->setMethod('DELETE')
+            ->add('submit', 'submit', array('label' => 'Delete'))
+            ->getForm()
+        ;
     }
 }

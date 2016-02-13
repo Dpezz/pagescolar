@@ -2,386 +2,246 @@
 
 namespace PAGE\DemoBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Security\Core\SecurityContext;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-
-// these import the "@Route" and "@Template" annotations
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\HttpFoundation\JsonResponse;
-
-use PAGE\DemoBundle\Controller\GetController;
-use PAGE\DemoBundle\Controller\LoadController;
-
+use PAGE\DemoBundle\Entity\CallRoll;
+use PAGE\DemoBundle\Form\CallRollType;
 
 /**
- * @Route("/profile")
+ * CallRoll controller.
+ *
+ * @Route("/profile/callroll")
  */
-class CallrollController extends Controller
+class CallRollController extends Controller
 {
-    
-/* Template */
 
     /**
-    * @Route("/asistencias", name="asistencias")
-    * @Method("GET")
-    * @Template()
-    */
-    public function asistenciasAction(Request $request){
-        //Asignar el FLAG
-        if(!$request->getSession()->get('flag'))
-        {$request->getSession()->set('flag',-1);}
+     * Lists all CallRoll entities.
+     *
+     * @Route("/", name="callroll")
+     * @Method("GET")
+     * @Template()
+     */
+    public function indexAction()
+    {
+        $em = $this->getDoctrine()->getManager();
 
-        $flag = $request->getSession()->get('flag');
-        $request->getSession()->set('flag',-1);
+        $entities = $em->getRepository('PAGEDemoBundle:CallRoll')->findAll();
 
-        $id_user = $this->getUser()->getParent();
-        $id_curso = $this->getCursos($id_user)[0]->getId();//Id del Curso
-           
-        //Obtener la fecha de hoy y de inicio de clases
-        $hoy = new \DateTime('now');
-        $user = $this->getInstitucion($id_user);
-        if(!is_null($user->getFechaInicio()) && !empty($user->getFechaInicio()))
-            $inicio = $user->getFechaInicio();
-        else
-            $inicio = new \DateTime(date('Y').'-03-01');
+        return array(
+            'entities' => $entities,
+        );
+    }
+    /**
+     * Creates a new CallRoll entity.
+     *
+     * @Route("/", name="callroll_create")
+     * @Method("POST")
+     * @Template("PAGEDemoBundle:CallRoll:new.html.twig")
+     */
+    public function createAction(Request $request)
+    {
+        $entity = new CallRoll();
+        $form = $this->createCreateForm($entity);
+        $form->handleRequest($request);
 
-        $dias = $inicio->diff($hoy);
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($entity);
+            $em->flush();
 
-        return array (
-            'flag'=>$flag,
-            'curso'=>$this->getNameCurso($id_curso),
-            'dataC'=>$this->getCursos($id_user),
-            'dataA'=>$this->getAlumnosCurso($id_user,$id_curso),
-            'dataAS'=>$this->getJsonAsistencia($id_curso,$id_user),
-            'dias'=>intval($dias->format('%a'))
-            
+            return $this->redirect($this->generateUrl('callroll_show', array('id' => $entity->getId())));
+        }
+
+        return array(
+            'entity' => $entity,
+            'form'   => $form->createView(),
         );
     }
 
     /**
-    * @Route("/asistencias/curso/{id}", name="asistencias_curso")
-    * @Method("GET")
-    */
-    public function asistenciasCursoAction(Request $request,$id){
-        //Asignar el FLAG
-        if(!$request->getSession()->get('flag'))
-        {$request->getSession()->set('flag',-1);}
-
-        $flag = $request->getSession()->get('flag');
-        $request->getSession()->set('flag',-1);
-
-        $id_user = $this->getUser()->getParent();
-        $id_curso = $id;//Id del Curso
-           
-        //Obtener la fecha de hoy y de inicio de clases
-        $hoy = new \DateTime('now');
-        $user = $this->getInstitucion($id_user);
-        if(!is_null($user->getFechaInicio()) && !empty($user->getFechaInicio()))
-            $inicio = $user->getFechaInicio();
-        else
-            $inicio = new \DateTime(date('Y').'-03-01');
-
-        $dias = $inicio->diff($hoy);
-
-        return $this->render('PAGEDemoBundle:Callroll:asistencias.html.twig',array (
-            'flag'=>$flag,
-            'curso'=>$this->getNameCurso($id_curso),
-            'dataC'=>$this->getCursos($id_user),
-            'dataA'=>$this->getAlumnosCurso($id_user,$id_curso),
-            'dataAS'=>$this->getJsonAsistencia($id_curso,$id_user),
-            'dias'=>intval($dias->format('%a'))
+     * Creates a form to create a CallRoll entity.
+     *
+     * @param CallRoll $entity The entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createCreateForm(CallRoll $entity)
+    {
+        $form = $this->createForm(new CallRollType(), $entity, array(
+            'action' => $this->generateUrl('callroll_create'),
+            'method' => 'POST',
         ));
+
+        $form->add('submit', 'submit', array('label' => 'Create'));
+
+        return $form;
     }
 
     /**
-    * @Route("/asistencias/alumno/{id}", name="asistencias_alumno")
-    * @Method("GET")
-    * @Template()
-    */
-    public function asistenciasAlumnoAction(Request $request,$id){
-        //Asignar el FLAG
-        if(!$request->getSession()->get('flag'))
-        {$request->getSession()->set('flag',-1);}
+     * Displays a form to create a new CallRoll entity.
+     *
+     * @Route("/new", name="callroll_new")
+     * @Method("GET")
+     * @Template()
+     */
+    public function newAction()
+    {
+        $entity = new CallRoll();
+        $form   = $this->createCreateForm($entity);
 
-        $flag = $request->getSession()->get('flag');
-        $request->getSession()->set('flag',-1);
-
-        $id_user = $this->getUser()->getParent();
-        $id_curso = $this->getAlumno($id_user,$id)->getCurso();//Id del Curso
-           
-        //Obtener la fecha de hoy y de inicio de clases
-        $hoy = new \DateTime('now');
-        $user = $this->getInstitucion($id_user);
-        if(!is_null($user->getFechaInicio()) && !empty($user->getFechaInicio()))
-            $inicio = $user->getFechaInicio();
-        else
-            $inicio = new \DateTime(date('Y').'-03-01');
-
-        $dias = $inicio->diff($hoy);
-
-        return $this->render('PAGEDemoBundle:Callroll:asistencias.html.twig', array (
-            'flag'=>$flag,
-            'curso'=>$this->getNameCurso($id_curso),
-            'dataC'=>$this->getCursos($id_user),
-            'dataA'=>$this->getAlumnoCurso($id_user,$id_curso,$id),
-            'dataAS'=>$this->getJsonAsistencia($id_curso,$id_user),
-            'dias'=>intval($dias->format('%a'))
-        ));
-    }
-
-    /**
-    * @Route("/asistencias/filter", name="asistencias_filter")
-    * @Method("POST")
-    */
-    public function asistenciasFilterAction(Request $request){
-        //Asignar el FLAG
-        if(!$request->getSession()->get('flag'))
-        {$request->getSession()->set('flag',-1);}
-
-        $flag = $request->getSession()->get('flag');
-        $request->getSession()->set('flag',-1);
-
-        $id_user = $this->getUser()->getParent();
-        $id_curso = $request->get('curso');//Id del Curso
-           
-        //Obtener la fecha de hoy y de inicio de clases
-        $hoy = new \DateTime('now');
-        $user = $this->getInstitucion($id_user);
-        if(!is_null($user->getFechaInicio()) && !empty($user->getFechaInicio()))
-            $inicio = $user->getFechaInicio();
-        else
-            $inicio = new \DateTime(date('Y').'-03-01');
-
-        $dias = $inicio->diff($hoy);
-
-        return $this->render('PAGEDemoBundle:Callroll:asistencias.html.twig',array (
-            'flag'=>$flag,
-            'curso'=>$this->getNameCurso($id_curso),
-            'dataC'=>$this->getCursos($id_user),
-            'dataA'=>$this->getAlumnosCurso($id_user,$id_curso),
-            'dataAS'=>$this->getJsonAsistencia($id_curso,$id_user),
-            'dias'=>intval($dias->format('%a'))
-            
-        ));
-    }
-
-    /**
-    * @Route("/asistencia/{id}", name="asistencia")
-    * @Method("GET")
-    * @Template()
-    */
-    public function asistenciaAction(Request $request, $id){
-        //Asignar el FLAG
-        if(!$request->getSession()->get('flag'))
-        {$request->getSession()->set('flag',-1);}
-
-        $flag = $request->getSession()->get('flag');
-        $request->getSession()->set('flag',-1);
-
-        $id_user = $this->getUser()->getParent();
-        $id_curso = $id;//get ID
-        $fecha = $request->query->get('fecha');//get Fecha
-
-        return array (
-            'flag'=>$flag,
-            'curso'=>$this->getNameCurso($id_curso),
-            'id_curso'=>$id_curso,
-            'fecha'=>$fecha,
-            'dataA'=>$this->getAlumnosCurso($id_user,$id_curso),
-            'dataAS'=>$this->jsonAsistenciaFecha($id_curso,$id_user,$fecha),
-            'exist'=>$this->jsonAsistenciaFechaExist($id_curso,$id_user,$fecha)
+        return array(
+            'entity' => $entity,
+            'form'   => $form->createView(),
         );
     }
 
-/* GET */
-
-    public function getInstitucion($id){
-        $em = $this->getDoctrine()->getManager();
-        $data = $em->getRepository('PAGEDemoBundle:DatosInstitucion')->find($id);
-        return $data;
-    }
-
-    public function getCursos($id){
-        $em = $this->getDoctrine()->getManager();
-        $data = $em->getRepository('PAGEDemoBundle:DatosCursos')->findBy(array('id_user'=>$id));
-        return $data;
-    }
-
-    public function getAlumno($id_user,$id){
-        $em = $this->getDoctrine()->getManager();
-        $data = $em->getRepository('PAGEDemoBundle:DatosAlumnos')->findOneBy(array('id_user'=>$id_user,'id'=>$id));
-        return $data;
-    }
-
-    public function getAlumnosCurso($id,$id_curso){
-        $em = $this->getDoctrine()->getManager();
-        $data = $em->getRepository('PAGEDemoBundle:DatosAlumnos')->findBy(array('id_user'=>$id,'curso'=>$id_curso));
-        return $data;
-    }
-
-    public function getAlumnoCurso($id_user,$id_curso,$id){
-        $em = $this->getDoctrine()->getManager();
-        $data = $em->getRepository('PAGEDemoBundle:DatosAlumnos')->findBy(array('id_user'=>$id_user,'curso'=>$id_curso,'id'=>$id));
-        return $data;
-    }
-
-    private function getNameCurso($id){
-        $em = $this->getDoctrine()->getManager();
-        if($data = $em->getRepository('PAGEDemoBundle:DatosCursos')->find($id))
-            return $data->getName().' '.$data->getIndice();
-
-        return null;
-    }
-
-/* POST ASISTENCIA */
     /**
-     * @Route("/asistencia/create/{id}", name="asistencia_create")
-     * @Method("POST")
+     * Finds and displays a CallRoll entity.
+     *
+     * @Route("/{id}", name="callroll_show")
+     * @Method("GET")
+     * @Template()
      */
-    public function createAsistencia(Request $request, $id){
-            $id_curso = $id;
-            //$id_curso = 'kMrJ4FeG8KOvwM7';
-            $fecha = str_replace('/', '-',$request->query->get('fecha'));
-            //$fecha = '18/03/2015';
-            $id_user = $this->getUser()->getParent();
+    public function showAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
 
-            try{
-                $file = file_get_contents("users/".$id_user."/callroll/".$id_curso.".json");
-                $json = json_decode($file,true);
+        $entity = $em->getRepository('PAGEDemoBundle:CallRoll')->find($id);
 
-                $ausentes = array();
-                $data = $this->getAlumnosCurso($id_user,$id_curso);
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find CallRoll entity.');
+        }
 
-                foreach ($data as $key => $value) {
-                    if($request->get('presente_'.$value->getId()) != 1){
-                        $ausentes[] = array('id'=>$value->getId(),'motivo'=>$request->get('motivo_'.$value->getId()));
-                    }
-                }
+        $deleteForm = $this->createDeleteForm($id);
 
-                $array = array('fecha'=>$fecha,'ausentes'=>$ausentes);
-                $json['asistencia'][count($json['asistencia'])] = $array;
-                
-                $json = json_encode($json,true);
-                file_put_contents("users/".$id_user."/callroll/".$id_curso.".json", $json);
-                $request->getSession()->set('flag',1);
-
-            }catch(Exception $e){
-                $exit = false;
-                $request->getSession()->set('flag',0);
-            }
-            return new RedirectResponse($this->generateUrl('asistencia',array('id'=>$id_curso,'fecha'=>$fecha)));
+        return array(
+            'entity'      => $entity,
+            'delete_form' => $deleteForm->createView(),
+        );
     }
 
     /**
-     * @Route("/asistencia/edit/{id}", name="asistencia_edit")
-     * @Method("POST")
+     * Displays a form to edit an existing CallRoll entity.
+     *
+     * @Route("/{id}/edit", name="callroll_edit")
+     * @Method("GET")
+     * @Template()
      */
-    public function editAsistencia(Request $request, $id){
-            $id_curso = $id;
-            //$id_curso = 'kMrJ4FeG8KOvwM7';
-            $fecha = str_replace('/', '-',$request->query->get('fecha'));
-            //$fecha = '18/03/2015';
-            $id_user = $this->getUser()->getParent();
-
-            try{
-                $file = file_get_contents("users/".$id_user."/callroll/".$id_curso.".json");
-                $json = json_decode($file,true);
-
-                $ausentes = array();
-                $data = $this->getAlumnosCurso($id_user,$id_curso);
-
-                foreach ($data as $key => $value) {
-                    if($request->get('presente_'.$value->getId()) != 1){
-                        $ausentes[] = array('id'=>$value->getId(),'motivo'=>$request->get('motivo_'.$value->getId()));
-                    }
-                }
-
-                for ($i=0; $i < count($json['asistencia']) ; $i++) { 
-                     if($fecha == $json['asistencia'][$i]['fecha'])
-                            $json['asistencia'][$i]['ausentes'] = $ausentes;
-                }
-                /*
-                foreach ($json['asistencia'] as $key => $value) {
-                    if($fecha == $value['fecha'])
-                        $value['ausentes'] = $ausentes;
-                }
-                */
-                //$array = array('fecha'=>$fecha,'ausentes'=>$ausentes);
-                //$json['asistencia'][count($json['asistencia'])] = $array;
-                
-                $json = json_encode($json,true);
-                file_put_contents("users/".$id_user."/callroll/".$id_curso.".json", $json);
-                $request->getSession()->set('flag',1);
-
-            }catch(Exception $e){
-                $exit = false;
-                $request->getSession()->set('flag',0);
-            }
-            return new RedirectResponse($this->generateUrl('asistencia',array('id'=>$id_curso,'fecha'=>$fecha)));
-    }
-
-/* FUNCIONES */
-
-    private function newJsonAsistencia($id,$id_user){
-        
+    public function editAction($id)
+    {
         $em = $this->getDoctrine()->getManager();
-        $data = $em->getRepository('PAGEDemoBundle:DatosCursos')->find($id);
 
-        $json = json_encode(array('id'=>$data->getId(),'year'=>date('Y'),'asistencia'=>array()));
+        $entity = $em->getRepository('PAGEDemoBundle:CallRoll')->find($id);
 
-        $fh = fopen("users/".$id_user."/callroll/".$id.".json", 'w');
-        fwrite($fh, $json);
-        fclose($fh);
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find CallRoll entity.');
+        }
+
+        $editForm = $this->createEditForm($entity);
+        $deleteForm = $this->createDeleteForm($id);
+
+        return array(
+            'entity'      => $entity,
+            'form'   => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        );
     }
 
-    private function jsonAsistenciaFecha($id,$id_user,$fecha){
-        
-        $file = file_get_contents("users/".$id_user."/callroll/".$id.".json");
-        $json = json_decode($file,true);
+    /**
+    * Creates a form to edit a CallRoll entity.
+    *
+    * @param CallRoll $entity The entity
+    *
+    * @return \Symfony\Component\Form\Form The form
+    */
+    private function createEditForm(CallRoll $entity)
+    {
+        $form = $this->createForm(new CallRollType(), $entity, array(
+            'action' => $this->generateUrl('callroll_update', array('id' => $entity->getId())),
+            'method' => 'PUT',
+        ));
 
-        $data = $json["asistencia"];
-        $fecha = str_replace('/', '-', $fecha);
-        $array = array();
+        $form->add('submit', 'submit', array('label' => 'Update'));
 
-        foreach ($data as $key => $value){
-            if($value['fecha'] == $fecha){
-                $array = $value["ausentes"];
+        return $form;
+    }
+    /**
+     * Edits an existing CallRoll entity.
+     *
+     * @Route("/{id}", name="callroll_update")
+     * @Method("PUT")
+     * @Template("PAGEDemoBundle:CallRoll:edit.html.twig")
+     */
+    public function updateAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('PAGEDemoBundle:CallRoll')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find CallRoll entity.');
+        }
+
+        $deleteForm = $this->createDeleteForm($id);
+        $editForm = $this->createEditForm($entity);
+        $editForm->handleRequest($request);
+
+        if ($editForm->isValid()) {
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('callroll_edit', array('id' => $id)));
+        }
+
+        return array(
+            'entity'      => $entity,
+            'form'   => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        );
+    }
+    /**
+     * Deletes a CallRoll entity.
+     *
+     * @Route("/{id}", name="callroll_delete")
+     * @Method("DELETE")
+     */
+    public function deleteAction(Request $request, $id)
+    {
+        $form = $this->createDeleteForm($id);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $entity = $em->getRepository('PAGEDemoBundle:CallRoll')->find($id);
+
+            if (!$entity) {
+                throw $this->createNotFoundException('Unable to find CallRoll entity.');
             }
+
+            $em->remove($entity);
+            $em->flush();
         }
-        return $array;
+
+        return $this->redirect($this->generateUrl('callroll'));
     }
 
-    private function jsonAsistenciaFechaExist($id,$id_user,$fecha){
-        
-        $file = file_get_contents("users/".$id_user."/callroll/".$id.".json");
-        $json = json_decode($file,true);
-
-        $data = $json["asistencia"];
-        $fecha = str_replace('/', '-', $fecha);
-
-        foreach ($data as $key => $value){
-            if($value['fecha'] == $fecha){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private function deleteJsonAsistencia($id){
-        if(file_exists("users/".$this->getUser()->getParent()."/callroll/".$id.".json")){
-            unLink("users/".$this->getUser()->getParent()."/callroll/".$id.".json");
-        }
-    }
-
-    private function getJsonAsistencia($id,$id_user){
-        
-        $fh = file_get_contents("users/".$id_user."/callroll/".$id.".json");
-        return json_decode($fh,true);
+    /**
+     * Creates a form to delete a CallRoll entity by id.
+     *
+     * @param mixed $id The entity id
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createDeleteForm($id)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('callroll_delete', array('id' => $id)))
+            ->setMethod('DELETE')
+            ->add('submit', 'submit', array('label' => 'Delete'))
+            ->getForm()
+        ;
     }
 }

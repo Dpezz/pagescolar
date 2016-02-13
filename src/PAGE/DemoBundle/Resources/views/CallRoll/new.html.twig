@@ -1,0 +1,19 @@
+{% extends 'PAGEDemoBundle:Layout:layout_dashboard.html.twig' %}
+
+{% block title "Nueva Asistencia"%}
+
+{% block menu_admin_academico %}class="active"{% endblock %}
+
+{% block datos %}
+    <h1 class="page-header">Nueva Asistencia</h1>
+
+   	{% include 'PAGEDemoBundle:CallRoll:_form.html.twig' %}
+
+    <ul class="record_actions">
+	    <li>
+	        <a href="{{ path('callroll') }}">
+	            Back to the list
+	        </a>
+	    </li>
+	</ul>
+{% endblock %}

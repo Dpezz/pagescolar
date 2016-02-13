@@ -2,494 +2,250 @@
 
 namespace PAGE\DemoBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Security\Core\SecurityContext;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-
-// these import the "@Route" and "@Template" annotations
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\HttpFoundation\JsonResponse;
-
-use PAGE\DemoBundle\Controller\LoadController;
-use PAGE\DemoBundle\Entity\DatosDocentes;
+use PAGE\DemoBundle\Entity\Teacher;
+use PAGE\DemoBundle\Entity\InTeacher;
+use PAGE\DemoBundle\Form\TeacherType;
 
 /**
- * @Route("/profile")
+ * Teacher controller.
+ *
+ * @Route("/profile/teacher")
  */
 class TeacherController extends Controller
 {
-/* Template */
 
     /**
-     * @Route("/docentes/new", name="docente_new")
+     * Lists all Teacher entities.
+     *
+     * @Route("/", name="teacher")
      * @Method("GET")
      * @Template()
      */
-    public function newAction(Request $request)
+    public function indexAction()
     {
-        //Asignar el FLAG
-        if(!$request->getSession()->get('flag'))
-            $request->getSession()->set('flag',-1);
-
-        $flag = $request->getSession()->get('flag');
-        $request->getSession()->set('flag',-1);
-
-        $load = new LoadController();
-        
-        return array(
-            'flag'=>$flag,
-            'image'=>false,
-            'dataD'=>null,
-            'listaS'=>$load->SexoAction(),
-            'listaR'=>$load->regionAction(),
-            'listaP'=>$load->paisAction()
-        );
-    }
-    
-    /**
-     * @Route("/docentes/{id}", defaults={"id" = -1}, name="docentes")
-     * @Method("GET")
-     * @Template()
-     */
-    public function docentesAction(Request $request,$id)
-    {
-        //Asignar el FLAG
-        if(!$request->getSession()->get('flag'))
-            $request->getSession()->set('flag',-1);
-
-        $flag = $request->getSession()->get('flag');
-        $request->getSession()->set('flag',-1);
+        $em = $this->getDoctrine()->getManager();
+        $entities = $this->getUser()->getTeachers();
 
         return array(
-            'flag'=>$flag,
-            'dataD'=>$this->getDocentes($this->getUser()->getParent()),
-            'dataA'=>$this->getAsignaturas($this->getUser()->getParent()),
-            'name_curso'=>'',
-            'curso'=>null,
+            'entities' => $entities,
         );
     }
-
     /**
-     * @Route("/docentes/curso/{id}", defaults={"id" = -1}, name="docentes_curso")
-     * @Method("GET")
-     * @Template()
-     */
-    public function docentesCursoAction(Request $request,$id)
-    {
-        //Asignar el FLAG
-        if(!$request->getSession()->get('flag'))
-            $request->getSession()->set('flag',-1);
-
-        $flag = $request->getSession()->get('flag');
-        $request->getSession()->set('flag',-1);
-
-        return $this->render('PAGEDemoBundle:Teacher:docentes.html.twig', array(
-            'flag'=>$flag,
-            'dataD'=>$this->getDocentesCurso($this->getUser()->getParent(),$id),
-            'dataA'=>$this->getAsignaturas($this->getUser()->getParent()),
-            'name_curso'=>$this->getNameCurso($this->getUser()->getParent(),$id),
-            'curso'=>$id,
-        ));
-    }
-
-
-    /**
-     * @Route("/docentes/perfil/{id}", name="docente_perfil_show")
-     * @Method("GET")
-     * @Template()
-     */
-    public function perfilAction(Request $request, $id)
-    {
-        //Asignar el FLAG
-        if(!$request->getSession()->get('flag'))
-            $request->getSession()->set('flag',-1);
-
-        $flag = $request->getSession()->get('flag');
-        $request->getSession()->set('flag',-1);
-
-        $load = new LoadController();
-
-        if($this->getUser()->getRole() == 'ROLE_DOCENTE')
-            $id = $this->getUser()->getId();
-
-        return array(
-            'flag'=>$flag,
-            'image'=>$this->getImage($id),
-            'dataD'=>$this->getDocente($id),
-            'listaS'=>$load->sexoAction(),
-            'listaR'=>$load->regionAction(),
-            'listaP'=>$load->paisAction()
-        );
-    }
-
-    /**
-     * @Route("/docentes/academico/{id}", name="docente_academico_show")
-     * @Method("GET")
-     * @Template()
-     */
-    public function academicoAction(Request $request, $id)
-    {
-        //Asignar el FLAG
-        if(!$request->getSession()->get('flag'))
-            $request->getSession()->set('flag',-1);
-
-        $flag = $request->getSession()->get('flag');
-        $request->getSession()->set('flag',-1);
-
-        $load = new LoadController();
-
-        if($this->getUser()->getRole() == 'ROLE_DOCENTE')
-            $id = $this->getUser()->getId();
-
-        return array(
-            'flag'=>$flag,
-            'dataD'=>$this->getDocente($id),
-            'dataA'=>$this->getAsignaturas($this->getUser()->getParent()),
-            'listaG'=>$load->grupoAction(),
-            'listaN'=>$load->nivelAction(),
-            'listaF'=>$load->funcionAction()
-        );
-    }
-
-    /**
-     * @Route("/docentes/imagen/{id}", name="docente_imagen_show")
-     * @Method("GET")
-     * @Template()
-     */
-    public function imagenAction(Request $request, $id)
-    {
-        //Asignar el FLAG
-        if(!$request->getSession()->get('flag'))
-            $request->getSession()->set('flag',-1);
-
-        $flag = $request->getSession()->get('flag');
-        $request->getSession()->set('flag',-1);
-
-        if($this->getUser()->getRole() == 'ROLE_DOCENTE')
-            $id = $this->getUser()->getId();
-
-        return array(
-            'flag'=>$flag,
-            'image'=>$this->getImage($id),
-            'dataD'=>$this->getDocente($id),
-        );
-    }
-
-/* GET */
-
-    public function getDocentes($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $data = $em->getRepository('PAGEDemoBundle:DatosDocentes')
-        ->findBy(array('id_user'=>$id),array('plastname' => 'ASC'));
-        return $data;
-    }
-
-    public function getDocente($id){
-        $em = $this->getDoctrine()->getManager();
-        $data = $em->getRepository('PAGEDemoBundle:DatosDocentes')
-        ->find($id);
-        return $data;
-    }
-
-    public function getDocentesCurso($id_user,$id)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $data = $em->createQuery('SELECT  p
-            FROM PAGEDemoBundle:DatosCalendarioDocentes u
-            JOIN PAGEDemoBundle:DatosDocentes p
-            WHERE u.id_user=:user and u.id_curso = :curso and p.id = u.id_docente')
-        ->setParameter('user', $id_user)
-        ->setParameter('curso', $id)
-        ->getResult();
-        return $data;
-    }
-
-
-    public function getAsignaturas($id){
-        $em = $this->getDoctrine()->getManager();
-        $data = $em->getRepository('PAGEDemoBundle:DatosAsignaturas')
-        ->findBy(array('id_user'=>$id));
-        return $data;
-    }
-
-    private function getImage($id){
-        $id_user = $this->getUser()->getParent();
-        $em = $this->getDoctrine()->getManager();
-        if(file_exists('users/'.$id_user.'/images/'.$id))
-            return true;
-        return false;
-    }
-
-    public function getNameCurso($id_user,$id){
-        $em = $this->getDoctrine()->getManager();
-        $data = $em->getRepository('PAGEDemoBundle:DatosCursos')
-        ->findOneBy(array('id_user'=>$id_user,'id'=>$id));
-        return $data;
-    }
-
-
-/* POST */
-    /**
-     * @Route("/docente/create",name="docente_create")
+     * Creates a new Teacher entity.
+     *
+     * @Route("/", name="teacher_create")
      * @Method("POST")
+     * @Template("PAGEDemoBundle:Teacher:new.html.twig")
      */
-    public function createDocente(Request $request)
+    public function createAction(Request $request)
     {
-        try{
-            $user = new DatosDocentes();
-            $id_user = $this->getUser()->getId();
-            $id = $this->nuevoId();
+        $entity = new Teacher();
+        
+        $form = $this->createCreateForm($entity);
+        $form->handleRequest($request);
 
-            $user->setId($id);
-            $user->setIdUser($id_user);
-
-            $user->setRut($request->get('rut'));
-            $user->setName($request->get('name'));
-            $user->setPlastname($request->get('plastname'));
-            $user->setMlastname($request->get('mlastname'));
-
-            //Agregar fecha
-            if( !empty($request->get('fnacimiento'))){
-                $fecha = str_replace('/', '-', $request->get('fnacimiento'));
-                $fecha = new \DateTime($fecha);
-                $user->setFechaNacimiento($fecha);
-            }
-            
-            $user->setSexo($request->get('sexo'));
-            $user->setAddress($request->get('address'));
-            $user->setRegion($request->get('region'));
-            $user->setComuna($request->get('comuna'));
-            $user->setPais($request->get('pais'));
-
-            $user->setTelefono($request->get('telefono'));
-            $user->setEmail($request->get('email'));
-
-            $user->setIngreso( date('Y'));//Año actual
-
-            $user->setIsActive(1);
-
+        if ($form->isValid()) {
+            $in_entity = new InTeacher();
+            $in_entity->setTeacher($entity);
             $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
+            $em->persist($entity);
+            $em->persist($in_entity);
             $em->flush();
 
-            $request->getSession()->set('flag',1);
-        }catch(Exception $e){
-            $request->getSession()->set('flag',0);
+            return $this->redirect($this->generateUrl('teacher_show', array('id' => $entity->getId())));
         }
-        return new RedirectResponse(
-            $this->generateUrl('docente_perfil_show', array('id'=>$id))
-            );
+
+        return array(
+            'entity' => $entity,
+            'form'   => $form->createView(),
+        );
     }
 
     /**
-     * @Route("/docente/perfil/edit/{id}",name="docente_perfil_edit")
-     * @Method("POST")
+     * Creates a form to create a Teacher entity.
+     *
+     * @param Teacher $entity The entity
+     *
+     * @return \Symfony\Component\Form\Form The form
      */
-    public function editDocente(Request $request, $id)
+    private function createCreateForm(Teacher $entity)
     {
-        try{
-            //$id = $request->query->get('id');
-            $em = $this->getDoctrine()->getManager();
-            if($user = $em->getRepository('PAGEDemoBundle:DatosDocentes')->find($id))
-            {
-                $user->setRut($request->get('rut'));
-                $user->setName($request->get('name'));
-                $user->setPlastname($request->get('plastname'));
-                $user->setMlastname($request->get('mlastname'));
+        $form = $this->createForm(new TeacherType(), $entity, array(
+            'action' => $this->generateUrl('teacher_create'),
+            'method' => 'POST',
+        ));
 
-                //Agregar fecha
-                if( !empty($request->get('fnacimiento'))){
-                    $fecha = str_replace('/', '-', $request->get('fnacimiento'));
-                    $fecha = new \DateTime($fecha);
-                    $user->setFechaNacimiento($fecha);
-                }
-                
-                $user->setSexo($request->get('sexo'));
-                $user->setAddress($request->get('address'));
-                $user->setRegion($request->get('region'));
-                $user->setComuna($request->get('comuna'));
-                $user->setPais($request->get('pais'));
+        $form->add('submit', 'submit', array('label' => 'Create'));
 
-                $user->setTelefono($request->get('telefono'));
-                $user->setEmail($request->get('email'));
-
-                $em->flush();
-                $request->getSession()->set('flag',1);
-            }
-        }catch(Exception $e){
-            $request->getSession()->set('flag',0);
-        }
-        return new RedirectResponse($this->generateUrl('docente_perfil_show', array('id'=>$id)));
+        return $form;
     }
 
     /**
-     * @Route("/docente/academico/edit/{id}",name="docente_academico_edit")
-     * @Method("POST")
+     * Displays a form to create a new Teacher entity.
+     *
+     * @Route("/new", name="teacher_new")
+     * @Method("GET")
+     * @Template()
      */
-    public function editAcademico(Request $request, $id)
+    public function newAction()
     {
-        try{
-            //$id = $request->query->get('id');
-            $em = $this->getDoctrine()->getManager();
-            if($user = $em->getRepository('PAGEDemoBundle:DatosDocentes')->find($id))
-            {
-                $user->setGrupo($request->get('grupo'));
-                $user->setFuncion($request->get('funcion'));
-                $user->setAsignatura($request->get('asignatura'));
-                $user->setNivel($request->get('nivel'));
-                $user->setTitulo($request->get('titulo'));
-                $user->setIngreso($request->get('ingreso'));
+        $entity = new Teacher();
+        $form   = $this->createCreateForm($entity);
 
-                $em->flush();
-                $request->getSession()->set('flag',1);
-            }
-        }catch(Exception $e){
-            $request->getSession()->set('flag',0);
-        }
-        return new RedirectResponse($this->generateUrl('docente_academico_show', array('id'=>$id)));
+        return array(
+            'entity' => $entity,
+            'form'   => $form->createView(),
+        );
     }
 
     /**
-     * @Route("/docente/delete")
-     * @Method("POST")
+     * Finds and displays a Teacher entity.
+     *
+     * @Route("/{id}", name="teacher_show")
+     * @Method("GET")
+     * @Template()
      */
-    public function deleteDocente(Request $request)
+    public function showAction($id)
     {
-        $data = json_decode($request->getContent(), true);
-        $request->request->replace($data);
-
-        try{
-            $id = $request->get('id');
-            $em = $this->getDoctrine()->getManager();
-            if($user = $em->getRepository('PAGEDemoBundle:DatosDocentes')->find($id))
-            {
-                $em->remove($user);
-                $em->flush();
-                $request->getSession()->set('flag',1);
-                return new Response(1);
-            }
-        }catch(Exception $e){
-            $request->getSession()->set('flag',0);
-            return new Response(0);
-        }
-    }
-
-    /**
-     * @Route("/docente/imagen/edit/{id}", name="docente_imagen_edit")
-     * @Method("POST")
-     */
-    public function editImagenAction(Request $request,$id)
-    {
-        //$id = $request->get('id');
-        try{
-            $id_user = $this->getUser()->getParent();
-            $file = $request->files->get('file');
-
-            if (($file instanceof UploadedFile) && ($file->getError() == '0')) {
-
-                if (($file->getSize() < 200000000)) {
-                    $name = $file->getClientOriginalName();
-                    $ext = $file->guessExtension();
-                    $type = $file->getMimeType();
-                    $size = $file->getClientSize();
-
-                    $valid_filetypes = array('jpg', 'jpeg','png');
-                    if (in_array($ext, $valid_filetypes)) {
-
-                        if($file->isValid()){
-
-                            $upload = $file->move('users/'.$id_user.'/images/',$id);
-                            $request->getSession()->set('flag',1);
-                            //update BD USER
-                            $em = $this->getDoctrine()->getManager();
-                            if($user = $em->getRepository('PAGEDemoBundle:User')->find($id)){
-                                $user ->setUrl($id);
-                                $em->flush();
-                                $request->getSession()->set('flag',1);
-                            }
-                        }
-                    } else {
-                        //type no corresponde
-                        $request->getSession()->set('flag',0);
-                    }
-                } else {
-                    //Size muy grande
-                    $request->getSession()->set('flag',0);
-                }
-            } else {
-                //Error de file error (0)
-                 $request->getSession()->set('flag',0);
-            }
-        }catch(Exception $e){
-            $request->getSession()->set('flag',0);
-        }
-        return $this->redirect($this->generateUrl('docente_imagen_show',array('id'=>$id)));
-    }
-
-    /**
-     * @Route("/docente/imagen/delete/{id}", name="docente_imagen_delete")
-     */
-    public function deleteImagen(Request $request, $id)
-    {
-        try{
-            //$id = $request->query->get('id');
-            $id_user = $this->getUser()->getParent();
-
-            $url = 'users/'.$id_user.'/images/'.$id;
-
-            if (file_exists($url))
-            {
-                unlink($url);
-                $em = $this->getDoctrine()->getManager();
-                if($user = $em->getRepository('PAGEDemoBundle:User')->find($id))
-                    $user ->setUrl(null);
-                    $em->flush();
-            }
-            $request->getSession()->set('flag',1);
-        }catch(Exception $e){
-            $request->getSession()->set('flag',0);
-        }
-        return $this->redirect($this->generateUrl('docente_imagen_show',array('id' => $id )));
-    }
-
-
-/* Funciones */
-    private function nuevoId()
-    {
-        $caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        $id = '';
-        for($i=0; $i<15; $i++){
-            $id .= $caracteres[rand(0, strlen($caracteres)-1)];
-        }
         $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository('PAGEDemoBundle:User')->find($id);
-        $docentes = $em->getRepository('PAGEDemoBundle:DatosDocentes')->find($id);
-        $alumnos = $em->getRepository('PAGEDemoBundle:DatosAlumnos')->find($id);
 
-        if ($user || $docentes || $alumnos){
-           $exit = true;
-           while($exit){
-                $id = '';
-                for($i=0; $i<15; $i++){
-                    $id .= $caracteres[rand(0, strlen($caracteres)-1)];
-                }
-                $em = $this->getDoctrine()->getManager();
-                $user = $em->getRepository('PAGEDemoBundle:User')->find($id);
-                $docentes = $em->getRepository('PAGEDemoBundle:DatosDocentes')->find($id);
-                $alumnos = $em->getRepository('PAGEDemoBundle:DatosAlumnos')->find($id);
+        $entity = $em->getRepository('PAGEDemoBundle:Teacher')->find($id);
 
-                if (!$user && !$docentes && !$alumnos)
-                    $exit = false;
-           }
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Teacher entity.');
         }
-        return $id;
+
+        $deleteForm = $this->createDeleteForm($id);
+
+        return array(
+            'entity'      => $entity,
+            'delete_form' => $deleteForm->createView(),
+        );
     }
 
+    /**
+     * Displays a form to edit an existing Teacher entity.
+     *
+     * @Route("/{id}/edit", name="teacher_edit")
+     * @Method("GET")
+     * @Template()
+     */
+    public function editAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('PAGEDemoBundle:Teacher')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Teacher entity.');
+        }
+
+        $editForm = $this->createEditForm($entity);
+        $deleteForm = $this->createDeleteForm($id);
+
+        return array(
+            'entity'      => $entity,
+            'form'   => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        );
+    }
+
+    /**
+    * Creates a form to edit a Teacher entity.
+    *
+    * @param Teacher $entity The entity
+    *
+    * @return \Symfony\Component\Form\Form The form
+    */
+    private function createEditForm(Teacher $entity)
+    {
+        $form = $this->createForm(new TeacherType(), $entity, array(
+            'action' => $this->generateUrl('teacher_update', array('id' => $entity->getId())),
+            'method' => 'PUT',
+        ));
+
+        $form->add('submit', 'submit', array('label' => 'Update'));
+
+        return $form;
+    }
+    /**
+     * Edits an existing Teacher entity.
+     *
+     * @Route("/{id}", name="teacher_update")
+     * @Method("PUT")
+     * @Template("PAGEDemoBundle:Teacher:edit.html.twig")
+     */
+    public function updateAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('PAGEDemoBundle:Teacher')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Teacher entity.');
+        }
+
+        $deleteForm = $this->createDeleteForm($id);
+        $editForm = $this->createEditForm($entity);
+        $editForm->handleRequest($request);
+
+        if ($editForm->isValid()) {
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('teacher_edit', array('id' => $id)));
+        }
+
+        return array(
+            'entity'      => $entity,
+            'form'   => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        );
+    }
+    /**
+     * Deletes a Teacher entity.
+     *
+     * @Route("/{id}", name="teacher_delete")
+     * @Method("DELETE")
+     */
+    public function deleteAction(Request $request, $id)
+    {
+        $form = $this->createDeleteForm($id);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $entity = $em->getRepository('PAGEDemoBundle:Teacher')->find($id);
+
+            if (!$entity) {
+                throw $this->createNotFoundException('Unable to find Teacher entity.');
+            }
+
+            $em->remove($entity);
+            $em->flush();
+        }
+
+        return $this->redirect($this->generateUrl('teacher'));
+    }
+
+    /**
+     * Creates a form to delete a Teacher entity by id.
+     *
+     * @param mixed $id The entity id
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createDeleteForm($id)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('teacher_delete', array('id' => $id)))
+            ->setMethod('DELETE')
+            ->add('submit', 'submit', array('label' => 'Delete'))
+            ->getForm()
+        ;
+    }
 }

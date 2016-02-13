@@ -1,0 +1,13 @@
+{% extends 'PAGEDemoBundle:Layout:layout_dashboard.html.twig' %}
+
+{% block title "Cuentas"%}
+
+{% block menu_admin_cuentas %}class="active"{% endblock %}
+
+{% block datos %}
+    <h1 class="page-header">Nuevo Usuario</h1>
+
+    {% include 'PAGEDemoBundle:User:_form.html.twig' %}
+    
+    <a href="{{ path('user') }}">Volver</a>
+{% endblock %}

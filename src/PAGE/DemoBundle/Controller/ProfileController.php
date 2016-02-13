@@ -6,7 +6,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
 // these import the "@Route" and "@Template" annotations
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -19,7 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class ProfileController extends Controller
 {
     /**
-     * @Route("/", name="_demo_profile")
+     * @Route("/", name="profile")
      * @Template()
      */
     public function indexAction(Request $request)
@@ -31,21 +30,14 @@ class ProfileController extends Controller
         if(!$request->getSession()->get('flag'))
         {$request->getSession()->set('flag',-1);}
 
-
         if($this->get('security.context')->isgranted('ROLE_SUPER_ADMIN'))
-            return $this->redirect($this->generateUrl('admin_index'));
+            #return $this->redirect($this->generateUrl('admin_index'));
+            return new Response("User Super Admin");
 
         else if($this->get('security.context')->isgranted('ROLE_ADMIN'))
-            return $this->redirect($this->generateUrl('institucion_perfil'));
+            return $this->redirect($this->generateUrl('user'));
+            #return array();
+            #return new Response("User Admin");
 
-        else if($this->get('security.context')->isgranted('ROLE_DOCENTE'))
-            return $this->redirect($this->generateUrl('docente_perfil_show',array('id'=>$this->getUser()->getId())));
-
-        else if($this->get('security.context')->isgranted('ROLE_ALUMNO'))
-            return $this->redirect($this->generateUrl('alumno_perfil_show',array('id'=>$this->getUser()->getId())));
-	
-        else 
-			//return $this->redirect($this->generateUrl('_demo_signin'));
-            return new Response("EN ESPERA");
     }
 }

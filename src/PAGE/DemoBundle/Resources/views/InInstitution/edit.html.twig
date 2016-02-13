@@ -1,0 +1,17 @@
+{% extends 'PAGEDemoBundle:Layout:layout_dashboard.html.twig' %}
+
+{% block title "Editar Institución"%}
+
+{% block menu_admin_cuentas %}class="active"{% endblock %}
+
+{% block datos %}
+    <h1 class="page-header">Institución&nbsp;<i class="fa fa-angle-right"></i>&nbsp;<small>Unidad Educativa</small>
+    	<ul class="nav nav-pills pull-right">
+		  	<li role="presentation"><a href="{{ path('institution_edit', {'id': entity.institution.id }) }}" class="btn">Datos Institución</a></li>
+			<li role="presentation" class="active"><a href="{{ path('ininstitution_edit',{'id': entity.id}) }}" class="btn">Unidad Educativa</a></li>
+
+		</ul>
+	</h1>
+
+    {% include 'PAGEDemoBundle:InInstitution:_form.html.twig' %}
+{% endblock %}

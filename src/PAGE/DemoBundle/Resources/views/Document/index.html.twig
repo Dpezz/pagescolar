@@ -1,0 +1,45 @@
+{% extends 'PAGEDemoBundle:Layout:layout_dashboard.html.twig' %}
+
+{% block title "Documentos"%}
+
+{% block menu_admin_documentos %}class="active"{% endblock %}
+
+{% block datos %}
+    <h1 class="page-header">Documentos</h1>
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Título</th>
+                <th>Descripción</th>
+                <th>Tipo</th>
+                <th>Tamaño</th>
+                <th>Creado</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('document_show', { 'id': entity.id }) }}" class="badge">{{ loop.index }}</a></td>
+                <td>{{ entity.title }}</td>
+                <td>{{ entity.description }}</td>
+                <td>{{ entity.type }}</td>
+                <td>{{ entity.size }}</td>
+                <td>{% if entity.createAt %}{{ entity.createAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>
+                   <a href="{{ path('document_show', { 'id': entity.id }) }}" class="glyphicon glyphicon-eye-open"></a>&nbsp;
+                   <a href="{{ path('document_edit', { 'id': entity.id }) }}" class="glyphicon glyphicon-edit"></a>&nbsp;
+                   <a href="{{ path('document_edit', { 'id': entity.id }) }}" class="glyphicon glyphicon-trash text-danger"></a>&nbsp;
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="modal-footer">
+        <a href="{{ path('document_new') }}" class="btn btn-mint">Nuevo</a>
+    </div>
+            
+{% endblock %}

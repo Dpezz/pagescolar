@@ -1,0 +1,251 @@
+{% extends 'PAGEDemoBundle:Layout:layout_page.html.twig' %}
+
+{% block title "Bienvenido" %}
+
+{% block stylesheets %}
+	{{parent()}}
+    <link rel="stylesheet" href="{{ asset('bundles/pagedemo/dist/cover/cover.css')}}">
+{% endblock %}
+
+{% block body %}
+	<nav class="navbar navbar-default navbar-fixed-top">
+	  	<div class="container">
+			    <!-- Brand and toggle get grouped for better mobile display -->
+		    <div class="navbar-header">
+		      	<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+		        	<span class="sr-only">Toggle navigation</span>
+		        	<span class="icon-bar"></span>
+		        	<span class="icon-bar"></span>
+		        	<span class="icon-bar"></span>
+		      	</button>
+		      	<a class="navbar-brand" href="#" style="font-family:'Righteous', cursive;color:#1ab394">
+		      	<i class="fa fa-book"></i>PAGESCOLAR
+		      	</a>
+		    </div>
+
+		    <!-- Collect the nav links, forms, and other content for toggling -->
+		    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+		      	<ul class="nav navbar-nav">
+		        	<li class="visible-lg"><a></a></li>
+		        	<li class="visible-lg"><a></a></li>
+	        		<li><a href="#home">Inicio<span class="sr-only">(current)</span></a></li>
+	        		<li><a href="#features">Características</a></li>
+	        		<li><a href="#contact">Contacto</a></li>
+		      	</ul>
+		      
+		      	<ul class="nav navbar-nav navbar-right">
+	        		<a href="{{path('signin')}}" class="btn btn-link btn-navbar" style="margin-top:8px">&nbsp;Iniciar Sesión</a>
+	        		<a href="{{path('signup')}}" class="btn btn-mint btn-navbar" style="margin-top:8px"><i class="fa fa-sign-out"></i>&nbsp;Registrar</a>
+		      	</ul>
+		    </div><!-- /.navbar-collapse -->
+		</div><!-- /.container-fluid -->
+	</nav>
+
+{# JUMBOTRON HEADER #}
+	<div id="home" class="site-wrapper">
+	  	<div class="site-wrapper-inner">
+	        <div class="cover-container">
+			 	<div class="inner cover">
+					<h1 class="text-center">
+						<span class="text-mint" style="font-size:38px;">
+						<i class="fa fa-quote-left"></i>&nbsp;
+						<strong>Plataforma de Administración y Gestión Escolar</strong>&nbsp;
+						<i class="fa fa-quote-right"></i></span>
+
+						<p style="color:#eee;font-size:21px;">Plataforma web que orienta hacia la toma de decisiones correctas.</p>
+
+						<p class="clearfix hr-ondas"></p>
+						<p><a href="{{path('signin')}}" class="btn btn-mint btn-lg"><i class="fa fa-sign-in"></i>&nbsp;Iniciar Sesión</a></p>
+					</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{# JUMBOTRON QUE ES? #}
+	<div class="jumbotron" style="background-color:#1AB394;">
+		<div class="container">
+			<br>
+			<blockquote style="color:#eee;background-color:rgba(0, 0, 0, 0.17);">
+				<div class="row">
+					<div class="col-md-2 col-sm-4">
+						<h6 class="text-center">
+							<img src="{{asset('bundles/pagedemo/img/logo.jpg')}}" class="img-circle" width="120px">
+						</h6>
+					</div>
+					<div class="col-md-10 col-sm-8">
+						<br>
+						<i class="fa fa-quote-left fa-2x text-mint-black"></i>&nbsp;Transformamos datos en información que permite tomar decisiones oportunas que ayudan a cumplir estándares de gestión administrativa, económica y curricular.
+						<small class="text-mint-black"><strong>Director - Alejandro Maturana Lorca</strong></small>
+					</div>
+				</div>
+			</blockquote>
+		</div>
+	</div>
+
+<h1 class="clearfix hr-ondas"></h1>
+
+{# JUMBOTRON FEAUTURES #}
+	<div id="features" class="container">
+		<h1 class="page-header text-left text-mint">Características</h1>
+
+		<div class="row">
+			<div class="col-md-4">
+				<div class="media">
+				  	<div class="media-left">
+				    	<a href="#">
+				      		<i class="fa fa-user fa-5x text-mint"></i>
+				    	</a>
+				  	</div>
+				  	<div class="media-body">
+				    	<h4 class="media-heading"><strong>Administrador</strong></h4>
+				    	<p>Con acceso a todas las etapas del Programa puede verificar el cumplimiento de roles de usuarios, levantar alertas tempranas o confirmar acciones en curso.</p>
+				  	</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="media">
+				  	<div class="media-left">
+				    	<a href="#">
+				      		<i class="fa fa-eye fa-5x text-mint"></i>
+				    	</a>
+				  	</div>
+				  	<div class="media-body">
+				    	<h4 class="media-heading"><strong>Usuarios</strong></h4>
+				    	<p>Personas autorizadas bajo un perfil específico que acceden a elementos del Programa para ingresar los datos que dicen relación con su descripción de cargo dentro de la institución escolar.</p>
+				  	</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="media">
+				  	<div class="media-left">
+				    	<a href="#">
+				      		<i class="fa fa-edit fa-5x text-mint"></i>
+				    	</a>
+				  	</div>
+				  	<div class="media-body">
+				    	<h4 class="media-heading"><strong>Formularios</strong></h4>
+				    	<p>Para el ingreso de datos en las distintas secciones de la plataforma facilitamos el uso de formularios simples y elegantes.</p>
+				  	</div>
+				</div>
+			</div>
+		</div>
+
+		<hr>
+
+		<div class="row">
+			<div class="col-md-4">
+				<div class="media">
+				  	<div class="media-left">
+				    	<a href="#">
+				      		<i class="fa fa-file fa-5x text-mint"></i>
+				    	</a>
+				  	</div>
+				  	<div class="media-body">
+				    	<h4 class="media-heading"><strong>Documentos</strong></h4>
+				    	<p>Podrás subir y descargar documentos institucional o ministerial. Los cuales estarán disponible cuándo, y desde donde quieras.</p>
+				  	</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="media">
+				  	<div class="media-left">
+				    	<a href="#">
+				      		<i class="fa fa-image fa-5x text-mint"></i>
+				    	</a>
+				  	</div>
+				  	<div class="media-body">
+				    	<h4 class="media-heading"><strong>Imagenes</strong></h4>
+				    	<p>Permite  registrar en forma actualizada imágenes de eventos y actividades que se desarrollan en el Establecimiento.</p>
+				  	</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="media">
+				  	<div class="media-left">
+				    	<a href="#">
+				      		<i class="fa fa-calendar fa-5x text-mint"></i>
+				    	</a>
+				  	</div>
+				  	<div class="media-body">
+				    	<h4 class="media-heading"><strong>Calendarios</strong></h4>
+				    	<p>Disponemos de vistas de calendarios simples y formales. Informando las fechas de las actividades del Establecimiento (Ingreso a clases, reuniones de apoderados, consejos docentes, consejos escolares, actos, paseos, etc.)</p>
+				  	</div>
+				</div>
+			</div>
+		</div>
+
+		<hr>
+
+		<div class="row">
+			<div class="col-md-4">
+				<div class="media">
+				  	<div class="media-left">
+				    	<a href="#">
+				      		<i class="fa fa-bar-chart fa-5x text-mint"></i>
+				    	</a>
+				  	</div>
+				  	<div class="media-body">
+				    	<h4 class="media-heading"><strong>Estadisticas</strong></h4>
+				    	<p>Entrega los análisis necesarios de estadística descriptiva para conocer el cumplimiento de estándares del Establecimiento y, si se requiere, adicionalmente cruzamos datos para entregar otros  informes específicos.</p>
+				  	</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="media">
+				  	<div class="media-left">
+				    	<a href="#">
+				      		<i class="fa fa-tablet fa-5x text-mint"></i>
+				    	</a>
+				  	</div>
+				  	<div class="media-body">
+				    	<h4 class="media-heading"><strong>Responsive</strong></h4>
+				    	<p>No tan solo podrás acceder desde tu escritorio, ahora facilitamos el acceso y podrás ingresar desde tu tablet o móvil.</p>
+				  	</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="media">
+				  	<div class="media-left">
+				    	<a href="#">
+				      		<i class="fa fa-cloud fa-5x text-mint"></i>
+				    	</a>
+				  	</div>
+				  	<div class="media-body">
+				    	<h4 class="media-heading"><strong>Servicio en la nube</strong></h4>
+				    	<p>Para tu seguridad, toda la información estará en nuestros servidores, acceso 24 horas, todos los días del año para actualizar datos y recibir información, desde donde estés y cuando quieras.</p>
+				  	</div>
+				</div>
+			</div>
+		</div>	
+	</div>
+
+<h1 class="clearfix hr-ondas"></h1>
+
+
+{# FOOTER #}
+	<footer id="contact" style="background-color:#eee;height:15%">
+		<h5 class="text-center">
+		<address style="padding-top:10px">
+	  		<strong class="text-mint">PAGESCOLAR</strong><br>
+		  	Todos los derechos reservados. <a href="http://www.aprendamosaleermatematica.cl/" class="text-info">Aprendamos a Leer Matemática.</a><br>
+		  
+		  	<abbr title="Fono"><i class="fa fa-mobile"></i></abbr>&nbsp;(+569) 81791226 &nbsp;-&nbsp;
+		  	<i class="fa fa-envelope-o"></i>&nbsp;<a class="text-info" href="mailto:contacto@pagescolar.cl">contacto@pagescolar.cl</a><br>
+		  	<i class="fa fa-map-marker"></i>&nbsp;Pedro Pablo Muñoz #250, La Serena, Chile - {{'now'|date('Y')}}
+		</address>
+		</h5>
+	</footer>
+
+	<!--Start of Zopim Live Chat Script-->
+	<script type="text/javascript">
+	window.$zopim||(function(d,s){var z=$zopim=function(c){z._.push(c)},$=z.s=
+	d.createElement(s),e=d.getElementsByTagName(s)[0];z.set=function(o){z.set.
+	_.push(o)};z._=[];z.set._=[];$.async=!0;$.setAttribute("charset","utf-8");
+	$.src="//v2.zopim.com/?2vHgQK5sQgFo3V2SzSknSw3gyQWhe3ZW";z.t=+new Date;$.
+	type="text/javascript";e.parentNode.insertBefore($,e)})(document,"script");
+	</script>
+	<!--End of Zopim Live Chat Script-->
+
+{% endblock %}

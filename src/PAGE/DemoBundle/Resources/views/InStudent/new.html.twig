@@ -1,0 +1,12 @@
+{% extends 'PAGEDemoBundle:Layout:layout_dashboard.html.twig' %}
+
+{% block title "Nuevo Alumno"%}
+
+{% block menu_admin_alumnos %}class="active"{% endblock %}
+
+{% block datos %}
+    <h1>Nuevo Alumno</h1>
+
+   {% include 'PAGEDemoBundle:InStudent:_form.html.twig' %}
+
+{% endblock %}
