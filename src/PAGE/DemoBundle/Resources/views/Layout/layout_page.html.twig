@@ -1,16 +1,20 @@
 {% extends "::base.html.twig" %}
 
-{% block title "Bienvenido" %}
+{% block title "Inicio" %}
+
 
 {% block stylesheets %}
+   	{{parent()}}
+   	<link rel="stylesheet" href="{{ asset('bundles/pagedemo/plugin/validator/css/formValidation.css')}}">
+{% endblock %}
+
+
+{% block javascripts %}
 	{{parent()}}
-<<<<<<< HEAD
 	<script src="{{ asset('bundles/pagedemo/plugin/validator/js/formValidation.js')}}"></script>
     <script src="{{ asset('bundles/pagedemo/plugin/validator/js/framework/bootstrap.min.js')}}"></script>
-=======
-    <link rel="stylesheet" href="{{ asset('bundles/pagedemo/dist/style/style-home.css')}}">
->>>>>>> 2f06cc7cc7aeba5f53e0bf62a1d0b5f14af225f2
 {% endblock %}
+
 
 {% block body %}
 	{% block content %}{% endblock %}

@@ -6,7 +6,7 @@ namespace PAGE\DemoBundle\Repository;
 class Datos
 {
 	private function getJson(){
-		$json = file_get_contents("../src/PAGE/DemoBundle/Repository/datos.json");
+		$json = file_get_contents("src/PAGE/DemoBundle/Repository/datos.json");
 		$datos = json_decode($json, true);
 		return $datos; 
 	}

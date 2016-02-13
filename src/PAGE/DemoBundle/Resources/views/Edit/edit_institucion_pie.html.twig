@@ -1,0 +1,22 @@
+{% block institucion_pie %}
+<div class="panel-group" role="tablist">
+{% for item in folder %}
+    <div class="panel panel-default">
+      	<div class="panel-heading" role="tab" id="folder{{loop.index}}">
+        	<h4 class="panel-title" id="-collapsible-list-group-">
+          	<a class="collapsed" data-toggle="collapse" href="#folderList{{loop.index}}" aria-expanded="false" aria-controls="folderList{{loop.index}}">
+            <i class="fa fa-folder text-lemon"></i>&nbsp;{{item.folder}}&nbsp;<i class="fa fa-angle-down text-white"></i>
+          	</a>
+      	</div>
+      	<div id="folderList{{loop.index}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="folder{{loop.index}}" aria-expanded="false" style="height: 0px;">
+        	<ul class="list-group">
+				{% for file in item.files %}
+	  				<li class="list-group-item"><a href="{{path('institucion_pie_download',{'folder':item.folder,'file':file})}}"><i class="fa fa-file-o text-muted"></i>&nbsp;{{file}}&nbsp;<i class="fa fa-download text-mint"></i></a></li>
+	  	 		{% endfor %}
+        	</ul>
+      	</div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+

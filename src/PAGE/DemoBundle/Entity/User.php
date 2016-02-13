@@ -4,115 +4,88 @@ namespace PAGE\DemoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Doctrine\Common\Collections\ArrayCollection;
+
 
 /**
+ * User
+ *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="PAGE\DemoBundle\Entity\UserRepository")
  */
 class User implements UserInterface, \Serializable
 {
+
     /**
+     * @var string
+     *
+     * @ORM\Column(name="id", type="string", length=25)
      * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @var string
+     *
+     * @ORM\Column(name="username", type="string", length=255)
      */
     private $username;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @var string
+     *
+     * @ORM\Column(name="email", type="string", length=255)
      */
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=25)
+     * @var string
+     *
+     * @ORM\Column(name="fono", type="string", length=25)
      */
-    private $phone;
+    private $fono;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @var string
+     *
+     * @ORM\Column(name="password", type="string", length=255)
      */
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true, options={"default" = "ROLE_ADMIN"})
+     * @var string
+     *
+     * @ORM\Column(name="role", type="string", length=255)
      */
     private $role;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true, options={"default":false})
+     * @var boolean
+     *
+     * @ORM\Column(name="isActive", type="boolean")
      */
     private $isActive;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @var datetime
+     *
+     * @ORM\Column(name="createAt", type="datetime")
      */
     private $createAt;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @var string
+     *
+     * @ORM\Column(name="url", type="string", length=255, nullable=true)
      */
-    private $updateAt;
+    private $url;
 
     /**
-     * @ORM\OneToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
-     **/
-    private $user;
+     * @var string
+     *
+     * @ORM\Column(name="parent", type="string", length=25)
+     */
+    private $parent;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Level", mappedBy="user")
-     **/
-    private $levels;
-
-    /**
-     * @ORM\OneToMany(targetEntity="Subject", mappedBy="user")
-     **/
-    private $subjects;
-
-    /**
-     * @ORM\OneToMany(targetEntity="Teacher", mappedBy="user")
-     **/
-    private $teachers;
-
-    /**
-     * @ORM\OneToMany(targetEntity="Student", mappedBy="user")
-     **/
-    private $students;
-
-    /**
-     * @ORM\OneToMany(targetEntity="Test", mappedBy="user")
-     **/
-    private $tests;
-
-     /**
-     * @ORM\OneToMany(targetEntity="Document", mappedBy="user")
-     **/
-    private $documents;
-
-    /**
-     * @ORM\OneToOne(targetEntity="Institution", mappedBy="user")
-     **/
-    private $institution;
-
-    public function __construct()
-    {
-        $this->role = "ROLE_ADMIN";
-        $this->isActive = false;
-        $this->updateAt = new \DateTime('now');
-
-        $this->levels = new ArrayCollection();
-        $this->subjects = new ArrayCollection();
-        $this->teachers = new ArrayCollection();
-        $this->students = new ArrayCollection();
-        $this->tests = new ArrayCollection();
-        $this->documents = new ArrayCollection();
-    }
 
     /**
      * Set id
@@ -182,6 +155,77 @@ class User implements UserInterface, \Serializable
         return $this->password;
     }
 
+
+    /**
+     * Set isActive
+     *
+     * @param boolean $isActive
+     * @return User
+     */
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * Get isActive
+     *
+     * @return boolean 
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
+    }
+    
+
+    /**
+     * Set createAt
+     *
+     * @param \DateTime $createAt
+     * @return User
+     */
+    public function setCreateAt($createAt)
+    {
+        $this->createAt = $createAt;
+
+        return $this;
+    }
+
+    /**
+     * Get createAt
+     *
+     * @return \DateTime 
+     */
+    public function getCreateAt()
+    {
+        return $this->createAt;
+    }
+
+    /**
+     * Set role
+     *
+     * @param string $role
+     * @return User
+     */
+    public function setRole($role)
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
+    /**
+     * Get role
+     *
+     * @return string 
+     */
+    public function getRole()
+    {
+        return $this->role;
+    }
+
     /**
      * Set email
      *
@@ -206,124 +250,75 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Set phone
+     * Set fono
      *
-     * @param string $phone
+     * @param string $fono
      * @return User
      */
-    public function setPhone($phone)
+    public function setFono($fono)
     {
-        $this->phone = $phone;
+        $this->fono = $fono;
 
         return $this;
     }
 
     /**
-     * Get phone
+     * Get fono
      *
      * @return string 
      */
-    public function getPhone()
+    public function getFono()
     {
-        return $this->phone;
+        return $this->fono;
     }
 
     /**
-     * Set role
+     * Set url
      *
-     * @param string $role
+     * @param string $url
      * @return User
      */
-    public function setRole($role)
+    public function setUrl($url)
     {
-       
-        $this->role = $role;
+        $this->url = $url;
 
         return $this;
     }
 
     /**
-     * Get role
+     * Get url
      *
      * @return string 
      */
-    public function getRole()
+    public function getUrl()
     {
-        return $this->role;
+        return $this->url;
     }
 
     /**
-     * Set isActive
+     * Set parent
      *
-     * @param boolean $isActive
+     * @param string $parent
      * @return User
      */
-    public function setIsActive($isActive)
+    public function setParent($parent)
     {
-        
-        $this->isActive = $isActive;
+        $this->parent = $parent;
 
         return $this;
     }
 
     /**
-     * Get isActive
+     * Get parent
      *
-     * @return boolean 
+     * @return string 
      */
-    public function getIsActive()
+    public function getParent()
     {
-        return $this->isActive;
-    }
-    
-    /**
-     * Set createAt
-     *
-     * @param \DateTime $createAt
-     * @return User
-     */
-    public function setCreateAt($createAt)
-    {
-       $this->createAt = $createAt;
-
-        return $this;
+        return $this->parent;
     }
 
-    /**
-     * Get createAt
-     *
-     * @return \DateTime 
-     */
-    public function getCreateAt()
-    {
-        return $this->createAt;
-    }
 
-    /**
-     * Set updateAt
-     *
-     * @param \DateTime $updateAt
-     * @return User
-     */
-    public function setUpdateAt($updateAt)
-    {   
-        if (is_null($updateAt))
-            $this->updateAt = new \DateTime('now');
-        else
-            $this->updateAt = $updateAt;
-
-        return $this;
-    }
-
-    /**
-     * Get updateAt
-     *
-     * @return \DateTime 
-     */
-    public function getUpdateAt()
-    {
-        return $this->updateAt;
-    }
 
 
     /**
@@ -398,249 +393,5 @@ class User implements UserInterface, \Serializable
     public function isEnabled()
     {
         return $this->isActive;
-    }
-
-    /**
-     * Set user
-     *
-     * @param \PAGE\DemoBundle\Entity\User $user
-     * @return User
-     */
-    public function setUser(\PAGE\DemoBundle\Entity\User $user = null)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * Get user
-     *
-     * @return \PAGE\DemoBundle\Entity\User 
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
-
-    /**
-     * Add levels
-     *
-     * @param \PAGE\DemoBundle\Entity\Level $levels
-     * @return User
-     */
-    public function addLevel(\PAGE\DemoBundle\Entity\Level $levels)
-    {
-        $this->levels[] = $levels;
-
-        return $this;
-    }
-
-    /**
-     * Remove levels
-     *
-     * @param \PAGE\DemoBundle\Entity\Level $levels
-     */
-    public function removeLevel(\PAGE\DemoBundle\Entity\Level $levels)
-    {
-        $this->levels->removeElement($levels);
-    }
-
-    /**
-     * Get levels
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getLevels()
-    {
-        return $this->levels;
-    }
-
-    /**
-     * Add subjects
-     *
-     * @param \PAGE\DemoBundle\Entity\Subject $subjects
-     * @return User
-     */
-    public function addSubject(\PAGE\DemoBundle\Entity\Subject $subjects)
-    {
-        $this->subjects[] = $subjects;
-
-        return $this;
-    }
-
-    /**
-     * Remove subjects
-     *
-     * @param \PAGE\DemoBundle\Entity\Subject $subjects
-     */
-    public function removeSubject(\PAGE\DemoBundle\Entity\Subject $subjects)
-    {
-        $this->subjects->removeElement($subjects);
-    }
-
-    /**
-     * Get subjects
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getSubjects()
-    {
-        return $this->subjects;
-    }
-
-    /**
-     * Add teachers
-     *
-     * @param \PAGE\DemoBundle\Entity\Teacher $teachers
-     * @return User
-     */
-    public function addTeacher(\PAGE\DemoBundle\Entity\Teacher $teachers)
-    {
-        $this->teachers[] = $teachers;
-
-        return $this;
-    }
-
-    /**
-     * Remove teachers
-     *
-     * @param \PAGE\DemoBundle\Entity\Teacher $teachers
-     */
-    public function removeTeacher(\PAGE\DemoBundle\Entity\Teacher $teachers)
-    {
-        $this->teachers->removeElement($teachers);
-    }
-
-    /**
-     * Get teachers
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getTeachers()
-    {
-        return $this->teachers;
-    }
-
-    /**
-     * Add students
-     *
-     * @param \PAGE\DemoBundle\Entity\Student $students
-     * @return User
-     */
-    public function addStudent(\PAGE\DemoBundle\Entity\Student $students)
-    {
-        $this->students[] = $students;
-
-        return $this;
-    }
-
-    /**
-     * Remove students
-     *
-     * @param \PAGE\DemoBundle\Entity\Student $students
-     */
-    public function removeStudent(\PAGE\DemoBundle\Entity\Student $students)
-    {
-        $this->students->removeElement($students);
-    }
-
-    /**
-     * Get students
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getStudents()
-    {
-        return $this->students;
-    }
-
-    /**
-     * Add tests
-     *
-     * @param \PAGE\DemoBundle\Entity\Test $tests
-     * @return User
-     */
-    public function addTest(\PAGE\DemoBundle\Entity\Test $tests)
-    {
-        $this->tests[] = $tests;
-
-        return $this;
-    }
-
-    /**
-     * Remove tests
-     *
-     * @param \PAGE\DemoBundle\Entity\Test $tests
-     */
-    public function removeTest(\PAGE\DemoBundle\Entity\Test $tests)
-    {
-        $this->tests->removeElement($tests);
-    }
-
-    /**
-     * Get tests
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getTests()
-    {
-        return $this->tests;
-    }
-
-    /**
-     * Add documents
-     *
-     * @param \PAGE\DemoBundle\Entity\Document $documents
-     * @return User
-     */
-    public function addDocument(\PAGE\DemoBundle\Entity\Document $documents)
-    {
-        $this->documents[] = $documents;
-
-        return $this;
-    }
-
-    /**
-     * Remove documents
-     *
-     * @param \PAGE\DemoBundle\Entity\Document $documents
-     */
-    public function removeDocument(\PAGE\DemoBundle\Entity\Document $documents)
-    {
-        $this->documents->removeElement($documents);
-    }
-
-    /**
-     * Get documents
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getDocuments()
-    {
-        return $this->documents;
-    }
-
-    /**
-     * Set institution
-     *
-     * @param \PAGE\DemoBundle\Entity\Institution $institution
-     * @return User
-     */
-    public function setInstitution(\PAGE\DemoBundle\Entity\Institution $institution = null)
-    {
-        $this->institution = $institution;
-
-        return $this;
-    }
-
-    /**
-     * Get institution
-     *
-     * @return \PAGE\DemoBundle\Entity\Institution 
-     */
-    public function getInstitution()
-    {
-        return $this->institution;
     }
 }

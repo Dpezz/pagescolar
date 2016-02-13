@@ -1,0 +1,172 @@
+{% block estadisticas_docentes %}
+
+<h2 class="page-header">Asignaturas</h2>
+<div class="row">
+	<div class="col-md-6" ng-controller="bar_docentes">
+		<canvas id="bar" class="chart chart-bar" data="data" labels="labels"></canvas>
+	</div>
+	<div class="col-md-5">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th class="active">Nombre</th>
+					<th class="active">Cantidad</th>
+					<th class="active">%</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in asignaturas %}
+				<tr>
+					<td>{{item.name}}</td>
+					<td>{{item.num}}</td>
+					<td> {{ (100 * item.num) / docentes.num }}%</td>
+				</tr>
+				{% endfor %}
+				<tr class="active">
+					<td>Total</td>
+					<td>{{docentes.num}}</td>
+					<td> 100%</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+
+<h2 class="page-header">Año Ingreso</h2>
+<div class="row" ng-controller="donuts_docentes">
+	<div class="col-md-6" ng-controller="line_docentes">
+		<canvas id="line" class="chart chart-line" data="data" labels="labels" legend="true" series="series" click="onClick"></canvas> 
+	</div>
+	<div class="col-md-5">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th class="active">Nombre</th>
+					<th class="active">Cantidad</th>
+					<th class="active">%</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in years %}
+				<tr>
+					<td>{{item.name}}</td>
+					<td>{{item.num}}</td>
+					<td> {{ (100 * item.num) / docentes.num }}%</td>
+				</tr>
+				{% endfor %}
+				<tr class="active">
+					<td>Total</td>
+					<td>{{docentes.num}}</td>
+					<td> 100%</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+
+<h2 class="page-header">Sexo</h2>
+<div class="row" ng-controller="donuts_docentes">
+	<div class="col-md-5">
+		<canvas id="doughnut" class="chart chart-doughnut" data="sexdata" labels="sexlabels"></canvas> 
+	</div>
+	<div class="col-md-5">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th class="active">Nombre</th>
+					<th class="active">Cantidad</th>
+					<th class="active">%</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in sexos %}
+				<tr>
+					<td>{{item.name}}</td>
+					<td>{{item.num}}</td>
+					<td> {{ (100 * item.num) / docentes.num }}%</td>
+				</tr>
+				{% endfor %}
+				<tr class="active">
+					<td>Total</td>
+					<td>{{docentes.num}}</td>
+					<td> 100%</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+
+<h2 class="page-header">Función</h2>
+<div class="row" ng-controller="donuts_docentes">
+	<div class="col-md-5">
+		<canvas id="doughnut" class="chart chart-doughnut" data="fundata" labels="funlabels"></canvas> 
+	</div>
+	<div class="col-md-5">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th class="active">Nombre</th>
+					<th class="active">Cantidad</th>
+					<th class="active">%</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in funciones %}
+				<tr>
+					<td>{{item.name}}</td>
+					<td>{{item.num}}</td>
+					<td> {{ (100 * item.num) / docentes.num }}%</td>
+				</tr>
+				{% endfor %}
+				<tr class="active">
+					<td>Total</td>
+					<td>{{docentes.num}}</td>
+					<td> 100%</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+
+<h2 class="page-header">Nivel</h2>
+<div class="row" ng-controller="donuts_docentes">
+	<div class="col-md-5">
+		<canvas id="doughnut" class="chart chart-doughnut" data="nivdata" labels="nivlabels"></canvas> 
+	</div>
+	<div class="col-md-5">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th class="active">Nombre</th>
+					<th class="active">Cantidad</th>
+					<th class="active">%</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in niveles %}
+				<tr>
+					<td>{{item.name}}</td>
+					<td>{{item.num}}</td>
+					<td> {{ (100 * item.num) / docentes.num }}%</td>
+				</tr>
+				{% endfor %}
+				<tr class="active">
+					<td>Total</td>
+					<td>{{docentes.num}}</td>
+					<td> 100%</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+<br>
+{#
+<div class="modal-footer">
+	<a href="{{path('_print_docentes')}}" type="button" class="btn btn-mint"><i class="fa fa-download fa-lg"></i>&nbsp;Descargar</a>
+</div>
+#}
+{% endblock %}

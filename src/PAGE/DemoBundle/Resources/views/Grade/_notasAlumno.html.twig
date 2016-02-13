@@ -1,0 +1,55 @@
+{% block academico_notas %}
+
+
+	<div class="page-header">
+		<h4>
+			<span class="text-mint">{{curso}}</span>&nbsp;<i class="fa fa-angle-right"></i>&nbsp;
+			<span class="text-muted"><em>{{dataA.name ~ ' ' ~ dataA.plastname ~ ' ' ~ dataA.mlastname }}</em></span>
+		</h4>
+	</div>
+
+	<div class="table-responsive">
+	  	<table class="table table-hover">
+		    <thead>
+		    	<tr>
+		    		<th>#</th>
+		    		<th>Asignatura</th>
+		    		<th>Notas</th>
+		    		<th>Promedio</th>
+		    	</tr>
+		    </thead>
+		    <tbody>
+
+		    	{% for item in dataAS %}
+		    	<tr>
+		    		<td><span class="badge">{{loop.index}}</span></td>
+		    		<td><span class="text-mint">{{item.name}}</span></td>
+		    		{% set prom = 0 %}
+		    		<td>
+		    		{% for element in dataN %}
+		    			{% if element.asignatura == item.id %}
+		    				{% set notas = 0 %}
+		    				{% for nota in element.notas %}
+		    				
+		    					{% if nota < 4 %}
+		    						<span class="label label-danger">{{nota|number_format(1)}}</span>&emsp;
+		    					{% else %}
+		    						<span class="">{{nota|number_format(1)}}</span>&emsp;
+		    					{% endif %}
+		    					{% set notas = notas + nota %}
+		    				
+		    				{% endfor %}
+		    				{% set prom = notas/(element.notas|length) %}
+	    				{% endif %}
+	    			{% endfor %}
+	    			</td>
+	    			<td><span class="badge">{{ prom|number_format(1) }}</span>&emsp;</td>
+	    		</tr>
+	    		{% endfor %}
+
+		    </tbody>
+	  	</table>
+	</div>
+
+
+{% endblock %}

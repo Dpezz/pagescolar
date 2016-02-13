@@ -1,6 +1,6 @@
 #index
-home:
-    resource: "@PAGEDemoBundle/Controller/homeController.php"
+_default:
+    resource: "@PAGEDemoBundle/Controller/DefaultController.php"
     type:     annotation
 
 #perfiles
@@ -13,92 +13,87 @@ _secured:
     resource: "@PAGEDemoBundle/Controller/SecuredController.php"
     type:     annotation
 
+#return Json
+_get:
+    resource: "@PAGEDemoBundle/Controller/GetController.php"
+    type:     annotation
+
 #load json
 _load:
     resource: "@PAGEDemoBundle/Controller/LoadController.php"
     type:     annotation
 
-#Usuarios
-_user:
-    resource: "@PAGEDemoBundle/Controller/UserController.php"
+#usuario admin
+_admin:
+    resource: "@PAGEDemoBundle/Controller/AdminController.php"
     type:     annotation
 
-#Cursos
-_cursos:
-    resource: "@PAGEDemoBundle/Controller/LevelController.php"
-    type:     annotation
-
-#Asignaturas
-_asignaturas:
-    resource: "@PAGEDemoBundle/Controller/SubjectController.php"
-    type:     annotation
-
-#profesores
-_profesores:
-    resource: "@PAGEDemoBundle/Controller/TeacherController.php"
-    type:     annotation
-
-#profesoresIn
-_profesoresIn:
-    resource: "@PAGEDemoBundle/Controller/InTeacherController.php"
-    type:     annotation
-
-#Alumnos
-_alumnos:
-    resource: "@PAGEDemoBundle/Controller/StudentController.php"
-    type:     annotation
-
-#AlumnosIn
-_alumnosIn:
-    resource: "@PAGEDemoBundle/Controller/InStudentController.php"
-    type:     annotation
-
-#InAlumnosIn
-_inAlumnosIn:
-    resource: "@PAGEDemoBundle/Controller/InStudentInController.php"
-    type:     annotation
-
-#Apoderados
-_apoderados:
-    resource: "@PAGEDemoBundle/Controller/AgentController.php"
-    type:     annotation
-
-#Prueba
-_prueba:
-    resource: "@PAGEDemoBundle/Controller/TestController.php"
-    type:     annotation
-
-#Documentos
-_documentos:
-    resource: "@PAGEDemoBundle/Controller/DocumentController.php"
-    type:     annotation
-
-#Horario
-_horario:
-    resource: "@PAGEDemoBundle/Controller/ScheduleController.php"
-    type:     annotation
-
-#Notas
-_notas:
-    resource: "@PAGEDemoBundle/Controller/GradeController.php"
-    type:     annotation
-
-#Asistencia
-_callroll:
-    resource: "@PAGEDemoBundle/Controller/CallRollController.php"
-    type:     annotation
-
-#In Asistencia
-_incallroll:
-    resource: "@PAGEDemoBundle/Controller/InCallRollController.php"
-    type:     annotation
-
-#Institucion
+#institucion
 _institution:
     resource: "@PAGEDemoBundle/Controller/InstitutionController.php"
     type:     annotation
 
-#In Institucion
-_ininstitution:
-    resource: "@PAGEDemoBundle/Controller/InInstitutionController.php"
+#documentos
+_document:
+    resource: "@PAGEDemoBundle/Controller/DocumentController.php"
+    type:     annotation
+
+#cuentas
+_account:
+    resource: "@PAGEDemoBundle/Controller/AccountController.php"
+    type:     annotation
+
+#cursos
+_level:
+    resource: "@PAGEDemoBundle/Controller/LevelController.php"
+    type:     annotation
+
+#asignaturas
+_class:
+    resource: "@PAGEDemoBundle/Controller/ClassController.php"
+    type:     annotation
+
+#docentes
+_teacher:
+    resource: "@PAGEDemoBundle/Controller/TeacherController.php"
+    type:     annotation
+
+#alumnos
+_student:
+    resource: "@PAGEDemoBundle/Controller/StudentController.php"
+    type:     annotation
+
+#estadisticas
+_stadistic:
+    resource: "@PAGEDemoBundle/Controller/StadisticController.php"
+    type:     annotation
+
+#planificacion
+_planning:
+    resource: "@PAGEDemoBundle/Controller/PlanningController.php"
+    type:     annotation
+
+#calendario
+_calendar:
+    resource: "@PAGEDemoBundle/Controller/CalendarController.php"
+    type:     annotation
+
+#asistencia
+_callroll:
+    resource: "@PAGEDemoBundle/Controller/CallrollController.php"
+    type:     annotation
+
+#evaluaciones
+_test:
+    resource: "@PAGEDemoBundle/Controller/TestController.php"
+    type:     annotation
+
+#notas
+_grade:
+    resource: "@PAGEDemoBundle/Controller/GradeController.php"
+    type:     annotation
+
+#imprimir
+_print:
+    resource: "@PAGEDemoBundle/Controller/PrintController.php"
     type:     annotation

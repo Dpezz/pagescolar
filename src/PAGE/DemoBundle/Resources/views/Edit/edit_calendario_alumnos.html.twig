@@ -1,0 +1,63 @@
+{% block calendario_alumnos %}
+<div class="table-responsive">
+	  	<table class="table table-hover">
+		    <thead>
+		    	<tr>
+		    		<th>Bloque #</th>
+		    		<th>Lunes</th>
+		    		<th>Martes</th>
+		    		<th>Miercoles</th>
+		    		<th>Jueves</th>
+		    		<th>Viernes</th>
+		    	</tr>
+		    </thead>
+		    <tbody>
+		    	{% for i in [1,2,3,4,5,6,7,8,9,10,11,12]|batch(2,'') %}
+			        {% for item in i %}
+				        <tr>
+				        	<td><span class="badge">{{item}}</span></td>
+				            <td>
+				            {% for value in dataCD %}
+				            	{% if value.dia == 'Lunes' and item == value.bloque %}<small class="text-mint"><strong>{{ value.asignatura }}</strong>&nbsp;/&nbsp;<br> {{ value.docente }}</small>{% endif %}
+			            	{% endfor %}
+				            </td>
+				    		<td>
+				    			{% for value in dataCD %}
+				    			{% if value.dia == 'Martes' and item == value.bloque %}<small class="text-mint"><strong>{{ value.asignatura }}</strong>&nbsp;/&nbsp;<br> {{ value.docente }}</small>{% endif %}
+				    			{% endfor %}
+				    		</td>
+				    		<td>
+				    			{% for value in dataCD %}
+				    			{% if value.dia == 'Miercoles' and item == value.bloque %}<small class="text-mint"><strong>{{ value.asignatura }}</strong>&nbsp;/&nbsp;<br> {{ value.docente }}</small>{% endif %}
+				    			{% endfor %}
+				    		</td>
+				    		<td>
+				    			{% for value in dataCD %}
+				    			{% if value.dia == 'Jueves' and item == value.bloque %}<small class="text-mint"><strong>{{ value.asignatura }}</strong>&nbsp;/&nbsp;<br> {{ value.docente }}</small>{% endif %}
+				    			{% endfor %}
+				    		</td>
+				    		<td>
+				    			{% for value in dataCD %}
+				    			{% if value.dia == 'Viernes' and item == value.bloque %}<small class="text-mint"><strong>{{ value.asignatura }}</strong>&nbsp;/&nbsp;<br> {{ value.docente }}</small>{% endif %}
+				    			{% endfor %}
+				    		</td>
+			    		</tr>
+			        {% endfor %}
+			    <tr class="success">
+		        	<td></td>
+		            <td></td>
+		    		<td></td>
+		    		<td></td>
+		    		<td></td>
+		    		<td></td>
+	    		</tr>
+	    		{% endfor %}
+		    </tbody>
+	  	</table>
+	</div>
+
+	<div class="modal-footer">
+		<a href="{% if app.user.role == 'ROLE_ALUMNO' %}{{path('alumnos_alumno',{'id':app.user.id})}}{% else %}{{path('alumnos_alumnos')}}{% endif %}" class="btn btn-default" type="button"><i class="fa fa-long-arrow-left"></i>&nbsp;volver</a>
+		
+	</div>
+{% endblock %}

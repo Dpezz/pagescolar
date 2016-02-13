@@ -1,0 +1,37 @@
+{% extends 'PAGEDemoBundle:Layout:layout_dashboard.html.twig' %}
+
+{% block title "Profile"%}
+
+{% block active_menu_documentos %}class="in"{% endblock %}
+
+{% block subtitle %}
+	 <i class="fa fa-file"></i>&nbsp;Documentos Institución
+{% endblock %}
+
+{% block javascripts %}
+  {{parent()}}
+  <script src="{{ asset('bundles/pagedemo/js/documentosController.js')}}"></script>
+{% endblock %}
+
+{% block submenu_admin_documentos_institucion %}
+  <li class="active"><a href="{{path('documentos_institucion')}}">&emsp;&emsp;<i class="fa fa-file"></i>&nbsp;Institución</a></li>
+{% endblock %}
+
+{% block submenu_admin_documentos_docentes %}
+  <li class="active"><a href="{{path('documentos_institucion')}}">&emsp;&emsp;<i class="fa fa-file-o"></i>&nbsp;Docentes</a></li>
+{% endblock %}
+
+{% block datos %}
+    {% embed 'PAGEDemoBundle:Layout:layout_alert.html.twig' %}
+      {% block alert %}
+        {{ parent() }}
+      {% endblock %}
+    {% endembed %}
+
+<section ng-app="documentos" ng-controller="documento">
+	{% include 'PAGEDemoBundle:Document:_documentos.html.twig' %}
+	{% block institucion_documentos %}
+		{{parent()}}
+	{% endblock %}
+</section>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% block docencia_imagen %}
+	<form action="{{path('docente_imagen_edit',{'id':dataD.id})}}" enctype="multipart/form-data" method="POST">
+		<input type="hidden" name="id" value="{{dataD.id}}">
+
+        <div class="fileinput fileinput-new" data-provides="fileinput">
+            <div class="fileinput-new thumbnail" style="width: 350px; height: 250px;">
+	            {% if not image %}
+	                <img src="{{asset('bundles/pagedemo/images/profile.png')}}">
+	            {% else %}
+	            	<img src="{{asset('users/' ~ app.user.parent ~ '/images/' ~ dataD.id )}}">
+	            {% endif %}   
+            </div>
+            <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 350px; max-height: 250px;"></div>
+            <div>
+                <span class="btn btn-default btn-file"><span class="fileinput-new"><i class="fa fa-image"></i>&nbsp;Seleccionar imagen</span><span class="fileinput-exists">Cambiar</span><input type="file" name="file" required></span>
+                <a href="{{ path('docente_imagen_delete',{'id':dataD.id}) }}" class="btn btn-default fileinput-exists" data-dismiss="fileinput">Eliminar</a>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <a href="{{ path('docente_imagen_delete',{'id':dataD.id}) }}" type="button" class="btn btn-default"><i class="fa fa-trash"></i>&nbsp;Eliminar</a>
+            <button type="submit" class="btn btn-mint"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+        </div>
+    </form>
+{% endblock %}

@@ -1,0 +1,97 @@
+{% block institucion_cuentas %}
+	<form>
+		
+		<div class="table-responsive">
+		  <table class="table table-hover">
+		    <thead>
+		    	<tr>
+		    		<th>#</th>
+		    		<th>Username</th>
+		    		<th>Email</th>
+		    		<th>Rol</th>
+		    		<th>Fecha Ingreso</th>
+		    		<th></th>
+		    	</tr>
+		    </thead>
+		    <tbody>
+		    	{% for item in dataU|sort %}
+		    	<tr>
+		    		<td><span class="badge">{{loop.index}}</span></td>
+		    		<td><span class="text-mint"><strong>{{item.username}}</strong></span></td>
+		    		<td>{{item.email}}</td>
+		    		<td>{{item.role}}</td>
+		    		<td>{{item.createat|date('d/m/Y')}}</td>
+		    		<td>
+		    		{% if item.role != 'ROLE_ADMIN' %}
+			    		<a href="" title="eliminar" ng-click="delete('{{item.id}}','{{item.username}}')" data-toggle="modal" data-target="#delete"><i class="fa fa-trash text-danger"></i></a>
+		    		{% endif %}
+		    		</td>
+		    	</tr>
+		    	{% endfor %}
+		    </tbody>
+		  </table>
+		</div>
+
+		<div class="modal-footer">
+			<button type="button" class="btn btn-mint" ng-click="nuevo({{app.user.parent}})" data-toggle="modal" data-target="#new"><i class="fa fa-plus"></i>&nbsp;Nuevo</button>
+		</div>
+	</form>
+
+
+	<!-- Modal -->
+	<div class="modal fade" id="new" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="myModalLabel">Nueva Cuenta de Usuario</h4>
+	      </div>
+	      <div class="modal-body">	
+
+	      	<form name="myForm" novalidate>
+	      		<div id="formNew" class="form-group">
+					<label class="text-muted">Rol</label>
+					<select class="form-control" name="rol" ng-change="change()" ng-model="rol" ng-options="rol.name for rol in roles" required autofocus>
+						<option value="">-- Rol --</option>
+					</select>
+		      	</div>
+				<div class="form-group">
+					<label class="text-muted">Usuario</label>
+		        	<select class="form-control" name="usuario" ng-change="validate()" ng-model="usuario" ng-options="usuario.name for usuario in usuarios" required autofocus>
+		        		<option value="">-- Usuario --</option>
+		        	</select>
+		      	</div>
+
+		      	<div class="modal-footer">
+		        	<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-remove"></i>&nbsp;Cerrar</button>
+			        <button class="btn btn-mint" ng-disabled="flag" ng-click="save()"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+		      	</div>
+	      	</form>
+	      </div>
+	      
+	    </div>
+	  </div>
+	</div>
+
+	<!-- Modal -->
+	<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  	<div class="modal-dialog">
+	    	<div class="modal-content">
+		      	<div class="modal-header">
+		        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        	<h4 class="modal-title" id="myModalLabel">{[{ title }]}</h4>
+		      	</div>
+		      	<div class="modal-body">
+			      	<form>
+			      		<h5 class="text-center">Seguro que desea eliminar a <strong class="text-mint">{[{ name }]}</strong> de Cuentas de Usuarios?</h5>
+
+			      		<div class="modal-footer">
+			        		<a type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-remove"></i>&nbsp;Cerrar</a>
+			        		<button class="btn btn-mint" ng-click="delete(-1,-1)"><i class="fa fa-trash"></i>&nbsp;Eliminar</button>
+			      		</div>
+		      		</form>
+	    		</div>
+	  		</div>
+		</div>
+	</div>
+{% endblock %}

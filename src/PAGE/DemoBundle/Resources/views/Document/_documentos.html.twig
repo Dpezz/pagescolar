@@ -1,0 +1,128 @@
+{% block institucion_perfil %}
+	<form>
+		
+		<div class="table-responsive">
+		  <table class="table table-hover">
+		    <thead>
+		    	<tr>
+		    		<th>#</th>
+		    		<th>Título</th>
+		    		<th>Descripción</th>
+		    		<th>Tipo</th>
+		    		<th>Size</th>
+		    		<th>Fecha</th>
+		    		<th></th>
+		    	</tr>
+		    </thead>
+		    <tbody>
+		    {% for item in dataD %}
+		    	<tr>
+		    		<td><span class="badge">{{loop.index}}</span></td>
+		    		<td><span class="text-mint"><strong>{{item.title}}</strong></span></td>
+		    		<td>{{item.description|slice(0,25)}}...</td>
+		    		<td>{{item.type}}</td>
+		    		<td>{{(item.size / 1000)|number_format(1)}}&nbsp;kb</td>
+		    		<td>{{ item.createat|date('d/m/y') }}</td>
+		    		<td>
+		    			<a href="{{path('institucion_download',{'id':item.id})}}" title="descargar"><i class="glyphicon glyphicon-download-alt text-success"></i></a>&emsp;
+
+			    		<a href="" title="editar" ng-click="edit('{{item.id}}')" data-toggle="modal" data-target="#edit"><i class="glyphicon glyphicon-edit"></i></a>&emsp;
+
+			    		<a href="" title="eliminar" ng-click="delete('{{item.id}}','{{item.title}}')" data-toggle="modal" data-target="#delete"><i class="glyphicon glyphicon-trash text-danger"></i></a>
+		    		</td>
+		    	</tr>
+	    	{% endfor %}
+		    </tbody>
+		  </table>
+		</div>
+
+		<div class="modal-footer">
+			<button type="button" class="btn btn-mint" data-toggle="modal" data-target="#new"><i class="fa fa-plus"></i>&nbsp;Nuevo</button>
+		</div>
+	</form>
+
+
+	<!-- Modal Nuevo -->
+	<div class="modal fade" id="new" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  	<div class="modal-dialog">
+	    	<div class="modal-content">
+	      		<div class="modal-header">
+	        		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        		<h4 class="modal-title" id="myModalLabel">Nuevo Documento</h4>
+	      		</div>
+	      		<div class="modal-body">	
+			      	<form action="{{path('institucion_upload')}}" enctype="multipart/form-data" method="POST">
+			      		
+				      	<div class="form-group">
+							<label class="text-muted">Título</label>
+				        	<input type="text" class="form-control" name="title" required autofocus>
+				      	</div>
+				      	<div class="form-group">
+							<label class="text-muted">Descripción</label>
+				        	<textarea class="form-control" name="description" required autofocus></textarea>			
+				      	</div>
+				      	<div class="form-group">
+							<label class="text-muted">Archivo</label>
+				        	<input type="file" class="form-control" name="file" required autofocus>
+				      	</div>
+
+				      	<div class="modal-footer">
+				        	<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-remove"></i>&nbsp;Cerrar</button>
+					        <button  id="myButton" data-loading-text="<i class='fa fa-spinner fa-pulse'></i>" class="btn btn-mint" autocomplete="off" type="submit"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+				      	</div>
+			      	</form>
+	      		</div>
+	    	</div>
+	  	</div>
+	</div>
+
+	<!-- Modal Eliminar -->
+	<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  	<div class="modal-dialog">
+	    	<div class="modal-content">
+		      	<div class="modal-header">
+		        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        	<h4 class="modal-title" id="myModalLabel">{[{ title }]}</h4>
+		      	</div>
+		      	<div class="modal-body">
+			      	<form>
+			      		<h5 class="text-center">Seguro que desea eliminar <strong class="text-mint">{[{ name }]}</strong> de Documentos?</h5>
+
+			      		<div class="modal-footer">
+			        		<a type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-remove"></i>&nbsp;Cerrar</a>
+			        		<button class="btn btn-mint" ng-click="delete(-1,-1)"><i class="fa fa-trash"></i>&nbsp;Eliminar</button>
+			      		</div>
+		      		</form>
+	    		</div>
+	  		</div>
+		</div>
+	</div>
+
+	<!-- Modal Editar -->
+	<div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  	<div class="modal-dialog">
+	    	<div class="modal-content">
+	      		<div class="modal-header">
+	        		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        		<h4 class="modal-title" id="myModalLabel">Editar Documento</h4>
+	      		</div>
+	      		<div class="modal-body">	
+			      	<form>
+				      	<div class="form-group">
+							<label class="text-muted">Título</label>
+				        	<input type="text" class="form-control" ng-model="data.title" required autofocus>
+				      	</div>
+				      	<div class="form-group">
+							<label class="text-muted">Descripción</label>
+				        	<textarea class="form-control" ng-model="data.description" required autofocus></textarea>
+				      	</div>
+				      	<div class="modal-footer">
+				        	<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-remove"></i>&nbsp;Cerrar</button>
+					        <button class="btn btn-mint" ng-click="save()"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+				      	</div>
+			      	</form>
+	      		</div>
+	    	</div>
+	  	</div>
+	</div>
+{% endblock %}

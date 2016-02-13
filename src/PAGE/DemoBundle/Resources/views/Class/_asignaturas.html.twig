@@ -1,0 +1,106 @@
+{% block academico_asignaturas %}
+
+	<form>
+		<div class="table-responsive">
+		  	<table class="table table-hover">
+			    <thead>
+			    	<tr>
+			    		<th>#</th>
+			    		<th>Asignatura</th>
+			    		<th></th>
+			    	</tr>
+			    </thead>
+			    <tbody>
+			    	{% for item in dataA %}
+			    	<tr>
+			    		<td><span class="badge">{{loop.index}}</span></td>
+			    		<td><span class="text-mint"><strong>{{ item.name }}</strong></span></td>
+			    		<td>
+				    		<a href="#" data-toggle="modal" data-target="#new" ng-click="edit('{{item.id}}')" title="editar"><i class="glyphicon glyphicon-edit"></i></a>&emsp;
+
+				    		<a href="#" data-toggle="modal" data-target="#delete" ng-click="delete('{{item.id}}','{{item.name}}')" title="eliminar"><i class="glyphicon glyphicon-trash text-danger"></i></a>
+			    		</td>
+		    		</tr>
+		    		{% endfor %}
+			    </tbody>
+		  	</table>
+		</div>
+
+		<div class="modal-footer">
+			<a href="" class="btn btn-mint" ng-click="nuevo('{{ app.user.parent }}')" data-toggle="modal" data-target="#new"><i class="fa fa-plus"></i>&nbsp;Nuevo</a>
+		</div>
+
+	</form>
+
+
+	<!-- Modal Nuevo-->
+	<div class="modal fade" id="new" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  	<div class="modal-dialog">
+		    <div class="modal-content">
+		      	<div class="modal-header">
+		        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        	<h4 class="modal-title" id="myModalLabel">{[{ title }]}</h4>
+		      	</div>
+		      	<div class="modal-body">	
+
+		      		<form>
+
+		      		<label class="text-muted">Asignatura</label>
+		      		<div class="row">
+	      				<div class="col-md-8">
+				      		<section ng-hide="data.active">
+					      		<div class="form-group">
+					      		<select class="form-control" ng-model="asignatura" ng-options="asignatura.name for asignatura in asignaturas" required>
+					      			<option value="">-- Asignatura --</option>
+					      		</select>
+						      	</div>
+					      	</section>
+					      	<section ng-show="data.active">
+						      	<div class="form-group">
+						        	<input type="text" class="form-control" ng-model="name" required>
+						      	</div>
+					      	</section>
+				      	</div>
+				      	<div class="col-md-4">
+					      	<div class="checkbox">
+							    <label>
+						      		<input type="checkbox" ng-checked="active" ng-model="data.active" ng-true-value="1" ng-false-value="0" ng-change="change()"> Otro
+							    </label>
+						  	</div>
+					  	</div>
+				  	</div>
+
+			      	<div class="modal-footer">
+			        	<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-remove"></i>&nbsp;Cerrar</button>
+			        	<button class="btn btn-mint" type="submit" ng-click="save()"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+			      	</div>
+	      		</form>
+
+		    	</div>
+		  	</div>
+		</div>
+	</div>
+
+	
+	<!-- Modal Eliminar-->
+	<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  	<div class="modal-dialog">
+	    	<div class="modal-content">
+		      	<div class="modal-header">
+		        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        	<h4 class="modal-title" id="myModalLabel">{[{ title }]}</h4>
+		      	</div>
+		      	<div class="modal-body">
+			      	<form>
+			      		<h5 class="text-center">Seguro que desea eliminar a <strong class="text-mint">{[{name}]}</strong> de Asignaturas?</h5>
+
+			      		<div class="modal-footer">
+			        		<a type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-remove"></i>&nbsp;Cerrar</a>
+			        		<button class="btn btn-mint" ng-click="delete(-1,-1)"><i class="fa fa-trash"></i>&nbsp;Eliminar</button>
+			      		</div>
+		      		</form>
+	    		</div>
+	  		</div>
+		</div>
+	</div>
+{% endblock %}

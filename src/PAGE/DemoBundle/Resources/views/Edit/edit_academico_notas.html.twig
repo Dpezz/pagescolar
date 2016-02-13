@@ -1,0 +1,123 @@
+{% block academico_notas %}
+
+{% if dataN %}
+	<div class="row page-header">
+		<div class="col-md-8">
+			<h4>
+			<span class="text-mint">{{dataE.curso}}</span>&nbsp;<i class="fa fa-angle-right"></i>&nbsp;
+			<span class="text-muted"><em>{{dataE.asignatura}}</em></span>
+			
+			</h4>
+		</div>
+		<div class="col-md-4">
+			<h5 class="text-right"><span class="text-mint"><strong>{{dataE.docente}}</strong></span>&nbsp;<i class="fa fa-angle-right"></i>&nbsp;<small class="label label-default">{{ "now"|date("d/m/Y") }}</small></h5>
+		</div>
+	</div>
+
+	<div class="table-responsive">
+	  	<table class="table table-hover">
+		    <thead>
+		    	<tr>
+		    		<th>#</th>
+		    		<th>Alumno</th>
+		    		{% for item in dataN[0].periodo %}
+		    			{% set elements = item.notas|split('-') %}
+		    			{% for i in 1..elements|length %}
+		    				<th>Nota {{loop.index}}</th>
+	    				{% endfor %}
+		    			<th class="active">{{loop.index}}º&nbsp;Prom.</th>
+		    		{% endfor %}
+		    		<th class="info">Prom. Final</th>
+		    	</tr>
+		    </thead>
+		    <tbody>
+
+		    	{% for item in dataN %}
+		    	<tr>
+		    		<td><span class="badge">{{loop.index}}</span></td>
+		    		<td>
+		    		<span class="text-mint">
+		    			{% for x in dataA %}
+		    				{% if x.id == item.id_alumno %}{{x.name}}&nbsp;{{x.plastname}}&nbsp;{{x.mlastname}}{% endif %}
+		    			{% endfor %}
+		    		</span>
+		    		</td>
+		    		{% for elements in item.periodo %}
+		    			{% set notas = elements.notas|split('-') %}
+		    			{% for x in notas %}
+			    			{% if  x %}
+				    			{% if x < 4 %}
+					    			<td><span class="label label-danger">{{x}}</span></td>
+				    			{% else %}
+				    				<td>{{x}}</td>
+				    			{% endif %}
+			    			{% else %}
+			    				<td><i class="fa fa-minus text-muted"></i></td>
+			    			{% endif %}
+		    			{% endfor %}
+
+		    			{% if elements.promedio < 4 %}
+							<td class="active"><span class="label label-danger">{{elements.promedio|number_format(1)}}</span></td>
+						{% else %}
+							<td class="active">{{elements.promedio|number_format(1)}}</td>
+						{% endif %}
+					{% endfor %}
+
+					{% if item.promedio < 4 %}
+						<td class="info"><span class="label label-danger">{{item.promedio|number_format(1)}}</span></td>
+					{% else %}
+						<td class="info">{{item.promedio|number_format(1)}}</td>
+					{% endif %}
+	    		</tr>
+	    		{% endfor %}
+		    </tbody>
+	  	</table>
+	</div>
+{% endif %}
+
+	<div class="modal-footer">
+		<a type="button" href="" class="btn btn-default" data-toggle="modal" data-target="#filter"><i class="fa fa-filter"></i>&nbsp;Filtro</a>
+	</div>
+
+
+	<!-- Modal Filtro-->
+	<div class="modal fade" id="filter" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  	<div class="modal-dialog modal-sm">
+	    	<div class="modal-content">
+		      	<div class="modal-header">
+		        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        	<h4 class="modal-title" id="myModalLabel">Filtrar Evaluaciones</h4>
+		      	</div>
+		      	<div class="modal-body">
+			      	<form action="{{path('academico_notas')}}" method="POST">
+						
+						<div class="form-group">
+							<label class="text-muted">Curso</label>
+			        		<select class="form-control" name="curso" required autofocus>
+			        			<option value="">-- Curso --</option>
+			        			{% for item in dataC %}
+				                	<option value="{{item.id}}">{{item.name}} {{item.indice}}</option>
+			        			{% endfor %}
+			        		</select>
+				      	</div>
+
+						<div class="form-group">
+							<label class="text-muted">Asignatura</label>
+			        		<select class="form-control" name="asignatura" required autofocus>
+			        			<option value="">-- Asignatura --</option>
+			        			{% for item in dataAS %}
+				                	<option value="{{item.id}}">{{item.name}}</option>
+			        			{% endfor %}
+			        		</select>
+			      		</div>
+
+			      		<div class="modal-footer">
+			        		<a type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-remove"></i>&nbsp;Cerrar</a>
+			        		<button type="submit" class="btn btn-mint"><i class="fa fa-filter"></i>&nbsp;Filtrar</button>
+			      		</div>
+		      		</form>
+	    		</div>
+	  		</div>
+		</div>
+	</div>
+{% endblock %}

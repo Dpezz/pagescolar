@@ -1,0 +1,37 @@
+{% extends 'PAGEDemoBundle:Layout:layout_dashboard.html.twig' %}
+
+
+{% block title "Cuentas de Usuario"%}
+
+
+{% block subtitle %}
+   <i class="fa fa-credit-card"></i>&nbsp;Cuentas de Usuario
+{% endblock %}
+
+
+{% block javascripts %}
+  {{parent()}}
+  <script src="{{ asset('bundles/pagedemo/js/adminController.js')}}"></script>
+{% endblock %}
+
+
+{% block submenu_admin_superadmin %}
+    <li class="active"><a href="{{path('admin_index')}}">&emsp;&emsp;<i class="fa fa-credit-card"></i>&nbsp;Cuentas</a></li>
+{% endblock %}
+
+
+{% block datos %}
+  {% embed 'PAGEDemoBundle:Layout:layout_alert.html.twig' %}
+    {% block alert %}
+      {{ parent() }}
+    {% endblock %}
+  {% endembed %}
+
+    
+  <section ng-app="admin" ng-controller="superadmin">
+    {% include 'PAGEDemoBundle:Admin:_admin.html.twig' %}
+    {% block admin_superadmin %}
+      {{parent()}}
+    {% endblock %}
+  </section>
+{% endblock %}

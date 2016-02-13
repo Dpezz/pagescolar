@@ -1,0 +1,34 @@
+{% extends 'PAGEDemoBundle:Layout:layout_dashboard.html.twig' %}
+
+{% block title "Asistencias"%}
+
+{% block active_menu_academico %}class="in"{% endblock %}
+
+{% block subtitle %}
+	 <i class="fa fa-clock-o"></i>&nbsp;Asistencias
+     {% if curso %}&nbsp;<i class="fa fa-angle-left"></i>&nbsp;<span class="text-mint">{{curso}}</span>{% endif %}
+{% endblock %}
+
+{% block submenu_admin_asistencias %}
+<li class="active"><a href="{{path('asistencias')}}">&emsp;&emsp;<i class="fa fa-clock-o"></i>&nbsp;Asistencias</a></li>
+{% endblock %}
+
+{% block submenu_alumno_asistencia %}
+  <li class="active"><a href="{{ path('asistencias_alumno',{'id':app.user.id}) }}">&emsp;&emsp;<i class="fa fa-clock-o"></i>&nbsp;Asistencia</a></li>
+{% endblock %}
+
+{% block datos %}
+    {% embed 'PAGEDemoBundle:Layout:layout_alert.html.twig' %}
+      {% block alert %}
+        {{ parent() }}
+      {% endblock %}
+    {% endembed %}
+
+    
+    <section>
+    	{% include 'PAGEDemoBundle:Callroll:_asistencias.html.twig' %}
+    	{% block academico_asistencias %}
+    		{{parent()}}
+    	{% endblock %}
+    </section>
+{% endblock %}

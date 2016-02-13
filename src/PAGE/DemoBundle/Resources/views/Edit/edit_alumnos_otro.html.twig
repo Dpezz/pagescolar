@@ -1,0 +1,71 @@
+{% block alumnos_otro %}
+
+{% if dataA %}
+	<form action="{{ path('otro_edit',{'id':dataA.id}) }}" method="POST">
+{% else %}
+	<form>
+{% endif %}
+	<label class="text-muted">Necesidades para cumplir expectativas y metas académicas:</label>
+	<div class="well well-sm">
+		<h5 class="text-mint">Básicas</h5>
+		<label class="checkbox-inline"></label>
+		{% set basico = listaB|split(',') %}
+		{% for item in basico %}
+		{% if dataA and loop.index in dataA.nbasica %}
+			<label class="checkbox-inline">
+			  <input type="checkbox" name="basica[]" value="{{loop.index}}" checked>{{item}}
+			</label>
+		{% else %}
+			<label class="checkbox-inline">
+			  <input type="checkbox" name="basica[]" value="{{loop.index}}">{{item}}
+			</label>
+		{% endif %}
+		{% endfor %}
+	</div>
+
+	<div class="well well-sm">
+		<h5 class="text-mint">Reforzamiento</h5>
+		<label class="checkbox-inline"></label>
+		{% set reforzamiento = listaR|split(',') %}
+		{% for item in reforzamiento %}
+			{% if dataA and loop.index in dataA.nreforzamiento %}
+				<label class="checkbox-inline">
+			  		<input type="checkbox" name="reforzamiento[]" value="{{loop.index}}" checked>{{item}}
+				</label>
+			{% else %}
+				<label class="checkbox-inline">
+			  		<input type="checkbox" name="reforzamiento[]" value="{{loop.index}}">{{item}}
+				</label>
+			{% endif %}
+		{% endfor %}
+	</div>
+
+	<div class="well well-sm">
+		<h5 class="text-mint">Talleres</h5>
+		<label class="checkbox-inline"></label>
+		{% set talleres = listaT|split(',') %}
+		{% for item in talleres %}
+			{% if dataA and loop.index in dataA.ntaller %}
+				<label class="checkbox-inline">
+				  <input type="checkbox" name="taller[]" value="{{loop.index}}" checked>{{item}}
+				</label>
+			{% else %}
+				<label class="checkbox-inline">
+				  <input type="checkbox" name="taller[]" value="{{loop.index}}">{{item}}
+				</label>
+			{% endif %}
+		{% endfor %}
+	</div>
+
+	<div class="well well-sm">
+		<h5 class="text-mint">Otras necesidades que considere relevantes:</h5>
+		
+		<textarea class="form-control" name="otra">{% if dataA %}{{dataA.notra}}{% endif %}</textarea>
+	</div>
+
+	<div class="modal-footer">
+		<button class="btn btn-mint" type="submit" {% if not dataA %}disabled{% endif %}><i class="fa fa-save"></i>&nbsp;Guardar</button>
+	</div>
+</form>
+{% endblock %}
+

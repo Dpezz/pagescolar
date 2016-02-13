@@ -1,0 +1,265 @@
+{% block estadisticas_alumnos %}
+<h2 class="page-header">Cursos</h2>
+<div class="row">
+	<div class="col-md-6" ng-controller="bar_alumnos">
+		<canvas id="bar" class="chart chart-bar" data="data" labels="labels"></canvas>
+	</div>
+	<div class="col-md-5">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th class="active">Nombre</th>
+					<th class="active">Cantidad</th>
+					<th class="active">%</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in cursos %}
+				<tr>
+					<td>{{item.name}}</td>
+					<td>{{item.num}}</td>
+					<td> {{ (100 * item.num) / alumnos.num }}%</td>
+				</tr>
+				{% endfor %}
+				<tr class="active">
+					<td>Total</td>
+					<td>{{alumnos.num}}</td>
+					<td> 100%</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<h2 class="page-header">Año Ingreso</h2>
+<div class="row">
+	<div class="col-md-6" ng-controller="line_alumnos">
+		<canvas id="line" class="chart chart-line" data="data" labels="labels" legend="true" series="series" click="onClick"></canvas> 
+	</div>
+	<div class="col-md-5">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th class="active">Nombre</th>
+					<th class="active">Cantidad</th>
+					<th class="active">%</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in years %}
+				<tr>
+					<td>{{item.name}}</td>
+					<td>{{item.num}}</td>
+					<td> {{ (100 * item.num) / alumnos.num }}%</td>
+				</tr>
+				{% endfor %}
+				<tr class="active">
+					<td>Total</td>
+					<td>{{alumnos.num}}</td>
+					<td> 100%</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<h2 class="page-header">Sexo</h2>
+<div class="row" ng-controller="donuts_alumnos">
+	<div class="col-md-5">
+		<canvas id="doughnut" class="chart chart-doughnut" data="sexdata" labels="sexlabels"></canvas> 
+	</div>
+	<div class="col-md-5">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th class="active">Nombre</th>
+					<th class="active">Cantidad</th>
+					<th class="active">%</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in sexos %}
+				<tr>
+					<td>{{item.name}}</td>
+					<td>{{item.num}}</td>
+					<td> {{ (100 * item.num) / alumnos.num }}%</td>
+				</tr>
+				{% endfor %}
+				<tr class="active">
+					<td>Total</td>
+					<td>{{alumnos.num}}</td>
+					<td> 100%</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<h2 class="page-header">Étnia</h2>
+<div class="row" ng-controller="donuts_alumnos">
+	<div class="col-md-5">
+		<canvas id="doughnut" class="chart chart-doughnut" data="fundata" labels="funlabels"></canvas> 
+	</div>
+	<div class="col-md-5">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th class="active">Nombre</th>
+					<th class="active">Cantidad</th>
+					<th class="active">%</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in etnias %}
+				<tr>
+					<td>{{item.name}}</td>
+					<td>{{item.num}}</td>
+					<td> {{ (100 * item.num) / alumnos.num }}%</td>
+				</tr>
+				{% endfor %}
+				<tr class="active">
+					<td>Total</td>
+					<td>{{alumnos.num}}</td>
+					<td> 100%</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<h2 class="page-header">Programas</h2>
+<div class="row" ng-controller="donuts_alumnos">
+	<div class="col-md-5">
+		<canvas id="doughnut" class="chart chart-doughnut" data="nivdata" labels="nivlabels"></canvas> 
+	</div>
+	<div class="col-md-5">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th class="active">Nombre</th>
+					<th class="active">Cantidad</th>
+					<th class="active">%</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in programas %}
+				<tr>
+					<td>{{item.name}}</td>
+					<td>{{item.num}}</td>
+					<td> {{ (100 * item.num) / alumnos.num }}%</td>
+				</tr>
+				{% endfor %}
+				<tr class="active">
+					<td>Total</td>
+					<td>{{alumnos.num}}</td>
+					<td> 100%</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+
+<h2 class="page-header">Necesidades Básica</h2>
+<div class="row" ng-controller="pie_alumnos">
+	<div class="col-md-5">
+		<canvas id="pie" class="chart chart-pie" data="basdata" labels="baslabels"></canvas>
+	</div>
+	<div class="col-md-5">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th class="active">Nombre</th>
+					<th class="active">Cantidad</th>
+					<th class="active">%</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in basicas %}
+				<tr>
+					<td>{{item.name}}</td>
+					<td>{{item.num}}</td>
+					<td> {{ (100 * item.num) / alumnos.num }}%</td>
+				</tr>
+				{% endfor %}
+				<tr class="active">
+					<td>Total</td>
+					<td>{{alumnos.num}}</td>
+					<td> 100%</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+
+<h2 class="page-header">Necesidades Reforzamiento</h2>
+<div class="row" ng-controller="pie_alumnos">
+	<div class="col-md-5">
+		<canvas id="pie" class="chart chart-pie" data="refdata" labels="reflabels"></canvas>
+	</div>
+	<div class="col-md-5">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th class="active">Nombre</th>
+					<th class="active">Cantidad</th>
+					<th class="active">%</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in reforzamientos %}
+				<tr>
+					<td>{{item.name}}</td>
+					<td>{{item.num}}</td>
+					<td> {{ (100 * item.num) / alumnos.num }}%</td>
+				</tr>
+				{% endfor %}
+				<tr class="active">
+					<td>Total</td>
+					<td>{{alumnos.num}}</td>
+					<td> 100%</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<h2 class="page-header">Necesidades Talleres</h2>
+<div class="row" ng-controller="pie_alumnos">
+	<div class="col-md-5">
+		<canvas id="pie" class="chart chart-pie" data="taldata" labels="tallabels"></canvas>
+	</div>
+	<div class="col-md-5">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th class="active">Nombre</th>
+					<th class="active">Cantidad</th>
+					<th class="active">%</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in talleres %}
+				<tr>
+					<td>{{item.name}}</td>
+					<td>{{item.num}}</td>
+					<td> {{ (100 * item.num) / alumnos.num }}%</td>
+				</tr>
+				{% endfor %}
+				<tr class="active">
+					<td>Total</td>
+					<td>{{alumnos.num}}</td>
+					<td> 100%</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+<br>
+{#
+<div class="modal-footer">
+	<a href="{{path('_print_docentes')}}" type="button" class="btn btn-mint"><i class="fa fa-download fa-lg"></i>&nbsp;Descargar</a>
+</div>
+#}
+{% endblock %}

@@ -1,0 +1,47 @@
+{% block estadisticas_alumnos %}
+<div class="row">
+	<div class="col-md-6" ng-controller="bar-alumnos">
+		<h5 class="page-header"><small class="badge">Cursos</small></h5>
+		<canvas id="bar" class="chart chart-bar" data="data" labels="labels"></canvas>
+	</div>
+	<div class="col-md-6" ng-controller="line-alumnos">
+		<h5 class="page-header"><small class="badge">Año Ingreso</small></h5>
+		<canvas id="line" class="chart chart-line" data="data" labels="labels" legend="true" series="series" click="onClick"></canvas> 
+	</div>
+</div>
+<div class="row" ng-controller="donuts-alumnos">
+	<div class="col-md-4">
+		<h5 class="page-header"><small class="badge">Sexo</small></h5>
+		<canvas id="doughnut" class="chart chart-doughnut" data="sexdata" labels="sexlabels"></canvas> 
+	</div>
+	<div class="col-md-4">
+		<h5 class="page-header"><small class="badge">Étnia</small></h5>
+		<canvas id="doughnut" class="chart chart-doughnut" data="fundata" labels="funlabels"></canvas> 
+	</div>
+	<div class="col-md-4">
+		<h5 class="page-header"><small class="badge">Programas</small></h5>
+		<canvas id="doughnut" class="chart chart-doughnut" data="nivdata" labels="nivlabels"></canvas> 
+	</div>
+</div>
+
+<div class="row" ng-controller="pie-alumnos">
+	<div class="col-md-4">
+		<h5 class="page-header"><small class="badge">Necesidades Básica</small></h5>
+		<canvas id="pie" class="chart chart-pie" data="basdata" labels="baslabels"></canvas>
+	</div>
+	<div class="col-md-4">
+		<h5 class="page-header"><small class="badge">Necesidades Reforzamiento</small></h5>
+		<canvas id="pie" class="chart chart-pie" data="refdata" labels="reflabels"></canvas>
+	</div>
+	<div class="col-md-4">
+		<h5 class="page-header"><small class="badge">Necesidades Talleres</small></h5>
+		<canvas id="pie" class="chart chart-pie" data="taldata" labels="tallabels"></canvas>
+	</div>
+</div>
+<br>
+{#
+<div class="modal-footer">
+	<a href="{{path('_print_docentes')}}" type="button" class="btn btn-mint"><i class="fa fa-download fa-lg"></i>&nbsp;Descargar</a>
+</div>
+#}
+{% endblock %}

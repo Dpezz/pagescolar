@@ -2,246 +2,657 @@
 
 namespace PAGE\DemoBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+// these import the "@Route" and "@Template" annotations
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use PAGE\DemoBundle\Entity\Test;
-use PAGE\DemoBundle\Form\TestType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
+use PAGE\DemoBundle\Entity\DatosEvaluaciones;
+use PAGE\DemoBundle\Controller\GetController;
+use PAGE\DemoBundle\Controller\LoadController;
 
 /**
- * Test controller.
- *
- * @Route("/profile/test")
+ * @Route("/profile")
  */
 class TestController extends Controller
 {
-
+/* Template */
+    
     /**
-     * Lists all Test entities.
-     *
-     * @Route("/", name="test")
+     * @Route("/evaluaciones", name="evaluaciones")
      * @Method("GET")
      * @Template()
      */
-    public function indexAction()
-    {
-        $em = $this->getDoctrine()->getManager();
+    public function evaluacionesAction(Request $request){
+        //Asignar el FLAG
+        if(!$request->getSession()->get('flag'))
+        {$request->getSession()->set('flag',-1);}
 
-        $entities = $em->getRepository('PAGEDemoBundle:Test')->findAll();
+        $flag = $request->getSession()->get('flag');
+        $request->getSession()->set('flag',-1);
+
+        $id_user = $this->getUser()->getParent();
 
         return array(
-            'entities' => $entities,
+            'flag'=>$flag,
+            'dataE'=>$this->getEvaluacionesAll($id_user),
+            'dataD'=>$this->getDocentes($id_user),
+            'dataC'=>$this->getCursos($id_user),
+            'dataA'=>$this->getAsignaturas($id_user),
+            'dataN'=>array('curso'=>'','asignatura'=>'','docente'=>''),
         );
     }
+
     /**
-     * Creates a new Test entity.
-     *
-     * @Route("/", name="test_create")
+     * @Route("/evaluaciones/curso/{id}",defaults={"id"=-1}, name="evaluaciones_curso")
+     * @Method("GET")
+     * @Template()
+     */
+    public function evaluacionesCursoAction(Request $request,$id){
+        //Asignar el FLAG
+        if(!$request->getSession()->get('flag'))
+        {$request->getSession()->set('flag',-1);}
+
+        $flag = $request->getSession()->get('flag');
+        $request->getSession()->set('flag',-1);
+
+        $id_user = $this->getUser()->getParent();
+
+        $id_curso = $id;
+        $id_asignatura = '';
+        $id_docente = '';
+
+        return $this->render('PAGEDemoBundle:Test:evaluaciones.html.twig',array(
+            'flag'=>$flag,
+            'dataE'=>$this->getEvaluaciones($id_user,$id_curso,$id_asignatura,$id_docente),
+            'dataD'=>$this->getDocentes($id_user),
+            'dataC'=>$this->getCursos($id_user),
+            'dataA'=>$this->getAsignaturas($id_user),
+            'dataN'=>array('curso'=>$this->getNameCurso($id_curso),
+                'asignatura'=>$this->getNameAsignatura($id_asignatura),
+                'docente'=>$this->getNameDocente($id_docente)),
+        ));
+    }
+
+    /**
+     * @Route("/evaluaciones/asignatura/{id}",defaults={"id"=-1}, name="evaluaciones_asignatura")
+     * @Method("GET")
+     * @Template()
+     */
+    public function evaluacionesAsignaturaAction(Request $request,$id){
+        //Asignar el FLAG
+        if(!$request->getSession()->get('flag'))
+        {$request->getSession()->set('flag',-1);}
+
+        $flag = $request->getSession()->get('flag');
+        $request->getSession()->set('flag',-1);
+
+        $id_user = $this->getUser()->getParent();
+
+        $id_curso = '';
+        $id_asignatura = $id;
+        $id_docente = '';
+
+        return $this->render('PAGEDemoBundle:Test:evaluaciones.html.twig',array(
+            'flag'=>$flag,
+            'dataE'=>$this->getEvaluaciones($id_user,$id_curso,$id_asignatura,$id_docente),
+            'dataD'=>$this->getDocentes($id_user),
+            'dataC'=>$this->getCursos($id_user),
+            'dataA'=>$this->getAsignaturas($id_user),
+            'dataN'=>array('curso'=>$this->getNameCurso($id_curso),
+                'asignatura'=>$this->getNameAsignatura($id_asignatura),
+                'docente'=>$this->getNameDocente($id_docente))
+        ));
+    }
+
+    /**
+     * @Route("/evaluaciones/docente/{id}",defaults={"id"=-1}, name="evaluaciones_docente")
+     * @Method("GET")
+     * @Template()
+     */
+    public function evaluacionesDocenteAction(Request $request,$id){
+        //Asignar el FLAG
+        if(!$request->getSession()->get('flag'))
+        {$request->getSession()->set('flag',-1);}
+
+        $flag = $request->getSession()->get('flag');
+        $request->getSession()->set('flag',-1);
+
+        $id_user = $this->getUser()->getParent();
+
+        $id_curso = '';
+        $id_asignatura = '';
+        $id_docente = $id;
+
+        return $this->render('PAGEDemoBundle:Test:evaluaciones.html.twig',array(
+            'flag'=>$flag,
+            'dataE'=>$this->getEvaluaciones($id_user,$id_curso,$id_asignatura,$id_docente),
+            'dataD'=>$this->getDocentes($id_user),
+            'dataC'=>$this->getCursos($id_user),
+            'dataA'=>$this->getAsignaturas($id_user),
+            'dataN'=>array('curso'=>$this->getNameCurso($id_curso),
+                'asignatura'=>$this->getNameAsignatura($id_asignatura),
+                'docente'=>$this->getNameDocente($id_docente))
+        ));
+    }
+
+    /**
+     * @Route("/evaluaciones/alumno/{id}",defaults={"id"=-1}, name="evaluaciones_alumno")
+     * @Method("GET")
+     * @Template()
+     */
+    public function evaluacionesAlumnoAction(Request $request,$id){
+        //Asignar el FLAG
+        if(!$request->getSession()->get('flag'))
+        {$request->getSession()->set('flag',-1);}
+
+        $flag = $request->getSession()->get('flag');
+        $request->getSession()->set('flag',-1);
+
+        $id_user = $this->getUser()->getParent();
+
+        $id_curso = $this->getAlumno($id_user,$id)->getCurso();
+        $id_asignatura = '';
+        $id_docente = '';
+
+        return $this->render('PAGEDemoBundle:Test:evaluaciones.html.twig',array(
+            'flag'=>$flag,
+            'dataE'=>$this->getEvaluaciones($id_user,$id_curso,$id_asignatura,$id_docente),
+            'dataD'=>$this->getDocentes($id_user),
+            'dataC'=>$this->getCursos($id_user),
+            'dataA'=>$this->getAsignaturas($id_user),
+            'dataN'=>array('curso'=>$this->getNameCurso($id_curso),
+                'asignatura'=>$this->getNameAsignatura($id_asignatura),
+                'docente'=>$this->getNameDocente($id_docente)),
+        ));
+    }
+
+    /**
+     * @Route("/evaluaciones/filter", name="evaluaciones_filter")
      * @Method("POST")
-     * @Template("PAGEDemoBundle:Test:new.html.twig")
      */
-    public function createAction(Request $request)
-    {
-        $entity = new Test();
-        $form = $this->createCreateForm($entity);
-        $form->handleRequest($request);
+    public function evaluacionesFilterAction(Request $request){
+        //Asignar el FLAG
+        if(!$request->getSession()->get('flag'))
+        {$request->getSession()->set('flag',-1);}
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
+        $flag = $request->getSession()->get('flag');
+        $request->getSession()->set('flag',-1);
 
-            return $this->redirect($this->generateUrl('test_show', array('id' => $entity->getId())));
-        }
+        $id_user = $this->getUser()->getParent();
 
-        return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        );
-    }
+        if(! $id_curso = $request->get('curso'))
+            $id_curso = '';
 
-    /**
-     * Creates a form to create a Test entity.
-     *
-     * @param Test $entity The entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createCreateForm(Test $entity)
-    {
-        $form = $this->createForm(new TestType(), $entity, array(
-            'action' => $this->generateUrl('test_create'),
-            'method' => 'POST',
+        if(! $id_asignatura = $request->get('asignatura'))
+            $id_asignatura = '';
+
+        if(! $id_docente = $request->get('docente'))
+            $id_docente = '';
+
+        return $this->render('PAGEDemoBundle:Test:evaluaciones.html.twig',array(
+            'flag'=>$flag,
+            'dataE'=>$this->getEvaluaciones($id_user,$id_curso,$id_asignatura,$id_docente),
+            'dataD'=>$this->getDocentes($id_user),
+            'dataC'=>$this->getCursos($id_user),
+            'dataA'=>$this->getAsignaturas($id_user),
+            'dataN'=>array('curso'=>$this->getNameCurso($id_curso),
+                'asignatura'=>$this->getNameAsignatura($id_asignatura),
+                'docente'=>$this->getNameDocente($id_docente))
         ));
-
-        $form->add('submit', 'submit', array('label' => 'Create'));
-
-        return $form;
     }
 
     /**
-     * Displays a form to create a new Test entity.
-     *
-     * @Route("/new", name="test_new")
+     * @Route("/evaluaciones/new", name="evaluacion_new")
      * @Method("GET")
      * @Template()
      */
-    public function newAction()
-    {
-        $entity = new Test();
-        $form   = $this->createCreateForm($entity);
+    public function newAction(Request $request){
+        //Asignar el FLAG
+        if(!$request->getSession()->get('flag'))
+        {$request->getSession()->set('flag',-1);}
+
+        $flag = $request->getSession()->get('flag');
+        $request->getSession()->set('flag',-1);
+
+        $load = new LoadController();
+        $id_user = $this->getUser()->getParent();
 
         return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        );
+                'flag'=>$flag,
+                'dataD'=>$this->getDocentes($id_user),
+                'dataC'=>$this->getCursos($id_user),
+                'dataA'=>$this->getAsignaturas($id_user),
+                'dataS'=>$this->getSemestres(),
+                'listaS'=>$load->sistemaAction(),
+                'listaM'=>$load->momentoAction(),
+                'listaE'=>$load->evaluadorAction(),
+                'listaEV'=>$load->evaluaAction(),
+                'listaED'=>$load->evaluacionDAction(),
+                'listaF'=>$load->finalidadAction(),
+                'listaI'=>$load->instrumentoAction(),
+                'listaA'=>$load->aprendizajeAction(),
+                'dataE'=>null
+            );
     }
 
     /**
-     * Finds and displays a Test entity.
-     *
-     * @Route("/{id}", name="test_show")
+     * @Route("/evaluaciones/{id}", name="evaluacion_show")
      * @Method("GET")
      * @Template()
      */
-    public function showAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
+    public function evaluacionAction(Request $request, $id){
+        //Asignar el FLAG
+        if(!$request->getSession()->get('flag'))
+        {$request->getSession()->set('flag',-1);}
 
-        $entity = $em->getRepository('PAGEDemoBundle:Test')->find($id);
+        $flag = $request->getSession()->get('flag');
+        $request->getSession()->set('flag',-1);
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Test entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-
-        return array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),
-        );
-    }
-
-    /**
-     * Displays a form to edit an existing Test entity.
-     *
-     * @Route("/{id}/edit", name="test_edit")
-     * @Method("GET")
-     * @Template()
-     */
-    public function editAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('PAGEDemoBundle:Test')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Test entity.');
-        }
-
-        $editForm = $this->createEditForm($entity);
-        $deleteForm = $this->createDeleteForm($id);
+        $load = new LoadController();
+        $id_user = $this->getUser()->getParent();
 
         return array(
-            'entity'      => $entity,
-            'form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        );
+                'flag'=>$flag,
+                'dataD'=>$this->getDocentes($id_user),
+                'dataC'=>$this->getCursos($id_user),
+                'dataA'=>$this->getAsignaturas($id_user),
+                'dataS'=>$this->getSemestres(),
+                'listaS'=>$load->sistemaAction(),
+                'listaM'=>$load->momentoAction(),
+                'listaE'=>$load->evaluadorAction(),
+                'listaEV'=>$load->evaluaAction(),
+                'listaED'=>$load->evaluacionDAction(),
+                'listaF'=>$load->finalidadAction(),
+                'listaI'=>$load->instrumentoAction(),
+                'listaA'=>$load->aprendizajeAction(),
+                'dataE'=>$this->getEvaluacion($id)
+            );
     }
 
-    /**
-    * Creates a form to edit a Test entity.
-    *
-    * @param Test $entity The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
-    private function createEditForm(Test $entity)
-    {
-        $form = $this->createForm(new TestType(), $entity, array(
-            'action' => $this->generateUrl('test_update', array('id' => $entity->getId())),
-            'method' => 'PUT',
-        ));
+/* GET */
 
-        $form->add('submit', 'submit', array('label' => 'Update'));
-
-        return $form;
-    }
-    /**
-     * Edits an existing Test entity.
-     *
-     * @Route("/{id}", name="test_update")
-     * @Method("PUT")
-     * @Template("PAGEDemoBundle:Test:edit.html.twig")
-     */
-    public function updateAction(Request $request, $id)
-    {
+    private function getAsignaturas($id){
         $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('PAGEDemoBundle:Test')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Test entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createEditForm($entity);
-        $editForm->handleRequest($request);
-
-        if ($editForm->isValid()) {
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('test_edit', array('id' => $id)));
-        }
-
-        return array(
-            'entity'      => $entity,
-            'form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        );
+        $data = $em->getRepository('PAGEDemoBundle:DatosAsignaturas')->findBy(array('id_user'=>$id));
+        return $data;
     }
+
+    private function getCursos($id){
+        $em = $this->getDoctrine()->getManager();
+        $data = $em->getRepository('PAGEDemoBundle:DatosCursos')->findBy(array('id_user'=>$id));
+        return $data;
+    }
+
+    private function getDocentes($id){
+        $em = $this->getDoctrine()->getManager();
+        $data = $em->getRepository('PAGEDemoBundle:DatosDocentes')->findBy(array('id_user'=>$id));
+        return $data;
+    }
+
+    private function getAlumno($id_user,$id){
+        $em = $this->getDoctrine()->getManager();
+        $data = $em->getRepository('PAGEDemoBundle:DatosAlumnos')->findOneBy(array('id_user'=>$id_user,'id'=>$id));
+        return $data;
+    }
+
+    private function getNameCurso($id){
+        $em = $this->getDoctrine()->getManager();
+        if($data = $em->getRepository('PAGEDemoBundle:DatosCursos')->find($id))
+            return $data->getName().' '.$data->getIndice();
+
+        return null;
+    }
+
+    private function getNameAsignatura($id){
+        $em = $this->getDoctrine()->getManager();
+        if($data = $em->getRepository('PAGEDemoBundle:DatosAsignaturas')->find($id))
+            return $data->getName();
+
+        return null;
+    }
+
+    private function getNameDocente($id){
+        $em = $this->getDoctrine()->getManager();
+        if($data = $em->getRepository('PAGEDemoBundle:DatosDocentes')->find($id))
+            return $data->getName().' '.$data->getPlastname().' '.$data->getMlastname();
+
+        return null;
+    }
+
+    public function getEvaluaciones($id,$id_curso,$id_asignatura,$id_docente){
+        $list = array();
+
+        $em = $this->getDoctrine()->getManager();
+        $data = $em->createQuery('SELECT i FROM PAGEDemoBundle:DatosEvaluaciones i where i.id_user = :user and 
+            i.id_curso Like :curso and i.id_asignatura Like :asignatura and i.id_docente Like :docente 
+            ORDER BY i.fecha DESC')
+        ->setParameter('user', $id)
+        ->setParameter('curso', '%'.$id_curso.'%')
+        ->setParameter('asignatura', '%'.$id_asignatura.'%')
+        ->setParameter('docente', '%'.$id_docente.'%')
+        ->getResult();
+
+        foreach ($data as $value) {
+            $list[] = array(
+                'id'=>$value->getId(),
+                'idcurso'=>$this->getNameCurso($value->getIdCurso()),
+                'idasignatura'=>$this->getNameAsignatura($value->getIdAsignatura()),
+                'iddocente'=>$this->getNameDocente($value->getIdDocente()),
+                'evaluador'=>$value->getEvaluador(),
+                'semestre'=>$value->getSemestre(),
+                'isactive'=>$value->getIsActive(),
+                'fecha'=>$value->getFecha(),
+                'fechanotas'=>$value->getFechaNotas(),
+                'titulo'=>$value->getTitulo(),
+                );
+        }
+        return $list;
+    }
+
+    public function getEvaluacionesAll($id_user){
+        $list = array();
+
+        $em = $this->getDoctrine()->getManager();
+        $data = $em->createQuery('SELECT i FROM PAGEDemoBundle:DatosEvaluaciones i where i.id_user = :user  
+        ORDER BY i.id_curso ASC, i.id_asignatura ASC, i.id_docente ASC, i.fecha DESC')
+        ->setParameter('user', $id_user)
+        ->getResult();
+
+        foreach ($data as $value) {
+            $list[] = array(
+                'id'=>$value->getId(),
+                'idcurso'=>$this->getNameCurso($value->getIdCurso()),
+                'idasignatura'=>$this->getNameAsignatura($value->getIdAsignatura()),
+                'iddocente'=>$this->getNameDocente($value->getIdDocente()),
+                'evaluador'=>$value->getEvaluador(),
+                'semestre'=>$value->getSemestre(),
+                'isactive'=>$value->getIsActive(),
+                'fecha'=>$value->getFecha(),
+                'fechanotas'=>$value->getFechaNotas(),
+                'titulo'=>$value->getTitulo(),
+                );
+        }
+        return $list;
+    }
+
+    private function getEvaluacion($id){
+        $em = $this->getDoctrine()->getManager();
+        $data = $em->getRepository('PAGEDemoBundle:DatosEvaluaciones')->find($id);
+        return $data;
+    }
+
+    private function getRegimen(){
+        $id = $this->getUser()->getParent();
+        $em = $this->getDoctrine()->getManager();
+        $data = $em->getRepository('PAGEDemoBundle:DatosInstitucion')->find($id);
+        $num = 0;
+        $regimen = $data->getRegimen();
+
+        $list = array();
+        if( !is_null($regimen)){
+            $regimen = strtolower($regimen);
+            if(strpos($regimen, 'tri') !== false ){
+                $num = 3;
+            }else{
+                $num = 2;
+            }
+        
+            for ($i=1; $i <= $num; $i++) { 
+                $list[] = array(
+                    'name' => $i.' '.str_replace('tral','tre', $regimen),
+                    'id' => $i
+                );
+            }
+        }
+        return new JsonResponse($list);
+    }
+
+    private function getSemestres(){
+        $id = $this->getUser()->getParent();
+        $em = $this->getDoctrine()->getManager();
+        $data = $em->getRepository('PAGEDemoBundle:DatosInstitucion')->find($id);
+        $num = 0;
+        $regimen = $data->getRegimen();
+
+        $list = array();
+        if( !is_null($regimen)){
+            $regimen = strtolower($regimen);
+            if(strpos($regimen, 'tri') !== false ){
+                $num = 3;
+            }else{
+                $num = 2;
+            }
+        
+            for ($i=1; $i <= $num; $i++) { 
+                $list[] = array(
+                    'name' => $i.' '.str_replace('tral','tre', $regimen),
+                    'id' => $i
+                );
+            }
+        }
+        return $list;
+    }
+
+
+/* POST EVALUACION */
     /**
-     * Deletes a Test entity.
-     *
-     * @Route("/{id}", name="test_delete")
-     * @Method("DELETE")
+     * @Route("/evaluacion/create",name="evaluacion_create")
+     * @Method("POST")
      */
-    public function deleteAction(Request $request, $id)
-    {
-        $form = $this->createDeleteForm($id);
-        $form->handleRequest($request);
+    public function createEvaluacion(Request $request){
+        try{
+            $user = new DatosEvaluaciones();
+            $id = $this->nuevoIdEvaluacion();//id de la evaluacion
+            $id_user = $this->getUser()->getParent();//id del User
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('PAGEDemoBundle:Test')->find($id);
+            $id_curso = $request->get('curso');//id del Curso
+            $id_asignatura = $request->get('asignatura');//id del Asignatura
+  
+            $user->setId($id);
+            $user->setIdUser($id_user);
+            $user->setIdDocente($request->get('docente'));
+            
+            $user->setIdCurso($id_curso);
+            $user->setIdAsignatura($id_asignatura);
 
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Test entity.');
+            $user->setSemestre($request->get('semestre'));
+            $user->setSistema($request->get('sistema'));
+
+            //Agregar fecha
+            if( !empty($request->get('fecha'))){
+                $fecha = str_replace('/', '-', $request->get('fecha'));
+                $fecha = new \DateTime($fecha);
+                $user->setFecha($fecha);
             }
 
-            $em->remove($entity);
-            $em->flush();
-        }
+            $user->setMomento($request->get('momento'));
+            $user->setEvaluador($request->get('evaluador'));
+            $user->setEvaluar($request->get('evalua'));
+            $user->setEvaluacionDocente($request->get('evaluacionD'));
+            $user->setFinalidad($request->get('finalidad'));
+            $user->setInstrumento($request->get('instrumento'));
+            $user->setAprendizaje($request->get('aprendizaje'));
+            $user->setTitulo($request->get('titulo'));
+            $user->setIsActive(0);
 
-        return $this->redirect($this->generateUrl('test'));
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+
+            $em->flush();
+
+            //crear .json
+            $this->newJsonEvaluacion($id_curso,$id_asignatura,$id_user);
+            
+            $request->getSession()->set('flag',1);
+        }catch(Exception $e){
+            $request->getSession()->set('flag',0);
+        }
+        return new RedirectResponse($this->generateUrl('evaluaciones'));
     }
 
     /**
-     * Creates a form to delete a Test entity by id.
-     *
-     * @param mixed $id The entity id
-     *
-     * @return \Symfony\Component\Form\Form The form
+     * @Route("/evaluacion/evaluacion/{id}", name="evaluacion_edit")
+     * @Method("POST")
      */
-    private function createDeleteForm($id)
+    public function editEvaluacion(Request $request, $id)
     {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('test_delete', array('id' => $id)))
-            ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
-            ->getForm()
-        ;
+        try{
+            //$id = $request->query->get('id');
+            $id_user = $this->getUser()->getParent();
+            $em = $this->getDoctrine()->getManager();
+            
+            if($user = $em->getRepository('PAGEDemoBundle:DatosEvaluaciones')->find($id)){
+            
+                $curso = $request->get('curso');
+                $asignatura = $request->get('asignatura');
+
+                $user->setIdDocente($request->get('docente'));
+                $user->setIdAsignatura($asignatura);
+                $user->setIdCurso($curso);
+
+                $semestre = $request->get('semestre');
+                $user->setSemestre($semestre);
+                $user->setSistema($request->get('sistema'));
+
+                //Agregar fecha
+                if( !empty($request->get('fecha'))){
+                    $fecha = str_replace('/', '-', $request->get('fecha'));
+                    $fecha = new \DateTime($fecha);
+                    $user->setFecha($fecha);
+                }
+
+                $user->setMomento($request->get('momento'));
+                $user->setEvaluador($request->get('evaluador'));
+                $user->setEvaluar($request->get('evalua'));
+                $user->setEvaluacionDocente($request->get('evaluacionD'));
+                $user->setFinalidad($request->get('finalidad'));
+                $user->setInstrumento($request->get('instrumento'));
+                $user->setAprendizaje($request->get('aprendizaje'));
+                $user->setTitulo($request->get('titulo'));
+
+                $em->flush();
+                $this->editJsonNotas($id,$curso,$asignatura,$id_user,$user->getSemestre());
+                $request->getSession()->set('flag',1);
+            }
+        }catch(Exception $e){
+            $request->getSession()->set('flag',0);
+        }
+        return new RedirectResponse($this->generateUrl('evaluaciones'));
     }
+
+    /**
+     * @Route("/evaluacion/delete")
+     * @Method("POST")
+     */
+    public function deleteEvaluacion(Request $request){
+        $data = json_decode($request->getContent(), true);
+        $request->request->replace($data);
+
+        try{
+            $id = $request->get('id');
+            $em = $this->getDoctrine()->getManager();
+            if($user = $em->getRepository('PAGEDemoBundle:DatosEvaluaciones')->find($id)){
+                $em->remove($user);
+                $em->flush();
+
+                $this->deleteJsonEvaluacionNotas($id,$user->getIdCurso(),$user->getIdAsignatura(),$this->getUser()->getParent());
+
+                $request->getSession()->set('flag',1);
+                return new Response(1);
+            }
+        }catch(Exception $e){
+            $request->getSession()->set('flag',0);
+            return new Response(0);
+        }
+    }
+
+/* FUNCIONES */
+
+    private function nuevoIdEvaluacion(){
+        $caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        $id = '';
+        for($i=0; $i<15; $i++){
+            $id .= $caracteres[rand(0, strlen($caracteres)-1)];
+        }
+        $em = $this->getDoctrine()->getManager();
+
+        $data = $em->getRepository('PAGEDemoBundle:DatosEvaluaciones')->find($id);
+
+        if ($data){
+           $exit = true;
+           while($exit){
+                $id = '';
+                for($i=0; $i<15; $i++){
+                    $id .= $caracteres[rand(0, strlen($caracteres)-1)];
+                }
+                $em = $this->getDoctrine()->getManager();
+                $data = $em->getRepository('PAGEDemoBundle:DatosEvaluaciones')->find($id);
+
+                if (!$data)
+                    $exit = false;
+           }
+        }
+        return $id;
+    }
+
+    private function newJsonEvaluacion($id_curso,$id_asignatura,$id_user){
+        $url = "users/".$id_user."/grades/".$id_curso.$id_asignatura.".json";
+        if(!file_exists($url)){
+            $json = json_encode(
+                array(
+                    'id_curso'=>$id_curso,
+                    'id_asignatura'=>$id_asignatura,
+                    'year'=>date('Y'),
+                    'evaluaciones'=>array()
+                    )
+                );
+            $fh = fopen("users/".$id_user."/grades/".$id_curso.$id_asignatura.".json", 'w');
+            fwrite($fh, $json);
+            fclose($fh);
+        }
+    }
+
+    private function deleteJsonEvaluacionNotas($id,$id_curso,$id_asignatura,$id_user){
+        $url = "users/".$id_user."/grades/".$id_curso.$id_asignatura.".json";
+        if(file_exists($url)){
+            $file = file_get_contents($url);
+            $json = json_decode($file,true);
+
+            foreach ($json['evaluaciones'] as $key => $value) {
+                if($value['id'] == $id){
+                    unset($json['evaluaciones'][$key]);
+                }
+            }
+            $json = json_encode($json,true);
+            file_put_contents($url, $json);
+        }
+        return null;
+    }
+
+    private function editJsonNotas($id,$id_curso,$id_asignatura,$id_user,$semestre){
+        $url = "users/".$id_user."/grades/".$id_curso.$id_asignatura.".json";
+        if(file_exists($url)){
+            $file = file_get_contents($url);
+            $json = json_decode($file,true);
+
+            foreach ($json['evaluaciones'] as $key => $value) {
+                if($value['id'] == $id){
+                    $json['evaluaciones'][$key]['semestre'] = $semestre;
+                }
+            }
+            $json = json_encode($json,true);
+            file_put_contents($url, $json);
+        }
+        return null;
+    }
+    
 }

@@ -1,0 +1,148 @@
+{% block estadisticas_apoderados %}
+<h2 class="page-header">Cursos</h2>
+<div class="row">
+	<div class="col-md-6" ng-controller="bar_apoderados">
+		<canvas id="bar" class="chart chart-bar" data="data" labels="labels" height="80px"></canvas>
+	</div>
+	<div class="col-md-5">
+		<table class="table table-bordered">
+		<thead>
+			<tr>
+				<th class="active">Nombre</th>
+				<th class="active">Cantidad</th>
+				<th class="active">%</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for item in alumnos %}
+			<tr>
+				<td>
+				{% for value in cursos %}
+					{% if value.id == item.id %}
+						{{value.name}}
+					{% endif %}
+				{% endfor %}
+				</td>
+				<td>{{item.num}}</td>
+				<td> {{ (100 * item.num) / apoderados.num }}%</td>
+			</tr>
+			{% endfor %}
+			<tr class="active">
+				<td>Total</td>
+				<td>{{apoderados.num}}</td>
+				<td> 100%</td>
+			</tr>
+		</tbody>
+		</table>
+	</div>
+</div>
+
+<h2 class="page-header">Parentesco</h2>
+<div class="row" ng-controller="donuts_apoderados">
+	<div class="col-md-5">
+		<canvas id="doughnut" class="chart chart-doughnut" data="pardata" labels="parlabels"></canvas> 
+	</div>
+	<div class="col-md-5">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th class="active">Nombre</th>
+					<th class="active">Cantidad</th>
+					<th class="active">%</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in parentescos %}
+				<tr>
+					<td>{{item.name}}</td>
+					<td>{{item.num}}</td>
+					<td> {{ (100 * item.num) / apoderados.num }}%</td>
+				</tr>
+				{% endfor %}
+				<tr class="active">
+					<td>Total</td>
+					<td>{{apoderados.num}}</td>
+					<td> 100%</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<h2 class="page-header">Convivencia</h2>
+<div class="row" ng-controller="donuts_apoderados">
+	<div class="col-md-5">
+		<canvas id="doughnut" class="chart chart-doughnut" data="condata" labels="conlabels"></canvas> 
+	</div>
+	<div class="col-md-5">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th class="active">Nombre</th>
+					<th class="active">Cantidad</th>
+					<th class="active">%</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in conviven %}
+				<tr>
+					<td>
+					{% if item.name == 0 %}
+						No
+					{% elseif item.name == 1 %}
+						Si
+					{% endif %}
+					</td>
+					<td>{{item.num}}</td>
+					<td> {{ (100 * item.num) / apoderados.num }}%</td>
+				</tr>
+				{% endfor %}
+				<tr class="active">
+					<td>Total</td>
+					<td>{{apoderados.num}}</td>
+					<td> 100%</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<h2 class="page-header">Escolaridad</h2>
+<div class="row" ng-controller="donuts_apoderados">
+	<div class="col-md-5">
+		<canvas id="doughnut" class="chart chart-doughnut" data="escdata" labels="esclabels"></canvas> 
+	</div>
+	<div class="col-md-5">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th class="active">Nombre</th>
+					<th class="active">Cantidad</th>
+					<th class="active">%</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in escolaridades %}
+				<tr>
+					<td>{{item.name}}</td>
+					<td>{{item.num}}</td>
+					<td> {{ (100 * item.num) / apoderados.num }}%</td>
+				</tr>
+				{% endfor %}
+				<tr class="active">
+					<td>Total</td>
+					<td>{{apoderados.num}}</td>
+					<td> 100%</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<br>
+	{#
+	<div class="modal-footer">
+		<a href="{{path('_print_docentes')}}" type="button" class="btn btn-mint"><i class="fa fa-download fa-lg"></i>&nbsp;Descargar</a>
+	</div>
+	#}
+{% endblock %}

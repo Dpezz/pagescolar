@@ -1,0 +1,240 @@
+{% block academico_evaluacion %}
+{% if dataE %}
+<form action="{{path('evaluacion_edit',{'id':dataE.id})}}" method="POST">
+{% else %}
+<form action="{{path('evaluacion_create')}}" method="POST">
+{% endif %}
+
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group">
+				<label class="text-muted">Docente</label>
+        		<select class="form-control" name="docente" required autofocus>
+        			<option value="">-- Docente --</option>
+        			{% for item in dataD %}
+    				 	{% if dataE and item.id == dataE.iddocente %}
+		                	<option value="{{item.id}}" selected>{{item.name}} {{item.plastname}} {{item.mlastname}}</option>
+		              	{% else %}
+		                	<option value="{{item.id}}">{{item.name}} {{item.plastname}} {{item.mlastname}}</option>
+		              	{% endif %}
+        			{% endfor %}
+        		</select>
+      		</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group">
+				<label class="text-muted">Curso</label>
+        		<select class="form-control" name="curso" required autofocus>
+        			<option value="">-- Curso --</option>
+        			{% for item in dataC %}
+    				 	{% if dataE and item.id == dataE.idcurso %}
+		                	<option value="{{item.id}}" selected>{{item.name}} {{item.indice}}</option>
+		              	{% else %}
+		                	<option value="{{item.id}}">{{item.name}} {{item.indice}}</option>
+		              	{% endif %}
+        			{% endfor %}
+        		</select>
+	      	</div>
+	  	</div>
+	</div>
+
+	
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group">
+				<label class="text-muted">Asignatura</label>
+        		<select class="form-control" name="asignatura" required autofocus>
+        			<option value="">-- Asignatura --</option>
+        			{% for item in dataA %}
+    				 	{% if dataE and item.id == dataE.idasignatura %}
+		                	<option value="{{item.id}}" selected>{{item.name}}</option>
+		              	{% else %}
+		                	<option value="{{item.id}}">{{item.name}}</option>
+		              	{% endif %}
+        			{% endfor %}
+        		</select>
+      		</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group">
+				<label class="text-muted">Semestre</label>
+        		<select class="form-control" name="semestre" required autofocus>
+        			<option value="">-- Semestre --</option>
+        			{% for item in dataS %}
+    				 	{% if dataE and item.name == dataE.semestre %}
+		                	<option value="{{item.name}}" selected>{{item.name}}</option>
+		              	{% else %}
+		                	<option value="{{item.name}}">{{item.name}}</option>
+		              	{% endif %}
+        			{% endfor %}
+        		</select>
+      		</div>
+  		</div>
+	</div>
+
+
+	<div class="form-group">
+		<textarea class="form-control" name="titulo" required autofocus>{% if dataE %}{{ dataE.titulo }}{% endif %}</textarea>
+	</div>
+
+
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group">
+				<label class="text-muted">Sistema Evaluacion</label>
+				{% set items = listaS|split(',') %}
+	        	<select class="form-control" name="sistema" required autofocus>
+	        		<option value="">-- Sistema --</option>
+	        		{% for item in items %}
+    				 	{% if dataE and item == dataE.sistema %}
+		                	<option value="{{item}}" selected>{{item}}</option>
+		              	{% else %}
+		                	<option value="{{item}}">{{item}}</option>
+		              	{% endif %}
+        			{% endfor %}
+	        	</select>
+	      	</div>
+	  	</div>
+	  	<div class="col-md-6">
+			<div class="form-group">
+				<label class="text-muted">Fecha Evaluacion</label>
+		        
+		        {% if dataE %}
+					{% set fecha = dataE.fecha|date('d') ~'/'~dataE.fecha|date('m') ~'/'~dataE.fecha|date('Y')%}
+			    	<input type="text" class="form-control" id="date-nacimiento" name="fecha" value="{{fecha}}">
+	    	 	{% else %}
+	    	 		<input type="text" class="form-control" id="date-nacimiento"  name="fecha" required autofocus>
+	    	 	{% endif %}
+	        </div>
+	  	</div>
+	</div>
+
+	<hr>
+
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group">
+				<label class="text-muted">Momento</label>
+				{% set items = listaM|split(',') %}
+	        	<select class="form-control" name="momento" required autofocus>
+	        		<option value="">-- Momento --</option>
+	        		{% for item in items %}
+    				 	{% if dataE and item == dataE.momento %}
+		                	<option value="{{item}}" selected>{{item}}</option>
+		              	{% else %}
+		                	<option value="{{item}}">{{item}}</option>
+		              	{% endif %}
+        			{% endfor %}
+	        	</select>
+	      	</div>
+	  	</div>
+	  	<div class="col-md-6">
+			<div class="form-group">
+				<label class="text-muted">Tipo de evaluación</label>
+				{% set items = listaE|split(',') %}
+	        	<select class="form-control" name="evaluador" required autofocus>
+	        		<option value="">-- Evaluador --</option>
+	        		{% for item in items %}
+    				 	{% if dataE and item == dataE.evaluador %}
+		                	<option value="{{item}}" selected>{{item}}</option>
+		              	{% else %}
+		                	<option value="{{item}}">{{item}}</option>
+		              	{% endif %}
+        			{% endfor %}
+	        	</select>
+	      	</div>
+	  	</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group">
+				<label class="text-muted">Que se Evalúa?</label>
+				{% set items = listaEV|split(',') %}
+	        	<select class="form-control" name="evalua" required autofocus>
+	        		<option value="">-- Evaluar --</option>
+	        		{% for item in items %}
+    				 	{% if dataE and item == dataE.evaluar %}
+		                	<option value="{{item}}" selected>{{item}}</option>
+		              	{% else %}
+		                	<option value="{{item}}">{{item}}</option>
+		              	{% endif %}
+        			{% endfor %}
+	        	</select>
+	      	</div>
+	  	</div>
+	  	<div class="col-md-6">
+			<div class="form-group">
+				<label class="text-muted">Evaluación por parte del Docente</label>
+				{% set items = listaED|split(',') %}
+	        	<select class="form-control" name="evaluacionD" required autofocus>
+	        		<option value="">-- Evaluación --</option>
+	        		{% for item in items %}
+    				 	{% if dataE and item == dataE.evaluaciondocente %}
+		                	<option value="{{item}}" selected>{{item}}</option>
+		              	{% else %}
+		                	<option value="{{item}}">{{item}}</option>
+		              	{% endif %}
+        			{% endfor %}
+	        	</select>
+	      	</div>
+	  	</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group">
+				<label class="text-muted">Finalidad</label>
+				{% set items = listaF|split(',') %}
+	        	<select class="form-control" name="finalidad" required autofocus>
+	        		<option value="">-- Finalidad --</option>
+	        		{% for item in items %}
+    				 	{% if dataE and item == dataE.finalidad %}
+		                	<option value="{{item}}" selected>{{item}}</option>
+		              	{% else %}
+		                	<option value="{{item}}">{{item}}</option>
+		              	{% endif %}
+        			{% endfor %}
+	        	</select>
+	      	</div>
+	  	</div>
+	  	<div class="col-md-6">
+			<div class="form-group">
+				<label class="text-muted">Instrumentos y Procedimientos</label>
+				{% set items = listaI|split(',') %}
+	        	<select class="form-control" name="instrumento" required autofocus>
+	        		<option value="">-- Instrumentos y Procedimientos --</option>
+	        		{% for item in items %}
+    				 	{% if dataE and item == dataE.instrumento %}
+		                	<option value="{{item}}" selected>{{item}}</option>
+		              	{% else %}
+		                	<option value="{{item}}">{{item}}</option>
+		              	{% endif %}
+        			{% endfor %}
+	        	</select>
+	      	</div>
+	  	</div>
+	</div>
+
+	<div class="form-group">
+		<label class="text-muted">Tipo de Aprendizaje</label>
+		{% set items = listaA|split(',') %}
+		<select class="form-control" name="aprendizaje" required autofocus>
+			<option value="">-- Aprendizaje --</option>
+			{% for item in items %}
+			 	{% if dataE and item == dataE.aprendizaje %}
+                	<option value="{{item}}" selected>{{item}}</option>
+              	{% else %}
+                	<option value="{{item}}">{{item}}</option>
+              	{% endif %}
+			{% endfor %}
+		</select>
+	</div>
+
+	<div class="modal-footer">
+		<a type="button" href="{{path('evaluaciones')}}" class="btn btn-default"><i class="fa fa-long-arrow-left"></i>&nbsp;Volver</a>
+		<button type="submit" class="btn btn-mint" ><i class="fa fa-save"></i>&nbsp;Guardar</button>
+	</div>
+</form>
+
+{% endblock %}

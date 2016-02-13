@@ -1,0 +1,52 @@
+{% block estadisticas_evaluaciones %}
+	<div class="row">
+		<div class="col-md-12" ng-controller="bar-evaluacion">
+			<h5 class="page-header"><small class="badge">Asignaturas</small></h5>
+			<canvas id="bar" class="chart chart-bar" data="data" labels="labels" series="series" height="80px"></canvas>
+		</div>
+	</div>
+
+	<div class="row" ng-controller="donuts-evaluacion">
+		<div class="col-md-3">
+			<h5 class="page-header"><small class="badge">Sistema</small></h5>
+			<canvas id="doughnut" class="chart chart-doughnut" data="adata" labels="alabels"></canvas>  
+		</div>
+		<div class="col-md-3">
+			<h5 class="page-header"><small class="badge">Momento</small></h5>
+			<canvas id="pie" class="chart chart-pie" data="bdata" labels="blabels"></canvas> 
+		</div>
+		<div class="col-md-3">
+			<h5 class="page-header"><small class="badge">Tipo de Evaluación</small></h5>
+			<canvas id="doughnut" class="chart chart-doughnut" data="cdata" labels="clabels"></canvas> 
+		</div>
+		<div class="col-md-3">
+			<h5 class="page-header"><small class="badge">Evaluar</small></h5>
+			<canvas id="doughnut" class="chart chart-doughnut" data="ddata" labels="dlabels"></canvas> 
+		</div>
+	</div>
+
+	<div class="row" ng-controller="pie-evaluacion">
+		<div class="col-md-3">
+			<h5 class="page-header"><small class="badge">Evaluación</small></h5>
+			<canvas id="doughnut" class="chart chart-doughnut" data="adata" labels="alabels"></canvas> 
+		</div>
+		<div class="col-md-3">
+			<h5 class="page-header"><small class="badge">Finalidad</small></h5>
+			<canvas id="pie" class="chart chart-pie" data="bdata" labels="blabels"></canvas> 
+		</div>
+		<div class="col-md-3">
+			<h5 class="page-header"><small class="badge">Intrumentos y procedimientos</small></h5>
+			<canvas id="pie" class="chart chart-pie" data="cdata" labels="clabels"></canvas> 
+		</div>
+		<div class="col-md-3">
+			<h5 class="page-header"><small class="badge">Tipo de Aprendizaje</small></h5>
+			<canvas id="pie" class="chart chart-pie" data="ddata" labels="dlabels"></canvas> 
+		</div>
+	</div>
+	<br>
+	{#
+	<div class="modal-footer">
+		<a href="{{path('_print_docentes')}}" type="button" class="btn btn-mint"><i class="fa fa-download fa-lg"></i>&nbsp;Descargar</a>
+	</div>
+	#}
+{% endblock %}

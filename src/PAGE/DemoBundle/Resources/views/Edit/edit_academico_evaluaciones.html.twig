@@ -1,0 +1,122 @@
+{% block academico_evaluaciones %}
+
+	<div class="table-responsive">
+	  	<table class="table table-hover">
+		    <thead>
+		    	<tr>
+		    		<th>#</th>
+		    		<th>Curso</th>
+		    		<th>Asignatura</th>
+		    		<th>Docente</th>
+		    		<th>Titulo</th>
+		    		<th>Fecha Prueba</th>
+		    		<th>Fecha Revisión</th>
+		    		<th></th>
+		    	</tr>
+		    </thead>
+		    <tbody>
+		    	{% for item in dataE %}
+		    	<tr>
+		    		<td><span class="badge">{{loop.index}}</span></td>
+		    		<td><span class="text-mint"><strong>{{ item.idcurso }}</strong></span></td>
+		    		<td><span>{{ item.idasignatura }}</span></td>
+		    		<td><span>{{ item.iddocente }}</span></td>
+		    		<td><span>{{ item.titulo }}</span></td>
+		    		<td> {{ item.fecha|date("d/m/Y") }}</td>
+		    		<td>{% if item.fechanotas %}{{ item.fechanotas|date("d/m/Y")}}{% else %}---{% endif %}</td>
+		    		<td>
+		    			{% if item.isactive %}
+		    				<a href="{{path('academico_nota',{'id': item.id })}}" data-toggle="modal" title="Notas"><i class="glyphicon glyphicon-ok-sign text-success"></i></a>&emsp;
+		    			{% else %}
+		    				<a href="{{path('academico_nota',{'id': item.id })}}" data-toggle="modal" title="Notas"><i class="glyphicon glyphicon-remove-sign text-danger"></i></a>&emsp;
+		    			{% endif %}
+			    		<a href="{{path('academico_evaluacion',{'id':item.id})}}" title="editar"><i class="glyphicon glyphicon-edit"></i></a>&emsp;
+
+			    		<a href="#" data-toggle="modal" data-target="#delete" ng-click="delete('{{item.id}}','{{item.idasignatura}} ~ {{item.idcurso}} ~ {{ item.fecha|date("d/m/Y") }}')" title="eliminar"><i class="glyphicon glyphicon-trash text-danger"></i></a>
+		    		</td>
+	    		</tr>
+	    		{% endfor %}
+		    </tbody>
+	  	</table>
+	</div>
+
+	<div class="modal-footer">
+		<a href="" class="btn btn-default" data-toggle="modal" data-target="#filter"><i class="fa fa-filter"></i>&nbsp;Filtro</a>
+		<a href="{{ path('academico_evaluacion_new') }}" class="btn btn-mint"><i class="fa fa-plus"></i>&nbsp;Nuevo</a>
+	</div>
+
+	<!-- Modal Filtro-->
+	<div class="modal fade" id="filter" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  	<div class="modal-dialog modal-sm">
+	    	<div class="modal-content">
+		      	<div class="modal-header">
+		        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        	<h4 class="modal-title" id="myModalLabel">Filtrar Evaluaciones</h4>
+		      	</div>
+		      	<div class="modal-body">
+			      	<form action="{{path('academico_evaluaciones')}}" method="POST">
+						
+						<div class="form-group">
+							<label class="text-muted">Curso</label>
+			        		<select class="form-control" name="curso">
+			        			<option value="">-- Curso --</option>
+			        			{% for item in dataC %}
+				                	<option value="{{item.id}}">{{item.name}} {{item.indice}}</option>
+			        			{% endfor %}
+			        		</select>
+				      	</div>
+
+						<div class="form-group">
+							<label class="text-muted">Asignatura</label>
+			        		<select class="form-control" name="asignatura">
+			        			<option value="">-- Asignatura --</option>
+			        			{% for item in dataA %}
+				                	<option value="{{item.id}}">{{item.name}}</option>
+			        			{% endfor %}
+			        		</select>
+			      		</div>
+
+			      		<div class="form-group">
+							<label class="text-muted">Docente</label>
+			        		<select class="form-control" name="docente">
+			        			<option value="">-- Docente --</option>
+			        			{% for item in dataD %}
+				                	<option value="{{item.id}}">{{item.name}} {{item.plastname}} {{item.mlastname}}</option>
+			        			{% endfor %}
+			        		</select>
+			      		</div>
+
+
+			      		<div class="modal-footer">
+			        		<a type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-remove"></i>&nbsp;Cerrar</a>
+			        		<button type="submit" class="btn btn-mint"><i class="fa fa-filter"></i>&nbsp;Filtrar</button>
+			      		</div>
+		      		</form>
+	    		</div>
+	  		</div>
+		</div>
+	</div>
+
+	<!-- Modal Eliminar-->
+	<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  	<div class="modal-dialog">
+	    	<div class="modal-content">
+		      	<div class="modal-header">
+		        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        	<h4 class="modal-title" id="myModalLabel">{[{ title }]}</h4>
+		      	</div>
+		      	<div class="modal-body">
+			      	<form>
+			      		<h5 class="text-center">Seguro que desea eliminar a <strong class="text-mint">{[{name}]}</strong> de Evaluaciones?</h5>
+
+			      		<div class="modal-footer">
+			        		<a type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-remove"></i>&nbsp;Cerrar</a>
+			        		<button class="btn btn-mint" ng-click="delete(-1,-1)"><i class="fa fa-trash"></i>&nbsp;Eliminar</button>
+			      		</div>
+		      		</form>
+	    		</div>
+	  		</div>
+		</div>
+	</div>
+
+{% endblock %}
