@@ -8,7 +8,7 @@
 /bin/
 /composer.phar
 /vendor/
-/web/bundles/
 !/web/bundles/pagedemo/*
+/web/bundles/
 /web/PIE/
 /web/users/
