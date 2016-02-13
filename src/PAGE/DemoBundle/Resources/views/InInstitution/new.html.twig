@@ -1,0 +1,13 @@
+{% extends 'PAGEDemoBundle:Layout:layout_dashboard.html.twig' %}
+
+{% block title "Nueva Institución"%}
+
+{% block menu_admin_cuentas %}class="active"{% endblock %}
+
+{% block datos %}
+    <h1 class="page-header">Nueva creation</h1>
+
+    {% include 'PAGEDemoBundle:Institution:_form.html.twig' %}
+
+    <a href="{{ path('ininstitution_edit', {'id': app.user.institution.id }) }}">Institucion</a>
+{% endblock %}

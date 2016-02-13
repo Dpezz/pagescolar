@@ -2,28 +2,22 @@
 
 namespace PAGE\DemoBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Security\Core\SecurityContext;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-
-// these import the "@Route" and "@Template" annotations
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\HttpFoundation\JsonResponse;
-
-use PAGE\DemoBundle\Controller\GetController;
-use PAGE\DemoBundle\Controller\LoadController;
-
+use PAGE\DemoBundle\Entity\CallRoll;
+use PAGE\DemoBundle\Form\CallRollType;
 
 /**
- * @Route("/profile")
+ * CallRoll controller.
+ *
+ * @Route("/profile/callroll")
  */
-class CallrollController extends Controller
+class CallRollController extends Controller
 {
+<<<<<<< HEAD
 
 /* Template */
 
@@ -61,10 +55,28 @@ class CallrollController extends Controller
             'dataAS'=>$this->getJsonAsistencia($id_curso,$id_user),
             'dias'=>intval($dias->format('%a'))
 
-        );
-    }
+=======
 
     /**
+     * Lists all CallRoll entities.
+     *
+     * @Route("/", name="callroll")
+     * @Method("GET")
+     * @Template()
+     */
+    public function indexAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entities = $em->getRepository('PAGEDemoBundle:CallRoll')->findAll();
+
+        return array(
+            'entities' => $entities,
+>>>>>>> 2f06cc7cc7aeba5f53e0bf62a1d0b5f14af225f2
+        );
+    }
+    /**
+<<<<<<< HEAD
     * @Route("/asistencias/curso/{id}", name="asistencias_curso")
     * @Method("GET")
     */
@@ -168,45 +180,83 @@ class CallrollController extends Controller
             'dataAS'=>$this->getJsonAsistencia($id_curso,$id_user),
             'dias'=>intval($dias->format('%a'))
 
-        ));
-    }
+=======
+     * Creates a new CallRoll entity.
+     *
+     * @Route("/", name="callroll_create")
+     * @Method("POST")
+     * @Template("PAGEDemoBundle:CallRoll:new.html.twig")
+     */
+    public function createAction(Request $request)
+    {
+        $entity = new CallRoll();
+        $form = $this->createCreateForm($entity);
+        $form->handleRequest($request);
 
-    /**
-    * @Route("/asistencia/{id}", name="asistencia")
-    * @Method("GET")
-    * @Template()
-    */
-    public function asistenciaAction(Request $request, $id){
-        //Asignar el FLAG
-        if(!$request->getSession()->get('flag'))
-        {$request->getSession()->set('flag',-1);}
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($entity);
+            $em->flush();
 
-        $flag = $request->getSession()->get('flag');
-        $request->getSession()->set('flag',-1);
+            return $this->redirect($this->generateUrl('callroll_show', array('id' => $entity->getId())));
+        }
 
-        $id_user = $this->getUser()->getParent();
-        $id_curso = $id;//get ID
-        $fecha = $request->query->get('fecha');//get Fecha
-
-        return array (
-            'flag'=>$flag,
-            'curso'=>$this->getNameCurso($id_curso),
-            'id_curso'=>$id_curso,
-            'fecha'=>$fecha,
-            'dataA'=>$this->getAlumnosCurso($id_user,$id_curso),
-            'dataAS'=>$this->jsonAsistenciaFecha($id_curso,$id_user,$fecha),
-            'exist'=>$this->jsonAsistenciaFechaExist($id_curso,$id_user,$fecha)
+        return array(
+            'entity' => $entity,
+            'form'   => $form->createView(),
         );
     }
 
-/* GET */
+    /**
+     * Creates a form to create a CallRoll entity.
+     *
+     * @param CallRoll $entity The entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createCreateForm(CallRoll $entity)
+    {
+        $form = $this->createForm(new CallRollType(), $entity, array(
+            'action' => $this->generateUrl('callroll_create'),
+            'method' => 'POST',
+>>>>>>> 2f06cc7cc7aeba5f53e0bf62a1d0b5f14af225f2
+        ));
 
-    public function getInstitucion($id){
-        $em = $this->getDoctrine()->getManager();
-        $data = $em->getRepository('PAGEDemoBundle:DatosInstitucion')->find($id);
-        return $data;
+        $form->add('submit', 'submit', array('label' => 'Create'));
+
+        return $form;
     }
 
+    /**
+     * Displays a form to create a new CallRoll entity.
+     *
+     * @Route("/new", name="callroll_new")
+     * @Method("GET")
+     * @Template()
+     */
+    public function newAction()
+    {
+        $entity = new CallRoll();
+        $form   = $this->createCreateForm($entity);
+
+        return array(
+            'entity' => $entity,
+            'form'   => $form->createView(),
+        );
+    }
+
+    /**
+     * Finds and displays a CallRoll entity.
+     *
+     * @Route("/{id}", name="callroll_show")
+     * @Method("GET")
+     * @Template()
+     */
+    public function showAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+<<<<<<< HEAD
     public function getCuentas($email){
         $em = $this->getDoctrine()->getManager();
         $data = $em->getRepository('PAGEDemoBundle:User')->findOneBy(array('email' => $email));
@@ -218,33 +268,36 @@ class CallrollController extends Controller
         $data = $em->getRepository('PAGEDemoBundle:DatosCursos')->findBy(array('id_user'=>$id));
         return $data;
     }
+=======
+        $entity = $em->getRepository('PAGEDemoBundle:CallRoll')->find($id);
+>>>>>>> 2f06cc7cc7aeba5f53e0bf62a1d0b5f14af225f2
 
-    public function getAlumno($id_user,$id){
-        $em = $this->getDoctrine()->getManager();
-        $data = $em->getRepository('PAGEDemoBundle:DatosAlumnos')->findOneBy(array('id_user'=>$id_user,'id'=>$id));
-        return $data;
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find CallRoll entity.');
+        }
+
+        $deleteForm = $this->createDeleteForm($id);
+
+        return array(
+            'entity'      => $entity,
+            'delete_form' => $deleteForm->createView(),
+        );
     }
 
-    public function getAlumnosCurso($id,$id_curso){
+    /**
+     * Displays a form to edit an existing CallRoll entity.
+     *
+     * @Route("/{id}/edit", name="callroll_edit")
+     * @Method("GET")
+     * @Template()
+     */
+    public function editAction($id)
+    {
         $em = $this->getDoctrine()->getManager();
-        $data = $em->getRepository('PAGEDemoBundle:DatosAlumnos')->findBy(array('id_user'=>$id,'curso'=>$id_curso));
-        return $data;
-    }
 
-    public function getAlumnoCurso($id_user,$id_curso,$id){
-        $em = $this->getDoctrine()->getManager();
-        $data = $em->getRepository('PAGEDemoBundle:DatosAlumnos')->findBy(array('id_user'=>$id_user,'curso'=>$id_curso,'id'=>$id));
-        return $data;
-    }
+        $entity = $em->getRepository('PAGEDemoBundle:CallRoll')->find($id);
 
-    private function getNameCurso($id){
-        $em = $this->getDoctrine()->getManager();
-        if($data = $em->getRepository('PAGEDemoBundle:DatosCursos')->find($id))
-            return $data->getName().' '.$data->getIndice();
-
-        return null;
-    }
-
+<<<<<<< HEAD
 /* POST ASISTENCIA */
     /**
      * @Route("/asistencia/create/{id}", name="asistencia_create")
@@ -341,60 +394,116 @@ class CallrollController extends Controller
             }
             return new RedirectResponse($this->generateUrl('asistencia',array('id'=>$id_curso,'fecha'=>$fecha)));
     }
+=======
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find CallRoll entity.');
+        }
 
-/* FUNCIONES */
+        $editForm = $this->createEditForm($entity);
+        $deleteForm = $this->createDeleteForm($id);
 
-    private function newJsonAsistencia($id,$id_user){
-
-        $em = $this->getDoctrine()->getManager();
-        $data = $em->getRepository('PAGEDemoBundle:DatosCursos')->find($id);
-
-        $json = json_encode(array('id'=>$data->getId(),'year'=>date('Y'),'asistencia'=>array()));
-
-        $fh = fopen("users/".$id_user."/callroll/".$id.".json", 'w');
-        fwrite($fh, $json);
-        fclose($fh);
+        return array(
+            'entity'      => $entity,
+            'form'   => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        );
     }
 
+    /**
+    * Creates a form to edit a CallRoll entity.
+    *
+    * @param CallRoll $entity The entity
+    *
+    * @return \Symfony\Component\Form\Form The form
+    */
+    private function createEditForm(CallRoll $entity)
+    {
+        $form = $this->createForm(new CallRollType(), $entity, array(
+            'action' => $this->generateUrl('callroll_update', array('id' => $entity->getId())),
+            'method' => 'PUT',
+        ));
+>>>>>>> 2f06cc7cc7aeba5f53e0bf62a1d0b5f14af225f2
+
+        $form->add('submit', 'submit', array('label' => 'Update'));
+
+<<<<<<< HEAD
+    private function newJsonAsistencia($id,$id_user){
+
+=======
+        return $form;
+    }
+    /**
+     * Edits an existing CallRoll entity.
+     *
+     * @Route("/{id}", name="callroll_update")
+     * @Method("PUT")
+     * @Template("PAGEDemoBundle:CallRoll:edit.html.twig")
+     */
+    public function updateAction(Request $request, $id)
+    {
+>>>>>>> 2f06cc7cc7aeba5f53e0bf62a1d0b5f14af225f2
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('PAGEDemoBundle:CallRoll')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find CallRoll entity.');
+        }
+
+<<<<<<< HEAD
     private function jsonAsistenciaFecha($id,$id_user,$fecha){
 
         $file = file_get_contents("users/".$id_user."/callroll/".$id.".json");
         $json = json_decode($file,true);
+=======
+        $deleteForm = $this->createDeleteForm($id);
+        $editForm = $this->createEditForm($entity);
+        $editForm->handleRequest($request);
+>>>>>>> 2f06cc7cc7aeba5f53e0bf62a1d0b5f14af225f2
 
-        $data = $json["asistencia"];
-        $fecha = str_replace('/', '-', $fecha);
-        $array = array();
+        if ($editForm->isValid()) {
+            $em->flush();
 
-        foreach ($data as $key => $value){
-            if($value['fecha'] == $fecha){
-                $array = $value["ausentes"];
-            }
+            return $this->redirect($this->generateUrl('callroll_edit', array('id' => $id)));
         }
-        return $array;
-    }
 
+<<<<<<< HEAD
     private function jsonAsistenciaFechaExist($id,$id_user,$fecha){
 
         $file = file_get_contents("users/".$id_user."/callroll/".$id.".json");
         $json = json_decode($file,true);
+=======
+        return array(
+            'entity'      => $entity,
+            'form'   => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        );
+    }
+    /**
+     * Deletes a CallRoll entity.
+     *
+     * @Route("/{id}", name="callroll_delete")
+     * @Method("DELETE")
+     */
+    public function deleteAction(Request $request, $id)
+    {
+        $form = $this->createDeleteForm($id);
+        $form->handleRequest($request);
+>>>>>>> 2f06cc7cc7aeba5f53e0bf62a1d0b5f14af225f2
 
-        $data = $json["asistencia"];
-        $fecha = str_replace('/', '-', $fecha);
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $entity = $em->getRepository('PAGEDemoBundle:CallRoll')->find($id);
 
-        foreach ($data as $key => $value){
-            if($value['fecha'] == $fecha){
-                return true;
+            if (!$entity) {
+                throw $this->createNotFoundException('Unable to find CallRoll entity.');
             }
-        }
-        return false;
-    }
 
-    private function deleteJsonAsistencia($id){
-        if(file_exists("users/".$this->getUser()->getParent()."/callroll/".$id.".json")){
-            unLink("users/".$this->getUser()->getParent()."/callroll/".$id.".json");
+            $em->remove($entity);
+            $em->flush();
         }
-    }
 
+<<<<<<< HEAD
     private function getJsonAsistencia($id,$id_user){
 
         $fh = file_get_contents("users/".$id_user."/callroll/".$id.".json");
@@ -413,5 +522,25 @@ class CallrollController extends Controller
             ),'text/html'
         );
         $this->get('mailer')->send($message);
+=======
+        return $this->redirect($this->generateUrl('callroll'));
+    }
+
+    /**
+     * Creates a form to delete a CallRoll entity by id.
+     *
+     * @param mixed $id The entity id
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createDeleteForm($id)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('callroll_delete', array('id' => $id)))
+            ->setMethod('DELETE')
+            ->add('submit', 'submit', array('label' => 'Delete'))
+            ->getForm()
+        ;
+>>>>>>> 2f06cc7cc7aeba5f53e0bf62a1d0b5f14af225f2
     }
 }

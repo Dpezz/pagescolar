@@ -1,0 +1,45 @@
+{% extends 'PAGEDemoBundle:Layout:layout_dashboard.html.twig' %}
+
+{% block title "Asistencias"%}
+
+{% block menu_admin_academico %}class="active"{% endblock %}
+
+{% block datos %}
+    <h1 class="page-header">Asistencias</h1>
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Reason</th>
+                <th>Createat</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('incallroll_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.reason }}</td>
+                <td>{% if entity.createAt %}{{ entity.createAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('incallroll_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('incallroll_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="modal-footer">
+        <a href="{{ path('incallroll_new') }}" class="btn btn-mint">Nuevo</a>
+    </div>
+            
+
+{% endblock %}

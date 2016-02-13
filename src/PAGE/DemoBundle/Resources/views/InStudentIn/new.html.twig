@@ -1,0 +1,19 @@
+{% extends 'PAGEDemoBundle:Layout:layout_dashboard.html.twig' %}
+
+{% block title "Nuevo Alumno"%}
+
+{% block menu_admin_alumnos %}class="active"{% endblock %}
+
+{% block datos %}
+    <h1 class="page-header">Nuevo Alumno</h1>
+
+    {% include 'PAGEDemoBundle:InStudentIn:_form.html.twig' %}
+
+    <ul class="record_actions">
+	    <li>
+	        <a href="{{ path('instudentin') }}">
+	            Back to the list
+	        </a>
+	    </li>
+	</ul>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'PAGEDemoBundle:Layout:layout_dashboard.html.twig' %}
+
+{% block title "Editar Asistencia"%}
+
+{% block menu_admin_academico %}class="active"{% endblock %}
+
+{% block datos %}
+    <h1 class="page-header">Editar Asistencia</h1>
+
+    {% include 'PAGEDemoBundle:InCallRoll:_form.html.twig' %}
+
+    <ul class="record_actions">
+	    <li>
+	        <a href="{{ path('incallroll') }}">
+	            Back to the list
+	        </a>
+	    </li>
+	    <li>{{ form(delete_form) }}</li>
+	</ul>
+{% endblock %}

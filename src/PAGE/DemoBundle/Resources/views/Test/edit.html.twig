@@ -1,0 +1,13 @@
+{% extends 'PAGEDemoBundle:Layout:layout_dashboard.html.twig' %}
+
+{% block title "Editar Evaluación"%}
+
+{% block menu_admin_academico %}class="active"{% endblock %}
+
+{% block datos %}
+    <h1>Editar Evaluación</h1>
+
+    {% include 'PAGEDemoBundle:Test:_form.html.twig' %}
+
+    <a href="{{ path('test') }}">volver</a>
+{% endblock %}

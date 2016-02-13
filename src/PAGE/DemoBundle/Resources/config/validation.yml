@@ -1,0 +1,239 @@
+PAGE\DemoBundle\Entity\User:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+            fields: [email]
+            message: "entity with this Email already exists"
+    properties:
+        username:
+            - NotBlank: ~
+        email:
+            - NotBlank: ~
+            - Email: ~
+        password:
+            - NotBlank: ~
+        phone:
+            - NotBlank: ~
+
+PAGE\DemoBundle\Entity\Level:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+            fields: [name,position,user]
+            message: "entity with this Level already exists"
+    properties:
+        name:
+            - NotBlank: ~
+        position:
+            - NotBlank: ~
+        user:
+            - NotBlank: ~
+
+PAGE\DemoBundle\Entity\Subject:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+            fields: [name,user]
+            message: "entity with this Subject already exists"
+    properties:
+        name:
+            - NotBlank: ~
+        user:
+            - NotBlank: ~
+
+PAGE\DemoBundle\Entity\Teacher:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+            fields: [rut,user]
+            message: "entity with this Teacher already exists"
+    properties:
+        rut:
+            - NotBlank: ~
+        name:
+            - NotBlank: ~
+        lastname:
+            - NotBlank: ~
+        mlastname:
+            - NotBlank: ~
+        user:
+            - NotBlank: ~
+
+PAGE\DemoBundle\Entity\InTeacher:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+            fields: [teacher]
+            message: "entity with this InTeacher already exists"
+    properties:
+        teacher:
+            - NotBlank: ~
+
+PAGE\DemoBundle\Entity\Student:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+            fields: [rut,user]
+            message: "entity with this Student already exists"
+    properties:
+        rut:
+            - NotBlank: ~
+        name:
+            - NotBlank: ~
+        lastname:
+            - NotBlank: ~
+        mlastname:
+            - NotBlank: ~
+        user:
+            - NotBlank: ~
+
+PAGE\DemoBundle\Entity\InStudent:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+            fields: [student]
+            message: "entity with this InStudent already exists"
+    properties:
+        student:
+            - NotBlank: ~
+
+PAGE\DemoBundle\Entity\InStudentIn:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+            fields: [student]
+            message: "entity with this InStudentIn already exists"
+    properties:
+        student:
+            - NotBlank: ~
+
+PAGE\DemoBundle\Entity\Agent:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+            fields: [rut,student,user]
+            message: "entity with this Agent already exists"
+    properties:
+        rut:
+            - NotBlank: ~
+        name:
+            - NotBlank: ~
+        lastname:
+            - NotBlank: ~
+        student:
+            - NotBlank: ~
+
+PAGE\DemoBundle\Entity\Test:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+            fields: [title,user,level,subject,teacher]
+            message: "entity with this Test already exists"
+    properties:
+        period:
+            - NotBlank: ~
+        title:
+            - NotBlank: ~
+        system:
+            - NotBlank: ~
+        moment:
+            - NotBlank: ~
+        evaluator:
+            - NotBlank: ~
+        assess:
+            - NotBlank: ~
+        value_teacher:
+            - NotBlank: ~
+        finality:
+            - NotBlank: ~
+        instrument:
+            - NotBlank: ~
+        learning:
+            - NotBlank: ~
+        user:
+            - NotBlank: ~
+        teacher:
+            - NotBlank: ~
+        level:
+            - NotBlank: ~
+        subject:
+            - NotBlank: ~
+
+PAGE\DemoBundle\Entity\Document:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+            fields: [title,user]
+            message: "entity with this Document already exists"
+    properties:
+        title:
+            - NotBlank: ~
+        user:
+            - NotBlank: ~
+
+PAGE\DemoBundle\Entity\Schedule:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+            fields: [day,block,teacher,subject,level]
+            message: "entity with this Schedule already exists"
+    properties:
+        day:
+            - NotBlank: ~
+        block:
+            - NotBlank: ~
+        teacher:
+            - NotBlank: ~
+        level:
+            - NotBlank: ~
+        subject:
+            - NotBlank: ~
+
+PAGE\DemoBundle\Entity\Grade:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+            fields: [score,test,student]
+            message: "entity with this Grade already exists"
+    properties:
+        score:
+            - NotBlank: ~
+        test:
+            - NotBlank: ~
+        student:
+            - NotBlank: ~
+
+PAGE\DemoBundle\Entity\CallRoll:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+            fields: [date,level]
+            message: "entity with this Callroll already exists"
+    properties:
+        date:
+            - NotBlank: ~
+        level:
+            - NotBlank: ~
+
+PAGE\DemoBundle\Entity\InCallRoll:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+            fields: [callroll,student]
+            message: "entity with this In Callroll already exists"
+    properties:
+        reason:
+            - NotBlank: ~
+        callroll:
+            - NotBlank: ~
+        student:
+            - NotBlank: ~
+
+PAGE\DemoBundle\Entity\Institution:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+            fields: [rbd,rut,user]
+            message: "entity with this Institution already exists"
+    properties:
+        rbd:
+            - NotBlank: ~
+        rut:
+            - NotBlank: ~
+        agent:
+            - NotBlank: ~
+        user:
+            - NotBlank: ~
+
+PAGE\DemoBundle\Entity\InInstitution:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+            fields: [institution]
+            message: "entity with this In Institution already exists"
+    properties:
+        institution:
+            - NotBlank: ~

@@ -1,0 +1,65 @@
+{{ form_start(form) }}
+	{{ form_errors(form) }}
+
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group">
+				{{ form_row(form.period, {'attr': {'class': 'form-control'}}) }}
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group">
+				{{ form_row(form.mode, {'attr': {'class': 'form-control'}}) }}
+			</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		{{ form_row(form.regime, {'attr': {'class': 'form-control'}}) }}
+	</div>
+		
+	<div class="row">
+		<div class="col-md-4">
+			<div class="form-group">
+				{{ form_row(form.date_start.month, {'attr': {'class': 'form-control'}}) }}
+			</div>
+		</div>			
+		<div class="col-md-4">
+			<div class="form-group">
+				{{ form_row(form.date_start.day, {'attr': {'class': 'form-control'}}) }}
+			</div>
+		</div>			
+		<div class="col-md-4">
+			<div class="form-group">
+				{{ form_row(form.date_start.year, {'attr': {'class': 'form-control'}}) }}
+			</div>
+		</div>					
+	</div>
+
+	<div class="row">
+		<div class="col-md-4">
+			<div class="form-group">
+				{{ form_row(form.date_end.month, {'attr': {'class': 'form-control'}}) }}
+			</div>
+		</div>		
+		<div class="col-md-4">
+			<div class="form-group">
+				{{ form_row(form.date_end.day, {'attr': {'class': 'form-control'}}) }}
+			</div>
+		</div>			
+		<div class="col-md-4">
+			<div class="form-group">
+				{{ form_row(form.date_end.year, {'attr': {'class': 'form-control'}}) }}
+			</div>
+		</div>					
+	</div>
+
+
+	<div class="form-group">
+		{{ form_row(form.institution, {'attr': {'data': app.user.institution.rbd,'class': 'form-control','readonly':''}}) }}
+	</div>
+
+	<div class="modal-footer">
+		{{ form_row(form.submit, {'attr': {'class': 'btn btn-mint'}}) }}
+	</div>
+{{ form_end(form) }}

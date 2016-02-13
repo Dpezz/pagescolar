@@ -1,0 +1,13 @@
+{% extends 'PAGEDemoBundle:Layout:layout_dashboard.html.twig' %}
+
+{% block title "Editar Curso"%}
+
+{% block menu_admin_academico %}class="active"{% endblock %}
+
+{% block datos %}
+    <h1 class="page-header">Editar Curso</h1>
+
+    {% include 'PAGEDemoBundle:Level:_form.html.twig' %}
+
+    <a href="{{ path('level') }}">volver</a>
+{% endblock %}

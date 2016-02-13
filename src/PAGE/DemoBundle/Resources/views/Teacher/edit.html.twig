@@ -1,0 +1,23 @@
+{% extends 'PAGEDemoBundle:Layout:layout_dashboard.html.twig' %}
+
+{% block title "Editar Docente"%}
+
+{% block menu_admin_docentes %}class="active"{% endblock %}
+
+{% block datos %}
+
+    <h1 class="page-header">Docente&nbsp;<i class="fa fa-angle-right"></i>&nbsp;<small>Datos Docente</small> 
+	    <ul class="nav nav-pills pull-right">
+		  	<li role="presentation" class="active">
+		  		<a href="{{ path('teacher_edit',{'id': entity.id }) }}" class="btn">Datos Docente</a>
+		  	</li>
+			<li role="presentation">
+				<a href="{{ path('inteacher_edit', { 'id': entity.inteacher.id }) }}" class="btn">Registro Académico</a>
+			</li>
+		</ul>
+	</h1>
+
+   {% include 'PAGEDemoBundle:Teacher:_form.html.twig' %}
+
+    <a href="{{ path('teacher') }}">volver</a>
+{% endblock %}

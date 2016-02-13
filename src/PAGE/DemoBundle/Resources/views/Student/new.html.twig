@@ -2,42 +2,12 @@
 
 {% block title "Nuevo Alumno"%}
 
-{% block active_menu_alumnos %}class="in"{% endblock %}
-
-{% block subtitle %}
-	 <i class="fa fa-user-plus"></i>&nbsp;Nuevo Alumno
-{% endblock %}
-
-{% block javascripts %}
-    {{parent()}}
-    <script src="{{ asset('bundles/pagedemo/js/comunas.js')}}"></script>
-    <script src="{{ asset('bundles/pagedemo/js/validar.js')}}"></script>
-{% endblock %}
-
-{% block submenu_admin_alumnos_nuevo %}
-    <li class="active"><a href="{{path('alumno_new')}}">&emsp;&emsp;<i class="fa fa-user-plus"></i>&nbsp;Nuevo Alumno</a></li>
-{% endblock %}
-
-
-{% block menubar %}
-    <li role="presentation" class="active btn-mint"><a>Datos Alumno</a></li>
-    <li role="presentation" class="disabled"><a>Registro Académico</a></li>
-    <li role="presentation" class="disabled"><a>Apoderados</a></li>
-    <li role="presentation" class="disabled"><a>Necesidades</a></li>
-    <li role="presentation" class="disabled"><a>Imagen</a></li>
-{% endblock %}
-
+{% block menu_admin_alumnos %}class="active"{% endblock %}
 
 {% block datos %}
-    {% embed 'PAGEDemoBundle:Layout:layout_alert.html.twig' %}
-      {% block alert %}
-        {{ parent() }}
-      {% endblock %}
-    {% endembed %}
+    <h1 class="page-header">Nuevo Alumno</h1>
 
-    
-	{% include 'PAGEDemoBundle:Student:_alumno.html.twig' %}
-	{% block alumnos_alumno %}
-		{{parent()}}
-	{% endblock %}
+    {% include 'PAGEDemoBundle:Student:_form.html.twig' %}
+
+    <a href="{{ path('student') }}">volver</a>
 {% endblock %}

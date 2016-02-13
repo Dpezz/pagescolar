@@ -1,0 +1,27 @@
+{% extends 'PAGEDemoBundle:Layout:layout_dashboard.html.twig' %}
+
+{% block title "Editar Alumno"%}
+
+{% block menu_admin_alumnos %}class="active"{% endblock %}
+
+{% block datos %}
+    <h1 class="page-header">Alumno&nbsp;<i class="fa fa-angle-right"></i>&nbsp;<small>Necesidades</small>
+	    <ul class="nav nav-pills pull-right">
+		  	<li role="presentation">
+		  		<a href="{{ path('student_edit',{'id': entity.student.id }) }}" class="btn">Datos Alumno</a>
+		  	</li>
+			<li role="presentation">
+				<a href="{{ path('instudent_edit', { 'id': entity.student.instudent.id }) }}" class="btn">Registro Académico</a>
+			</li>
+			<li role="presentation">
+				<a href="{{ path('agent') }}" class="btn">Apoderados</a>
+			</li>
+			<li role="presentation" class="active">
+				<a href="{{ path('instudentin_edit', { 'id': entity.id }) }}" class="btn">Necesidades</a>
+			</li>
+		</ul>
+	</h1>
+
+    {% include 'PAGEDemoBundle:InStudentIn:_form.html.twig' %}
+
+{% endblock %}

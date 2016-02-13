@@ -4,19 +4,21 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Pagescolar - {% block title %}Bienvenido!{% endblock %}</title>
+        <title>Pagescolar - {% block title %}Bienvenido{% endblock %}</title>
         <link rel="icon" type="image/x-icon" href="{{ asset('bundles/pagedemo/images/favicon.ico') }}" />
         {% block stylesheets %}
-            <link rel="stylesheet" href="{{ asset('bundles/pagedemo/plugin/bootstrap/css/bootstrap.css')}}">
-            <link rel="stylesheet" href="{{ asset('bundles/pagedemo/plugin/font-awesome/css/font-awesome.min.css')}}">
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+            <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+            <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/metisMenu/2.0.2/metisMenu.min.css">
+            <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,200italic' rel='stylesheet' type='text/css'>
+            <link href='http://fonts.googleapis.com/css?family=Righteous' rel='stylesheet' type='text/css'>
         {% endblock %}
     </head>
     <body>
         {% block body %}{% endblock %}
         {% block javascripts %}
-            <script src="{{ asset('bundles/pagedemo/plugin/angular/jquery.min.js') }}"></script>
-            <script src="{{ asset('bundles/pagedemo/plugin/bootstrap/js/bootstrap.min.js') }}"></script>
-            <script src="{{ asset('bundles/pagedemo/plugin/angular/angular.min.js') }}"></script>
+            <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
         {% endblock %}
     </body>
 </html>
