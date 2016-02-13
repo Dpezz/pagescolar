@@ -24,7 +24,7 @@ use PAGE\DemoBundle\Controller\LoadController;
  */
 class CallrollController extends Controller
 {
-    
+
 /* Template */
 
     /**
@@ -42,7 +42,7 @@ class CallrollController extends Controller
 
         $id_user = $this->getUser()->getParent();
         $id_curso = $this->getCursos($id_user)[0]->getId();//Id del Curso
-           
+
         //Obtener la fecha de hoy y de inicio de clases
         $hoy = new \DateTime('now');
         $user = $this->getInstitucion($id_user);
@@ -60,7 +60,7 @@ class CallrollController extends Controller
             'dataA'=>$this->getAlumnosCurso($id_user,$id_curso),
             'dataAS'=>$this->getJsonAsistencia($id_curso,$id_user),
             'dias'=>intval($dias->format('%a'))
-            
+
         );
     }
 
@@ -78,7 +78,7 @@ class CallrollController extends Controller
 
         $id_user = $this->getUser()->getParent();
         $id_curso = $id;//Id del Curso
-           
+
         //Obtener la fecha de hoy y de inicio de clases
         $hoy = new \DateTime('now');
         $user = $this->getInstitucion($id_user);
@@ -114,7 +114,7 @@ class CallrollController extends Controller
 
         $id_user = $this->getUser()->getParent();
         $id_curso = $this->getAlumno($id_user,$id)->getCurso();//Id del Curso
-           
+
         //Obtener la fecha de hoy y de inicio de clases
         $hoy = new \DateTime('now');
         $user = $this->getInstitucion($id_user);
@@ -149,7 +149,7 @@ class CallrollController extends Controller
 
         $id_user = $this->getUser()->getParent();
         $id_curso = $request->get('curso');//Id del Curso
-           
+
         //Obtener la fecha de hoy y de inicio de clases
         $hoy = new \DateTime('now');
         $user = $this->getInstitucion($id_user);
@@ -167,7 +167,7 @@ class CallrollController extends Controller
             'dataA'=>$this->getAlumnosCurso($id_user,$id_curso),
             'dataAS'=>$this->getJsonAsistencia($id_curso,$id_user),
             'dias'=>intval($dias->format('%a'))
-            
+
         ));
     }
 
@@ -204,6 +204,12 @@ class CallrollController extends Controller
     public function getInstitucion($id){
         $em = $this->getDoctrine()->getManager();
         $data = $em->getRepository('PAGEDemoBundle:DatosInstitucion')->find($id);
+        return $data;
+    }
+
+    public function getCuentas($email){
+        $em = $this->getDoctrine()->getManager();
+        $data = $em->getRepository('PAGEDemoBundle:User')->findOneBy(array('email' => $email));
         return $data;
     }
 
@@ -261,12 +267,17 @@ class CallrollController extends Controller
                 foreach ($data as $key => $value) {
                     if($request->get('presente_'.$value->getId()) != 1){
                         $ausentes[] = array('id'=>$value->getId(),'motivo'=>$request->get('motivo_'.$value->getId()));
+                        //Verifi if exist acount
+                        if($this->getCuentas($value->getEmail())){
+                          //enviar email
+                          $this->sendEmail($value->getName().' '.$value->getPlastname(),$value->getEmail(),$fecha,$request->get('motivo_'.$value->getId()));
+                        }
                     }
                 }
 
                 $array = array('fecha'=>$fecha,'ausentes'=>$ausentes);
                 $json['asistencia'][count($json['asistencia'])] = $array;
-                
+
                 $json = json_encode($json,true);
                 file_put_contents("users/".$id_user."/callroll/".$id_curso.".json", $json);
                 $request->getSession()->set('flag',1);
@@ -299,10 +310,15 @@ class CallrollController extends Controller
                 foreach ($data as $key => $value) {
                     if($request->get('presente_'.$value->getId()) != 1){
                         $ausentes[] = array('id'=>$value->getId(),'motivo'=>$request->get('motivo_'.$value->getId()));
+                        //Verifi if exist acount
+                        if($this->getCuentas($value->getEmail())){
+                          //enviar email
+                          $this->sendEmail($value->getName().' '.$value->getPlastname(),$value->getEmail(),$fecha, $request->get('motivo_'.$value->getId()));
+                        }
                     }
                 }
 
-                for ($i=0; $i < count($json['asistencia']) ; $i++) { 
+                for ($i=0; $i < count($json['asistencia']) ; $i++) {
                      if($fecha == $json['asistencia'][$i]['fecha'])
                             $json['asistencia'][$i]['ausentes'] = $ausentes;
                 }
@@ -314,7 +330,7 @@ class CallrollController extends Controller
                 */
                 //$array = array('fecha'=>$fecha,'ausentes'=>$ausentes);
                 //$json['asistencia'][count($json['asistencia'])] = $array;
-                
+
                 $json = json_encode($json,true);
                 file_put_contents("users/".$id_user."/callroll/".$id_curso.".json", $json);
                 $request->getSession()->set('flag',1);
@@ -329,7 +345,7 @@ class CallrollController extends Controller
 /* FUNCIONES */
 
     private function newJsonAsistencia($id,$id_user){
-        
+
         $em = $this->getDoctrine()->getManager();
         $data = $em->getRepository('PAGEDemoBundle:DatosCursos')->find($id);
 
@@ -341,7 +357,7 @@ class CallrollController extends Controller
     }
 
     private function jsonAsistenciaFecha($id,$id_user,$fecha){
-        
+
         $file = file_get_contents("users/".$id_user."/callroll/".$id.".json");
         $json = json_decode($file,true);
 
@@ -358,7 +374,7 @@ class CallrollController extends Controller
     }
 
     private function jsonAsistenciaFechaExist($id,$id_user,$fecha){
-        
+
         $file = file_get_contents("users/".$id_user."/callroll/".$id.".json");
         $json = json_decode($file,true);
 
@@ -380,8 +396,22 @@ class CallrollController extends Controller
     }
 
     private function getJsonAsistencia($id,$id_user){
-        
+
         $fh = file_get_contents("users/".$id_user."/callroll/".$id.".json");
         return json_decode($fh,true);
+    }
+
+    private function sendEmail($name, $email, $fecha, $motivo){
+        $message = \Swift_Message::newInstance()
+        ->setSubject('Pagescolar - Asistencia a Clases')
+        ->setFrom('contacto@pagescolar.cl')
+        ->setTo($email)
+        ->setBody(
+            $this->renderView(
+                'PAGEDemoBundle:Email:email_asistencia.html.twig',
+                array('name'=> $name,'email'=>$email, 'fecha'=>$fecha, 'motivo'=>$motivo)
+            ),'text/html'
+        );
+        $this->get('mailer')->send($message);
     }
 }

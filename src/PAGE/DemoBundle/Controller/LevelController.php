@@ -24,7 +24,7 @@ use PAGE\DemoBundle\Controller\LoadController;
  */
 class LevelController extends Controller
 {
-    
+
 /* Template */
 
     /**
@@ -62,7 +62,7 @@ class LevelController extends Controller
     public function createCurso(Request $request){
         $data = json_decode($request->getContent(), true);
         $request->request->replace($data);
-        
+
         try{
             $user = new DatosCursos();
             $id = $this->nuevoIdCurso();//id de la Curso
@@ -96,11 +96,11 @@ class LevelController extends Controller
     public function editCurso(Request $request){
         $data = json_decode($request->getContent(), true);
         $request->request->replace($data);
-        
+
         try{
             $id = $request->get('id');
             $em = $this->getDoctrine()->getManager();
-            
+
             if($user = $em->getRepository('PAGEDemoBundle:DatosCursos')->find($id)){
                 $user->setName($request->get('name'));
                 $user->setIndice($request->get('indice'));
@@ -171,13 +171,13 @@ class LevelController extends Controller
     }
 
     private function newJsonAsistencia($id,$id_user){
-        
+
         $em = $this->getDoctrine()->getManager();
         $data = $em->getRepository('PAGEDemoBundle:DatosCursos')->find($id);
 
         $json = json_encode(array('id'=>$data->getId(),'year'=>date('Y'),'asistencia'=>array()));
 
-        $fh = fopen("users/".$id_user."/pullroll/".$id.".json", 'w');
+        $fh = fopen("users/".$id_user."/callroll/".$id.".json", 'w');
         fwrite($fh, $json);
         fclose($fh);
     }

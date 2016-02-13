@@ -4,7 +4,7 @@
 Plataforma de Administración y Gestión Escolar. Plataforma web que orienta hacia la toma de decisiones correctas.
 
 Desarrollado por:
-  [Daniel Jara](http://twitter.com/davegandy),
+  [Daniel Jara](http://twitter.com/d_pezz),
   
 Desarrollado para [Aprendamos a leer Matemática(ALM)](http://www.aprendamosaleermatematica.cl).
 
